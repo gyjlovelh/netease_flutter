@@ -34,4 +34,3 @@ flutter:
     - family: iconfont
       fonts:
         - asset: assets/fonts/iconfont.ttf
-

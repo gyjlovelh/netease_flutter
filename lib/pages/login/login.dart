@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../shared/service/request_service.dart';
 
 import 'input.dart';
 
@@ -128,7 +130,7 @@ class _State extends State<NeteaseLogin> {
                           ),
                         ),
                         color: Colors.redAccent,
-                        onPressed: onLogin,
+                        onPressed: _onLogin,
                       ),
                     ),
                     Padding(
@@ -171,14 +173,15 @@ class _State extends State<NeteaseLogin> {
     );
   }
 
-  void onLogin() {
+  _onLogin() async {
     if (phontController.text.trim().isNotEmpty && passwordController.text.trim().isNotEmpty) {
       // 跳转到首页
-      if (phontController.text == '18062791691' && passwordController.text == '8525abcd') {
-        Navigator.of(context).pushNamed('home');
-      } else {
-        showLoginErrorDialog('手机号或者密码填写错误');
-      }
+      RequestService service = RequestService.getInstance();
+      Response result = await service.login(phone: phontController.text, password: passwordController.text);
+
+      // todo 缓存用户信息
+      Navigator.of(context).pushNamed('home');
+    
     } else {
       showLoginErrorDialog('请填写手机号和密码');
     }

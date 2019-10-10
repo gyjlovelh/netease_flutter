@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:netease_flutter/pages/home/find/swiper.dart';
+
+import 'icon_buttons.dart';
+import 'recommend_playlist.dart';
 
 class NeteaseFind extends StatefulWidget {
   @override
@@ -16,39 +19,10 @@ class _NeteaseFindState extends State<NeteaseFind> {
       scrollDirection: Axis.vertical,
       child: Column(
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.symmetric(
-              vertical: screenUtil.setHeight(28.0)
-            ),
-            height: screenUtil.setHeight(330.0),
-            child: new Swiper(
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(screenUtil.setWidth(15.0)),
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/login_bg.jpg'),
-                      fit: BoxFit.cover
-                    )
-                  ),
-                );
-              },
-              scale: 0.8,
-              viewportFraction: 0.925,
-              autoplayDelay: 5000,
-              autoplay: true,
-              duration: 1500,
-              outer: false,
-              loop: true,
-              itemCount: 6,
-              layout: SwiperLayout.DEFAULT,
-              pagination: new SwiperPagination(),
-              control: new SwiperControl(
-                iconPrevious: null,
-                iconNext: null
-              )
-            ),
-          )
+          new NeteaseSwiper(),
+          new NeteaseIconButtons(),
+          Divider(height: screenUtil.setHeight(66.0)),
+          new NeteaseRecommentPlaylist()
         ],
       ),
     );
