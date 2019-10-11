@@ -49,18 +49,19 @@ class _NeteaseSwiperState extends State<NeteaseSwiper> {
                     alignment: Alignment.bottomRight,
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                        vertical: 3.0
+                        horizontal: screenUtil.setWidth(12.0),
+                        vertical: screenUtil.setWidth(5.0)
                       ),
                       decoration: BoxDecoration(
                         color: titleColor,
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8.0),
-                          bottomRight: Radius.circular(8.0),
+                          topLeft: Radius.circular(screenUtil.setWidth(15.0)),
+                          bottomRight: Radius.circular(screenUtil.setWidth(15.0)),
                         )
                       ),
                       child: Text(item.typeTitle, style: TextStyle(
-                        color: Colors.white
+                        color: Colors.white,
+                        fontSize: screenUtil.setSp(20.0)
                       )),
                     )
                   ),
