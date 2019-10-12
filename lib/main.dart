@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:netease_flutter/pages/playlist/playlist.dart';
+import 'package:netease_flutter/pages/song_detail/song_detail.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 
 import 'pages/home/home.dart';
@@ -51,8 +53,14 @@ class _NetState extends State<NeteaseApp> {
       ),
       initialRoute: "login",
       routes: {
+        // 登录页
         'login': (BuildContext context) => new NeteaseLogin(),
-        'home': (BuildContext context) => new NeteaseHome()
+        // 主页
+        'home': (BuildContext context) => new NeteaseHome(),
+        // 歌曲详情
+        'song_detail': (BuildContext context) => new NeteaseSongDetail(),
+        // 歌单界面
+        'playlist': (BuildContext context) => new NeteasePlaylist()
       }
     );
   }

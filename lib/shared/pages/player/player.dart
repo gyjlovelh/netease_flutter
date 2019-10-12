@@ -14,7 +14,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
     
     return GestureDetector(
       onTap: () {
-        
+        Navigator.of(context).pushNamed('song_detail');
       },
       child: Container(
         width: double.infinity,
@@ -97,4 +97,6 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
       ),
     );
   }
+
+  
 }

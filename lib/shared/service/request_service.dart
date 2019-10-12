@@ -51,5 +51,11 @@ class RequestService {
 
   // 获取推荐歌单
   Future getRecommendPlaylist() => _request('/personalized', {"limit": 6});
+
+  // 获取歌曲详情
+  Future getSongDetail(String id) => _request('/song/detail', {"ids": id});
+
+  // 获取歌单详情
+  Future getPlaylistDetail(int id) => _request('/playlist/detail', {"id": id});
   
 }

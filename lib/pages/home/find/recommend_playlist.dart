@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:netease_flutter/models/playlist.dart';
+import 'package:netease_flutter/models/recomment_playlist.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 
 class NeteaseRecommentPlaylist extends StatelessWidget {
@@ -55,7 +55,7 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                   runSpacing: screenUtil.setHeight(8.0),
                   spacing: screenUtil.setWidth(14.0),
                   children: playlist.map((item) {
-                    PlaylistModel model = PlaylistModel.fromJson(item);
+                    RecommentPlaylistModel model = RecommentPlaylistModel.fromJson(item);
                     String playCount;
                     if (model.playCount > 10000) {
                       playCount = (model.playCount ~/ 10000).toString() + '万';
@@ -64,6 +64,9 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                     }
 
                     return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushNamed('playlist', arguments: json.encode({"id": model.id, "copywriter": model.copywriter}).toString());
+                      },
                       onLongPress: () {
                         return showDialog(
                           context: context,
