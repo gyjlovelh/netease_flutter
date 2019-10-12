@@ -135,7 +135,6 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
             ),
             // 底部播放栏
             Container(
-              color: Colors.redAccent,
               height: sc.setHeight(footerHeight),
               child: new NeteasePlayer(),
             ),
