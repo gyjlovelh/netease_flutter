@@ -21,6 +21,8 @@ class _NetState extends State<NeteaseApp> {
     // var screenInstance = ScreenUtil.getInstance();
     RequestService.init(baseUrl: 'http://106.14.154.205:3000');
 
+    
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       debugShowMaterialGrid: false,

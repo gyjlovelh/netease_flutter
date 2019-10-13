@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/playlist.dart';
+import 'package:netease_flutter/shared/pages/icon_data/icon_data.dart';
 
 class NeteasePlaylistSongs extends StatelessWidget {
 
@@ -14,10 +15,15 @@ class NeteasePlaylistSongs extends StatelessWidget {
 
     return Container(
       child: Column(
-        children: detail.tracks.map((song) {
-
-          return ListTile(
-            // leading: Text('1'),
+        children: detail.tracks.asMap().map((index, song) {
+          return MapEntry(index, ListTile(
+            // 点击播放
+            onTap: () {},
+            // 复制歌曲名
+            onLongPress: () {},
+            leading: Text(
+              (index + 1).toString()
+            ),
             title: Text(
               song.name,
               overflow: TextOverflow.ellipsis,
@@ -27,6 +33,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
                 fontWeight: FontWeight.w500
               ),
             ),
+            // contentPadding: EdgeInsets.zero,
             subtitle: Text(
               song.ar.map((item) => item.name).join(',') + ' - ' + song.al.name,
               overflow: TextOverflow.ellipsis,
@@ -42,14 +49,23 @@ class NeteasePlaylistSongs extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Icon(Icons.play_circle_outline),
-                  Icon(Icons.list)
+                  GestureDetector(
+                    child: NeteaseIconData(
+                      0xe613
+                    ),
+                  ),
+                  GestureDetector(
+                    child: NeteaseIconData(
+                      0xe8f5
+                    ),
+                  ),
                 ],
               )
             ),
             dense: true,
-          );
-        }).toList(),
+            isThreeLine: false,
+          ));
+        }).values.toList(),
       )
     );
   }
