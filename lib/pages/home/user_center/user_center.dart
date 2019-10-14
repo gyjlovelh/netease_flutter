@@ -33,13 +33,13 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 10.0),
-      child: iconButtonsMine(getListData()),
-      /*Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: Column(
         children: <Widget>[
-          
+          Expanded(
+            child:iconButtonsMine(getListData()) ,
+          ),
         ],
-      ),*/
+      ),
     );
   }
 }
