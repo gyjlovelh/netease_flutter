@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/playlist.dart';
@@ -18,14 +20,16 @@ class NeteasePlaylistSongs extends StatelessWidget {
         children: detail.tracks.asMap().map((index, song) {
           return MapEntry(index, ListTile(
             // 点击播放
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pushNamed('song_detail', arguments: json.encode({"id": song.id}).toString());
+            },
             // 复制歌曲名
             onLongPress: () {},
             leading: Text(
               (index + 1).toString()
             ),
             title: Text(
-              song.name,
+              song.name + song.id.toString(),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
               style: TextStyle(

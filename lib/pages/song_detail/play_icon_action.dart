@@ -1,4 +1,4 @@
-import 'package:audioplayer/audioplayer.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
@@ -17,6 +17,9 @@ class NeteasePlayIconAction extends StatefulWidget {
 class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> {
   
   final AudioPlayer player = new AudioPlayer();
+
+  var state;
+
 
   Widget actionIconButton(int pointer, { 
     double size, 
@@ -97,7 +100,9 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> {
                 actionIconButton(0xe61b, onPressed: () {}),
                 actionIconButton(0xe605, onPressed: () {}),
                 actionIconButton(0xe674, size: screenUtil.setSp(100.0), onPressed: () async {
-                  await player.play('http://m7.music.126.net/20191012213317/65122b9a612a5fab312c2039b41ab0a3/ymusic/045e/535d/535c/34209bebc5d76c572296d6e60674d6a7.flac');
+                  await player.play(widget.song.url);
+                  
+                  setState(() => state = AudioPlayerState.PLAYING);
                   print('played...');
                 }),
                 actionIconButton(0xeaad, onPressed: () {}),

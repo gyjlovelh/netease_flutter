@@ -46,10 +46,10 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
             ],
           ),
           FutureBuilder(
-            future: RequestService.getInstance().getRecommendPlaylist(),
+            future: RequestService.getInstance(context: context).getRecommendPlaylist(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
-                List playlist = (json.decode(snapshot.data.toString())['result'] as List).cast();
+                List playlist = snapshot.data;
 
                 return Wrap(
                   runSpacing: screenUtil.setHeight(8.0),

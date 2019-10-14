@@ -14,7 +14,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
     
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed('song_detail');
+        Navigator.of(context).pushNamed('song_detail', arguments: {"id": "123123123"});
       },
       child: Container(
         width: double.infinity,

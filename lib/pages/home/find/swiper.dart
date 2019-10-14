@@ -17,10 +17,11 @@ class _NeteaseSwiperState extends State<NeteaseSwiper> {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
     
     return FutureBuilder(
-      future: RequestService.getInstance().getBanner(),
+      future: RequestService.getInstance(context: context).getBanner(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
+        print(snapshot);
         if (snapshot.hasData) {
-          List banners = (json.decode(snapshot.data.toString())['banners'] as List).cast();
+          List banners = snapshot.data;
 
           return Container(
             padding: EdgeInsets.symmetric(

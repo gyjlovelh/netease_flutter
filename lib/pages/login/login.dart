@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:netease_flutter/models/profile.dart';
 import '../../shared/service/request_service.dart';
 
 import 'input.dart';
@@ -176,8 +177,8 @@ class _State extends State<NeteaseLogin> {
   _onLogin() async {
     if (phontController.text.trim().isNotEmpty && passwordController.text.trim().isNotEmpty) {
       // 跳转到首页
-      RequestService service = RequestService.getInstance();
-      Response result = await service.login(phone: phontController.text, password: passwordController.text);
+      RequestService service = RequestService.getInstance(context: context);
+      // ProfileModel profile = await service.login(phone: phontController.text, password: passwordController.text);
 
       // todo 缓存用户信息
       Navigator.of(context).pushNamed('home');

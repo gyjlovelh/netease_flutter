@@ -6,7 +6,6 @@ import 'package:netease_flutter/models/playlist.dart';
 import 'package:netease_flutter/pages/playlist/playlist_actions.dart';
 import 'package:netease_flutter/pages/playlist/playlist_panel.dart';
 import 'package:netease_flutter/pages/playlist/playlist_songs.dart';
-import 'package:netease_flutter/pages/song_detail/play_icon_action.dart';
 import 'package:netease_flutter/shared/pages/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/pages/player/player.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
@@ -25,10 +24,10 @@ class _NeteasePlaylistState extends State<NeteasePlaylist> {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
     return FutureBuilder(
-      future: RequestService.getInstance().getPlaylistDetail(arguments['id']),
+      future: RequestService.getInstance(context: context).getPlaylistDetail(arguments['id']),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
-          PlaylistModel detail = PlaylistModel.fromJson(json.decode(snapshot.data.toString())['playlist']);
+          PlaylistModel detail = snapshot.data;
 
           return Scaffold(
             appBar: AppBar(

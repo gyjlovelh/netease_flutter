@@ -19,13 +19,17 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
+    var arguments = json.decode(ModalRoute.of(context).settings.arguments);
+
+    print(arguments);
+
     return FutureBuilder(
-      future: RequestService.getInstance().getSongDetail('1374056688'),
+      future: RequestService.getInstance(context: context).getSongDetail(arguments['id']),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
       
         if (snapshot.hasData) {
-          SongModel song = SongModel.fromJson(json.decode(snapshot.data.toString())['songs'][0]);
-
+          SongModel song = snapshot.data;
+          
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.redAccent.withOpacity(0.1),
@@ -33,7 +37,7 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(song.name + song.id.toString(), style: TextStyle(
+                  Text(song.name, style: TextStyle(
                     fontSize: screenUtil.setSp(30.0)
                   )),
                   Text(song.ar.map((item) => item.name).join(','), style: TextStyle(
@@ -59,6 +63,7 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
                 direction: Axis.vertical,
                 children: <Widget>[
                   new NeteaseSongCover(song: song),
+                  Text(song.url),
                   new NeteasePlayIconAction(song: song)
                 ],
               ),

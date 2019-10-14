@@ -53,8 +53,8 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> {
                     borderRadius: BorderRadius.circular(999.0)
                   ),
                   child: ClipOval(
-                    child: Image.asset(
-                      'assets/images/theme.jpeg',
+                    child: Image.network(
+                      widget.song.al.picUrl,
                       fit: BoxFit.cover,
                       width: screenUtil.setWidth(480.0),
                       height: screenUtil.setWidth(480.0),

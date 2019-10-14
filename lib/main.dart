@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:netease_flutter/pages/playlist/playlist.dart';
 import 'package:netease_flutter/pages/song_detail/song_detail.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
@@ -6,7 +7,15 @@ import 'package:netease_flutter/shared/service/request_service.dart';
 import 'pages/home/home.dart';
 import 'pages/login/login.dart';
 
-void main() => runApp(NeteaseApp());
+void main() async {
+  // 强制竖屏。
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
+
+  runApp(NeteaseApp());
+}
 
 class NeteaseApp extends StatefulWidget {
   @override
