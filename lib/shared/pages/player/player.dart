@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/pages/icon_data/icon_data.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:netease_flutter/shared/player/music_player.dart';
 
 class NeteasePlayer extends StatefulWidget {
   @override
@@ -10,7 +11,17 @@ class NeteasePlayer extends StatefulWidget {
 
 class _NeteasePlayerState extends State<NeteasePlayer> {
 
-  AudioPlayer player = new AudioPlayer();
+  NeteaseMusicController controller;
+
+  SongModel song = new SongModel();
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = NeteaseMusicController.getInstance();
+    song = controller.currentMusicInfo;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +64,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      '南方姑娘',
+                      '--',
                       style: TextStyle(
                         fontSize: screenUtil.setSp(30.0)
                       ),
@@ -75,7 +86,6 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                 child: IconButton(
                   onPressed: () {
                     print('play_start...');
-                    player.play('http://m8.music.126.net/20191014214005/7df29a84ef0f70615a9f105aa9b4a344/ymusic/0fd6/4f65/43ed/a8772889f38dfcb91c04da915b301617.mp3');
                   },
                   icon: NeteaseIconData(
                     0xe674,

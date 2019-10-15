@@ -1,8 +1,9 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/pages/icon_data/icon_data.dart';
+import 'package:netease_flutter/shared/player/music_player.dart';
 
 class NeteasePlayIconAction extends StatefulWidget {
 
@@ -14,11 +15,41 @@ class NeteasePlayIconAction extends StatefulWidget {
   _NeteasePlayIconActionState createState() => _NeteasePlayIconActionState();
 }
 
-class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> {
+class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with SingleTickerProviderStateMixin {
   
-  final AudioPlayer player = new AudioPlayer();
+  NeteaseMusicController controller;
 
-  var state;
+  AudioPlayerState _playerState = AudioPlayerState.COMPLETED;
+
+  String _currentPostion = '00:00';
+  double _progressPosition = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = NeteaseMusicController.getInstance();
+    
+    controller.player.onAudioPositionChanged.listen((e) {
+      double rix = e.inSeconds / controller.player.duration.inSeconds;
+      setState(() {
+        _currentPostion = formarSeconds(e.inSeconds);
+        _progressPosition = rix * 500.0;
+        print('$_currentPostion $_progressPosition');
+      });
+    });
+    controller.player.onPlayerStateChanged.listen((state) {
+      setState(() {
+        _playerState = state;
+      });
+    });
+  }
+
+  String formarSeconds(int seconds) {
+    int minute = seconds ~/ 60;
+    int second = seconds % 60;
+
+    return ((minute < 10) ? '0$minute' : '$minute') + ':' + ((second < 10) ? '0$second' : '$second');
+  }
 
 
   Widget actionIconButton(int pointer, { 
@@ -47,7 +78,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> {
               children: <Widget>[
                 Container(
                   width: screenUtil.setWidth(125.0),
-                  child: Text('00:00', textAlign: TextAlign.center),
+                  child: Text(_currentPostion, textAlign: TextAlign.center),
                 ),
                 Container(
                   child: Stack(
@@ -65,14 +96,14 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(screenUtil.setWidth(10.0)),
                           child: Container(
-                            width: screenUtil.setWidth(200.0),
+                            width: screenUtil.setWidth(_progressPosition),
                             height: screenUtil.setHeight(3.0),
                             color: Colors.redAccent,
                           ),
                         ),
                       ),
                       Positioned(
-                        left: screenUtil.setWidth(192.0),
+                        left: screenUtil.setWidth(_progressPosition - 3),
                         top: screenUtil.setHeight(-7.0),
                         child: GestureDetector(
                           child: Container(
@@ -90,7 +121,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> {
                 ),
                 Container(
                   width: screenUtil.setWidth(125.0),
-                  child: Text('03:42', textAlign: TextAlign.center,),
+                  child: Text(formarSeconds(controller.player.duration.inSeconds), textAlign: TextAlign.center,),
                 ),
               ],
             ),
@@ -99,12 +130,18 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> {
               children: <Widget>[
                 actionIconButton(0xe61b, onPressed: () {}),
                 actionIconButton(0xe605, onPressed: () {}),
-                actionIconButton(0xe674, size: screenUtil.setSp(100.0), onPressed: () async {
-                  await player.play(widget.song.url);
-                  
-                  setState(() => state = AudioPlayerState.PLAYING);
-                  print('played...');
-                }),
+                actionIconButton(
+                  _playerState == AudioPlayerState.PLAYING ? 0xe6cb : 0xe674, 
+                  size: screenUtil.setSp(100.0), 
+                  onPressed: () async {
+                    if (_playerState != AudioPlayerState.PLAYING) {
+                      controller.currentMusicInfo = widget.song;
+                      await controller.play();
+                    } else {
+                      await controller.pause();
+                    }
+                  }
+                ),
                 actionIconButton(0xeaad, onPressed: () {}),
                 actionIconButton(0xe604, onPressed: () {})
               ],

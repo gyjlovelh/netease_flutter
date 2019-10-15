@@ -120,7 +120,7 @@ class RequestService {
   // 获取歌单详情
   Future<PlaylistModel> getPlaylistDetail(int id) async {
     Response response = await _request('/playlist/detail', queryParameters: {"id": id});
-
+    print(response);
     return PlaylistModel.fromJson( response.data['playlist'] );
   }
   

@@ -19,7 +19,6 @@ class _NeteaseSwiperState extends State<NeteaseSwiper> {
     return FutureBuilder(
       future: RequestService.getInstance(context: context).getBanner(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        print(snapshot);
         if (snapshot.hasData) {
           List banners = snapshot.data;
 

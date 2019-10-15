@@ -63,7 +63,6 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
                 direction: Axis.vertical,
                 children: <Widget>[
                   new NeteaseSongCover(song: song),
-                  Text(song.url),
                   new NeteasePlayIconAction(song: song)
                 ],
               ),
