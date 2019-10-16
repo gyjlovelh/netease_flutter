@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:netease_flutter/pages/home/user_center/icon_buttons_item.dart';
-import './icon_buttons_mine.dart';
-import './icon_buttons_vo.dart';
+import 'package:netease_flutter/pages/home/user_center/icon_buttons/icon_buttons_item.dart';
+import './icon_buttons/icon_buttons_mine.dart';
+import './icon_buttons/icon_buttons_vo.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../shared/pages/icon_data/icon_data.dart';
+import './music_list/music_list_vo.dart';
+import './music_list/music_list_mine.dart';
+import './music_list/music_list_item.dart';
+import '../../../models/playlist.dart';
+import 'dart:async';
+import 'package:dio/dio.dart';
 
 class NeteaseUserCenter extends StatefulWidget {
   @override
@@ -11,6 +17,26 @@ class NeteaseUserCenter extends StatefulWidget {
 }
 
 class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
+  //“创建的歌单” 左侧图标变化   false收起，true展开
+  bool _downOrUp = false;
+
+  //需要显示的歌单List
+  List<MusicListVO> getMusicList() {
+    getPlayList().then((val) {
+      PlaylistModel data = PlaylistModel.fromJson(val);
+      print('===============>>>>>>>>>>>'+data.name);
+    });
+  }
+
+  //json获取 歌单List
+  Future getPlayList() async {
+    Dio dio = Dio();
+    Response response =
+        await dio.get('http://106.14.154.205:3000/user/playlist?uid=406330413');
+
+    return response.data;
+  }
+
   //ListView Item
   List<IconButtonsVO> getListData() {
     List<IconButtonsVO> list = List<IconButtonsVO>();
@@ -53,27 +79,49 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
             children: <Widget>[
               Expanded(
                 flex: 0,
-                child: IconButton(icon: NeteaseIconData(0xe626),onPressed: (){},),
+                child: _downOrUp
+                    ? IconButton(
+                        icon: NeteaseIconData(0xe646),
+                        onPressed: getMusicList,
+                      )
+                    : IconButton(
+                        icon: NeteaseIconData(0xe626),
+                        onPressed: getMusicList,
+                      ),
               ),
               Expanded(
                 flex: 1,
-                child: Text('创建的歌单',style: TextStyle(fontSize: ScreenUtil().setSp(30.0),fontWeight: FontWeight.w700),),
+                child: Text(
+                  '创建的歌单',
+                  style: TextStyle(
+                      fontSize: ScreenUtil().setSp(30.0),
+                      fontWeight: FontWeight.w700),
+                ),
               ),
               Expanded(
                 flex: 0,
-                child: IconButton(icon: NeteaseIconData(0xe64b), onPressed: () {},),
+                child: IconButton(
+                  icon: NeteaseIconData(0xe64b),
+                  onPressed: () {},
+                ),
               ),
               Expanded(
                 flex: 0,
-                child: IconButton(icon: NeteaseIconData(0xe62b),onPressed: (){},),
+                child: IconButton(
+                  icon: NeteaseIconData(0xe62b),
+                  onPressed: () {},
+                ),
               ),
             ],
           ),
+          // musicListMine(list),
         ],
       ),
     );
   }
 }
+
+//展开菜单
 
 Widget userActionItem(int pointer, String title) {
   return Container(

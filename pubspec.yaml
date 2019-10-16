@@ -24,6 +24,12 @@ dependencies:
   audioplayer: ^0.5.2
 
   video_player: ^0.10.2
+ 
+  json_annotation: ^3.0.0
+
+  json_serializable: ^3.2.3
+
+  build_runner: ^1.7.1
 
 dev_dependencies:
 

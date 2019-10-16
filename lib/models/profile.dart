@@ -1,4 +1,8 @@
 
+import 'package:json_annotation/json_annotation.dart';
+
+part 'profile.g.dart';
+@JsonSerializable(nullable: true)
 class ProfileModel {
   int authStatus;
   bool followed;
@@ -17,8 +21,8 @@ class ProfileModel {
   String backgroundUrl;
   int authority;
   bool mutual;
-  Null expertTags;
-  Null experts;
+  String expertTags;
+  String experts;
   int djStatus;
   int vipType;
 

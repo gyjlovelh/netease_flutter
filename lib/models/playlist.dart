@@ -1,7 +1,10 @@
 
 import 'package:netease_flutter/models/profile.dart';
 import 'package:netease_flutter/models/song.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'playlist.g.dart';
+@JsonSerializable()
 class PlaylistModel {
   List<ProfileModel> subscribers;
   bool subscribed;
@@ -118,7 +121,7 @@ class PlaylistModel {
     description = json['description'];
     subscribedCount = json['subscribedCount'];
     cloudTrackCount = json['cloudTrackCount'];
-    tags = json['tags'].cast<String>();
+    tags = json['tags'] == null?List<String>():json['tags'].cast<String>();
     userId = json['userId'];
     name = json['name'];
     id = json['id'];
