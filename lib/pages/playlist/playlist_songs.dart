@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/playlist.dart';
 import 'package:netease_flutter/shared/pages/icon_data/icon_data.dart';
+import 'package:netease_flutter/shared/player/music_change.dart';
+import 'package:provider/provider.dart';
 
 class NeteasePlaylistSongs extends StatelessWidget {
 
@@ -21,7 +23,8 @@ class NeteasePlaylistSongs extends StatelessWidget {
           return MapEntry(index, ListTile(
             // 点击播放
             onTap: () {
-              Navigator.of(context).pushNamed('song_detail', arguments: json.encode({"id": song.id}).toString());
+              final provider = Provider.of<MusicChangeNotifier>(context);
+              provider.loadMusic(song);
             },
             // 复制歌曲名
             onLongPress: () {},

@@ -13,7 +13,8 @@ class NeteaseSongCover extends StatefulWidget {
   _NeteaseSongCoverState createState() => _NeteaseSongCoverState();
 }
 
-class _NeteaseSongCoverState extends State<NeteaseSongCover> {
+class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerProviderStateMixin {
+  AnimationController controller;
 
   Widget iconButton(int pointer) => GestureDetector(
     child: Container(
@@ -22,11 +23,30 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> {
       ),
       child: NeteaseIconData(
         pointer,
-        color: Colors.grey,
+        color: Colors.white60,
         size: ScreenUtil.getInstance().setSp(48.0),
       ),
     ),
   );
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(duration: Duration(seconds: 25), vsync: this);
+    controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.reset();
+        controller.forward();
+      }
+    });
+    controller.forward();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,19 +67,30 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> {
                   padding: EdgeInsets.all(screenUtil.setWidth(30.0)),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      width: screenUtil.setWidth(8.0),
-                      color: Colors.grey[300]
+                      width: screenUtil.setWidth(4.0),
+                      color: Colors.white54
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.white12,
+                        blurRadius: screenUtil.setWidth(25.0),
+                        spreadRadius: screenUtil.setWidth(18.0)
+                      )
+                    ],
                     borderRadius: BorderRadius.circular(999.0)
                   ),
-                  child: ClipOval(
-                    child: Image.network(
-                      widget.song.al.picUrl,
-                      fit: BoxFit.cover,
-                      width: screenUtil.setWidth(480.0),
-                      height: screenUtil.setWidth(480.0),
+                  child: RotationTransition(
+                    turns: controller,
+                    alignment: Alignment.center,
+                    child: ClipOval(
+                      child: Image.network(
+                        widget.song.al.picUrl,
+                        fit: BoxFit.cover,
+                        width: screenUtil.setWidth(480.0),
+                        height: screenUtil.setWidth(480.0),
+                      ),
                     ),
-                  ),
+                  )
                 )
               ),
             ),

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/pages/icon_data/icon_data.dart';
-import 'package:netease_flutter/shared/player/music_player.dart';
+import 'package:netease_flutter/shared/player/music_player_status.dart';
+import 'package:provider/provider.dart';
 
 class NeteasePlayIconAction extends StatefulWidget {
 
@@ -17,8 +18,6 @@ class NeteasePlayIconAction extends StatefulWidget {
 
 class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with SingleTickerProviderStateMixin {
   
-  NeteaseMusicController controller;
-
   AudioPlayerState _playerState = AudioPlayerState.COMPLETED;
 
   String _currentPostion = '00:00';
@@ -27,21 +26,6 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
   @override
   void initState() {
     super.initState();
-    controller = NeteaseMusicController.getInstance();
-    
-    controller.player.onAudioPositionChanged.listen((e) {
-      double rix = e.inSeconds / controller.player.duration.inSeconds;
-      setState(() {
-        _currentPostion = formarSeconds(e.inSeconds);
-        _progressPosition = rix * 500.0;
-        print('$_currentPostion $_progressPosition');
-      });
-    });
-    controller.player.onPlayerStateChanged.listen((state) {
-      setState(() {
-        _playerState = state;
-      });
-    });
   }
 
   String formarSeconds(int seconds) {
@@ -54,7 +38,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
 
   Widget actionIconButton(int pointer, { 
     double size, 
-    Color color = Colors.black54, 
+    Color color = Colors.white, 
     @required VoidCallback onPressed
   }) => GestureDetector(
     child: NeteaseIconData(pointer, size: size ?? ScreenUtil.getInstance().setSp(48.0), color: color),
@@ -64,6 +48,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
+    final stateController = Provider.of<MusicPlayerStatus>(context);
 
     return Expanded(
       flex: 0,
@@ -75,10 +60,18 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
                   width: screenUtil.setWidth(125.0),
-                  child: Text(_currentPostion, textAlign: TextAlign.center),
+                  child: Text(
+                    _currentPostion, 
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: screenUtil.setSp(24.0)
+                    ),
+                  ),
                 ),
                 Container(
                   child: Stack(
@@ -88,7 +81,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                         width: screenUtil.setWidth(500.0),
                         height: screenUtil.setHeight(3.0),
                         decoration: BoxDecoration(
-                          color: Colors.grey
+                          color: Colors.white30
                         ),
                       ),
                       Positioned(
@@ -98,7 +91,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                           child: Container(
                             width: screenUtil.setWidth(_progressPosition),
                             height: screenUtil.setHeight(3.0),
-                            color: Colors.redAccent,
+                            color: Colors.white70,
                           ),
                         ),
                       ),
@@ -109,7 +102,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(99.0),
-                              color: Colors.green
+                              color: Colors.white
                             ),
                             width: screenUtil.setWidth(17.0),
                             height: screenUtil.setWidth(17.0)
@@ -121,25 +114,33 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                 ),
                 Container(
                   width: screenUtil.setWidth(125.0),
-                  child: Text(formarSeconds(controller.player.duration.inSeconds), textAlign: TextAlign.center,),
+                  child: Text(
+                    '11:11', 
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: screenUtil.setSp(24.0)
+                    ),
+                  ),
                 ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                actionIconButton(0xe61b, onPressed: () {}),
+                actionIconButton(
+                  stateController.repeatMode == RepeatMode.LIST ? 0xe63e : 
+                  stateController.repeatMode == RepeatMode.RANDOM ? 0xe61b : 0xe640, 
+                  onPressed: () {
+                    stateController.changeRepeatMode();
+                  }
+                ),
                 actionIconButton(0xe605, onPressed: () {}),
                 actionIconButton(
                   _playerState == AudioPlayerState.PLAYING ? 0xe6cb : 0xe674, 
                   size: screenUtil.setSp(100.0), 
                   onPressed: () async {
-                    if (_playerState != AudioPlayerState.PLAYING) {
-                      controller.currentMusicInfo = widget.song;
-                      await controller.play();
-                    } else {
-                      await controller.pause();
-                    }
+                    
                   }
                 ),
                 actionIconButton(0xeaad, onPressed: () {}),

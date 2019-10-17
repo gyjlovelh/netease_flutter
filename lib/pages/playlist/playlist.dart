@@ -25,9 +25,7 @@ class _NeteasePlaylistState extends State<NeteasePlaylist> {
 
     return FutureBuilder(
       future: RequestService.getInstance(context: context).getPlaylistDetail(arguments['id']),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        print(snapshot);
-        
+      builder: (BuildContext context, AsyncSnapshot snapshot) {        
         if (snapshot.hasData) {
           PlaylistModel detail = snapshot.data;
 

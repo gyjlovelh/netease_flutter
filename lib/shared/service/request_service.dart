@@ -4,8 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:netease_flutter/models/profile.dart';
 import 'package:netease_flutter/models/song.dart';
-
-import '../../models/banner.dart';
 import '../../models/playlist.dart';
 
 class RequestService {
@@ -117,10 +115,44 @@ class RequestService {
     return song;
   }
 
+  // 获取歌曲播放链接
+  Future<String> getSongUrl(int id) async {
+    Response urlRes = await _request('/song/url', queryParameters: {"id": id});
+    return urlRes.data['data'][0]['url'];
+  }
+
+  // 获取歌曲歌词
+  Future<List> getSongLyric(int id) async {
+    Response response = await _request('/lyric', queryParameters: {"id": id});
+    if (response.data['lrc'] != null) {
+      // 原有语言歌词
+      String lyric = response.data['lrc']['lyric'];
+      List<String> lines = lyric.split('\n');
+      RegExp pattern = new RegExp(r"\[\d{2}:\d{2}.\d{1,3}\]");
+      List temp = List();
+      List result = List();
+
+      lines.forEach((line) {
+        if (pattern.hasMatch(line)) {
+          temp.add(line);
+        }
+      });
+
+      temp.forEach((line) {
+        String time = pattern.stringMatch(line).replaceAll(new RegExp(r'\[|\]'), '');
+        String word = line.replaceAll(pattern, '');
+        print('lyric $time - $word');
+
+        result.add({"time": time, "lyric": word});
+      });
+      return result;
+    }
+    return [];
+  }
+
   // 获取歌单详情
   Future<PlaylistModel> getPlaylistDetail(int id) async {
     Response response = await _request('/playlist/detail', queryParameters: {"id": id});
-    print(response);
     return PlaylistModel.fromJson( response.data['playlist'] );
   }
   

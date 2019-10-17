@@ -1,8 +1,12 @@
+import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/pages/icon_data/icon_data.dart';
-import 'package:netease_flutter/shared/player/music_player.dart';
+import 'package:netease_flutter/shared/player/music_change.dart';
+import 'package:netease_flutter/shared/player/music_player_status.dart';
+import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:provider/provider.dart';
 
 class NeteasePlayer extends StatefulWidget {
   @override
@@ -11,25 +15,40 @@ class NeteasePlayer extends StatefulWidget {
 
 class _NeteasePlayerState extends State<NeteasePlayer> {
 
-  NeteaseMusicController controller;
-
   SongModel song = new SongModel();
 
   @override
   void initState() {
     super.initState();
+  }
 
-    controller = NeteaseMusicController.getInstance();
-    song = controller.currentMusicInfo;
+  int iconPointer(AudioPlayerState state) {
+    if (state == AudioPlayerState.STOPPED) {
+      return 0xe74d;
+    } else if (state == AudioPlayerState.PLAYING) {
+      return 0xe6cb;
+    } else if (state == AudioPlayerState.PAUSED) {
+      return 0xe674;
+    } else {
+      return 0xe674;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
+
+    final provider = Provider.of<MusicChangeNotifier>(context);
+    final stateController = Provider.of<MusicPlayerStatus>(context);
+    SongModel song =  provider.currentMusic;
+
+    if (song == null) {
+      return Text('no song');
+    }
     
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed('song_detail', arguments: {"id": "123123123"});
+        Navigator.of(context).pushNamed('song_detail', arguments: {"id": song.id});
       },
       child: Container(
         width: double.infinity,
@@ -50,7 +69,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                   ),
                   borderRadius: BorderRadius.circular(99.0),
                   image: DecorationImage(
-                    image: AssetImage('assets/images/theme.jpeg'),
+                    image: song == null ? AssetImage('assets/images/theme.jpeg') : NetworkImage(song.al.picUrl),
                     fit: BoxFit.cover
                   ),
                 ),
@@ -64,20 +83,23 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      '--',
+                      song == null ? '--' : song.name, 
                       style: TextStyle(
                         fontSize: screenUtil.setSp(30.0)
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                     Text(
-                      '作词/作曲 赵雷',
+                      '歌词',
+                      // song != null ? song.name : '--',
                       style: TextStyle(
                         fontSize: screenUtil.setSp(24.0)
                       ),
                     )
                   ],
                 ),
-            ),
+              ),
             ),
             Expanded(
               flex: 0,
@@ -85,10 +107,16 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                 width: screenUtil.setWidth(90.0),
                 child: IconButton(
                   onPressed: () {
-                    print('play_start...');
+                    if (stateController.playerState == AudioPlayerState.STOPPED) {
+
+                    } else if (stateController.playerState == AudioPlayerState.PLAYING) {
+                      stateController.pause();
+                    } else {
+                      stateController.play();
+                    }
                   },
                   icon: NeteaseIconData(
-                    0xe674,
+                    iconPointer(stateController.playerState),
                     size: screenUtil.setSp(54.0),
                     color: Colors.black54,
                   ),
@@ -114,6 +142,4 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
       ),
     );
   }
-
-  
 }

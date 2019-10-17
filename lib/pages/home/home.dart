@@ -1,5 +1,8 @@
+import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:netease_flutter/shared/player/music_player_status.dart';
+import 'package:provider/provider.dart';
 import 'find/find.dart';
 import 'user_center/user_center.dart';
 import '../../shared/pages/icon_data/icon_data.dart';
@@ -31,6 +34,8 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
     ScreenUtil.instance = ScreenUtil(width: 750, height: 1340, allowFontScaling: true)..init(context);
 
     ScreenUtil sc = ScreenUtil.getInstance();
+
+    final stateController = Provider.of<MusicPlayerStatus>(context);
 
     // 计算各区域高度
     double screentHeight = ScreenUtil.getInstance().height;
