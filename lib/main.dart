@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import 'pages/home/home.dart';
 import 'pages/login/login.dart';
+import 'pages/local_musics/local_musics.dart';
 
 void main() async {
   // 强制竖屏。
@@ -85,7 +86,9 @@ class _NetState extends State<NeteaseApp> {
               // 歌曲详情
               'song_detail': (BuildContext context) => new NeteaseSongDetail(),
               // 歌单界面
-              'playlist': (BuildContext context) => new NeteasePlaylist()
+              'playlist': (BuildContext context) => new NeteasePlaylist(),
+              // 本地音乐
+              'local_musics': (BuildContext context) => new LocalMusics(),
             }
           );
         },

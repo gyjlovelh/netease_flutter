@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:netease_flutter/pages/home/user_center/icon_buttons/icon_buttons_item.dart';
 import './icon_buttons/icon_buttons_mine.dart';
 import './icon_buttons/icon_buttons_vo.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../shared/pages/icon_data/icon_data.dart';
 import './music_list/music_list_vo.dart';
-import './music_list/music_list_mine.dart';
-import './music_list/music_list_item.dart';
 import '../../../models/playlist.dart';
 import 'dart:async';
 import 'package:dio/dio.dart';
+import 'dart:convert';
 
 class NeteaseUserCenter extends StatefulWidget {
   @override
@@ -19,12 +17,21 @@ class NeteaseUserCenter extends StatefulWidget {
 class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
   //“创建的歌单” 左侧图标变化   false收起，true展开
   bool _downOrUp = false;
+  List<MusicListVO> musicList = List<MusicListVO>();
 
   //需要显示的歌单List
-  List<MusicListVO> getMusicList() {
+  void setListData() {
     getPlayList().then((val) {
-      PlaylistModel data = PlaylistModel.fromJson(val);
-      print('===============>>>>>>>>>>>'+data.name);
+      var list = val['playlist'] as List;
+      List<PlaylistModel> playList =
+          list.map((i) => PlaylistModel.fromJson(i)).toList();
+      for (int i = 0; i < playList.length; i++) {
+        musicList.add(MusicListVO(
+            header: playList[i].coverImgUrl,
+            title: playList[i].name,
+            trackCount: playList[i].trackCount));
+      }
+
     });
   }
 
@@ -33,7 +40,6 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
     Dio dio = Dio();
     Response response =
         await dio.get('http://106.14.154.205:3000/user/playlist?uid=406330413');
-
     return response.data;
   }
 
@@ -55,8 +61,61 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
     return list;
   }
 
+//todo 展开菜单
+  Widget showList() {
+    // List<MusicListVO> musicList = getMusicList();
+    return Container(
+      child: ListView.builder(
+        itemCount: musicList.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: Image.network(musicList[index].header),
+            title: Text(index == 0 ? '我喜欢的音乐' : musicList[index].title),
+            subtitle: Text(musicList[index].trackCount.toString()),
+            trailing: index == 0 ? null : NeteaseIconData(0xe62b),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget userActionItem(int pointer, String title, onClick()) {
+    return Container(
+      width: double.infinity,
+      child: GestureDetector(
+        onTap: onClick,
+        child: Row(
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(
+                  left: 25.0, right: 25.0, top: 12.0, bottom: 12.0),
+              child: NeteaseIconData(
+                pointer,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              title,
+              style: TextStyle(fontSize: ScreenUtil().setSp(25.0)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget mDivider(double h) {
+    return Divider(
+      height: ScreenUtil().setHeight(h),
+      color: Colors.grey,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    setListData();
+
     return Container(
       margin: EdgeInsets.only(top: 10.0),
       child: Column(
@@ -65,15 +124,17 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
             child: iconButtonsMine(getListData()),
           ),
           mDivider(0.5),
-          userActionItem(0xe680, '本地音乐'),
+          userActionItem(0xe680, '本地音乐', () {
+            Navigator.of(context).pushNamed('local_musics');
+          }),
           mDivider(0.5),
-          userActionItem(0xe625, '最近播放'),
+          userActionItem(0xe625, '最近播放', () {}),
           mDivider(0.5),
-          userActionItem(0xe691, '下载管理'),
+          userActionItem(0xe691, '下载管理', () {}),
           mDivider(0.5),
-          userActionItem(0xe620, '我的电台'),
+          userActionItem(0xe620, '我的电台', () {}),
           mDivider(0.5),
-          userActionItem(0xe621, '我的收藏'),
+          userActionItem(0xe621, '我的收藏', () {}),
           mDivider(20.0),
           Row(
             children: <Widget>[
@@ -82,11 +143,11 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
                 child: _downOrUp
                     ? IconButton(
                         icon: NeteaseIconData(0xe646),
-                        onPressed: getMusicList,
+                        onPressed: () {},
                       )
                     : IconButton(
                         icon: NeteaseIconData(0xe626),
-                        onPressed: getMusicList,
+                        onPressed: (){},
                       ),
               ),
               Expanded(
@@ -114,43 +175,12 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
               ),
             ],
           ),
-          // musicListMine(list),
+    
+
+          showList(),
+
         ],
       ),
     );
   }
-}
-
-//展开菜单
-
-Widget userActionItem(int pointer, String title) {
-  return Container(
-    width: double.infinity,
-    child: GestureDetector(
-      onTap: () {},
-      child: Row(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(
-                left: 25.0, right: 25.0, top: 12.0, bottom: 12.0),
-            child: NeteaseIconData(
-              pointer,
-              color: Colors.black,
-            ),
-          ),
-          Text(
-            title,
-            style: TextStyle(fontSize: ScreenUtil().setSp(25.0)),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-Widget mDivider(double h) {
-  return Divider(
-    height: ScreenUtil().setHeight(h),
-    color: Colors.grey,
-  );
 }
