@@ -16,12 +16,13 @@ class NeteaseUserCenter extends StatefulWidget {
 
 class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
   //“创建的歌单” 左侧图标变化   false收起，true展开
-  bool _downOrUp = false;
+  bool _downOrUp = true;
   List<MusicListVO> musicList = List<MusicListVO>();
 
   //需要显示的歌单List
   void setListData() {
     getPlayList().then((val) {
+      musicList.clear();
       var list = val['playlist'] as List;
       List<PlaylistModel> playList =
           list.map((i) => PlaylistModel.fromJson(i)).toList();
@@ -31,7 +32,7 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
             title: playList[i].name,
             trackCount: playList[i].trackCount));
       }
-
+      setState(() {});
     });
   }
 
@@ -64,19 +65,24 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
 //todo 展开菜单
   Widget showList() {
     // List<MusicListVO> musicList = getMusicList();
-    return Container(
-      child: ListView.builder(
-        itemCount: musicList.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: Image.network(musicList[index].header),
-            title: Text(index == 0 ? '我喜欢的音乐' : musicList[index].title),
-            subtitle: Text(musicList[index].trackCount.toString()),
-            trailing: index == 0 ? null : NeteaseIconData(0xe62b),
-          );
-        },
-      ),
-    );
+    return _downOrUp
+        ? (musicList.length == 0
+            ? Container()
+            : Container(
+                child: ListView.builder(
+                  itemCount: musicList.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: Image.network(musicList[index].header),
+                      title:
+                          Text(index == 0 ? '我喜欢的音乐' : musicList[index].title),
+                      subtitle: Text(musicList[index].trackCount.toString()+'首'),
+                      trailing: index == 0 ? null : NeteaseIconData(0xe62b),
+                    );
+                  },
+                ),
+              ))
+        : Container();
   }
 
   Widget userActionItem(int pointer, String title, onClick()) {
@@ -111,9 +117,19 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
     );
   }
 
+  void changeState() {
+    print('点击了图标');
+    setState(() {
+      if(_downOrUp) {
+        _downOrUp = false;
+      }else {
+        _downOrUp = true;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-
     setListData();
 
     return Container(
@@ -140,15 +156,10 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
             children: <Widget>[
               Expanded(
                 flex: 0,
-                child: _downOrUp
-                    ? IconButton(
-                        icon: NeteaseIconData(0xe646),
-                        onPressed: () {},
-                      )
-                    : IconButton(
-                        icon: NeteaseIconData(0xe626),
-                        onPressed: (){},
-                      ),
+                child: IconButton(
+                  icon: _downOrUp ? NeteaseIconData(0xe646) : NeteaseIconData(0xe626),
+                  onPressed: changeState,
+                ),
               ),
               Expanded(
                 flex: 1,
@@ -175,10 +186,9 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
               ),
             ],
           ),
-    
-
-          showList(),
-
+          Expanded(
+            child: showList(),
+          ),
         ],
       ),
     );
