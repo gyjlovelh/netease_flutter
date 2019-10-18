@@ -1,12 +1,11 @@
-import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:provider/provider.dart';
 import 'find/find.dart';
 import 'user_center/user_center.dart';
-import '../../shared/pages/icon_data/icon_data.dart';
-import '../../shared/pages/player/player.dart';
+import '../../shared/widgets/icon_data/icon_data.dart';
+import '../../shared/widgets/player/player.dart';
 
 import 'drawer/drawer.dart';
 

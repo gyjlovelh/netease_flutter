@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/playlist.dart';
-import 'package:netease_flutter/shared/pages/icon_data/icon_data.dart';
+import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 
 class NeteasePlaylistActions extends StatelessWidget {
 
@@ -13,13 +13,14 @@ class NeteasePlaylistActions extends StatelessWidget {
     onPressed: onPressed,
     child: Column(
       children: <Widget>[
-        NeteaseIconData(pointer),
+        NeteaseIconData(pointer, color: Colors.white, size: ScreenUtil.getInstance().setSp(42.0)),
         Padding(
           padding: EdgeInsets.only(top: ScreenUtil.getInstance().setHeight(8.0)),
           child: Text(
             label,
             style: TextStyle(
-
+              color: Colors.white,
+              fontSize: ScreenUtil.getInstance().setSp(24.0)
             ),
           ),
         )

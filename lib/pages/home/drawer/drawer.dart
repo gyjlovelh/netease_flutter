@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'custom_drawer.dart';
-import '../../../shared/pages/icon_data/icon_data.dart';
+import '../../../shared/widgets/icon_data/icon_data.dart';
 
 class NeteaseDrawer extends StatefulWidget {
   @override

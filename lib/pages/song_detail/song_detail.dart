@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
-import 'package:netease_flutter/pages/song_detail/song_lyric.dart';
 import 'package:netease_flutter/shared/player/music_change.dart';
-import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:provider/provider.dart';
 
 import 'play_icon_action.dart';
@@ -17,6 +13,8 @@ class NeteaseSongDetail extends StatefulWidget {
 }
 
 class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
+
+  bool showLyric = false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,15 +50,15 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(song.pic ?? song.al.picUrl),
+            image: AssetImage('assets/images/bg_blur.jpeg'),
             fit: BoxFit.cover
           )
         ),
         child: Flex(
           direction: Axis.vertical,
           children: <Widget>[
-            new NeteaseSongLyric(),
-            // new NeteaseSongCover(song: song),
+            new NeteaseSongCover(song: song),
+            // new NeteaseSongLyric(),
             new NeteasePlayIconAction(song: song)
           ],
         ),

@@ -2,7 +2,7 @@ import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
-import 'package:netease_flutter/shared/pages/icon_data/icon_data.dart';
+import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:provider/provider.dart';
 
@@ -132,7 +132,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                   stateController.repeatMode == RepeatMode.LIST ? 0xe63e : 
                   stateController.repeatMode == RepeatMode.RANDOM ? 0xe61b : 0xe640, 
                   onPressed: () {
-                    stateController.changeRepeatMode();
+                    stateController.changeRepeatMode();       
                   }
                 ),
                 actionIconButton(0xe605, onPressed: () {}),

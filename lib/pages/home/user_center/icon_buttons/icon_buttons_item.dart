@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:netease_flutter/shared/pages/icon_data/icon_data.dart';
+import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import './icon_buttons_vo.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class IconButtonsItem extends StatelessWidget {
-  IconButtonsVO itemVO;
+  final IconButtonsVO itemVO;
 
   IconButtonsItem({@required this.itemVO});
 
