@@ -7,11 +7,8 @@ import './music_list/music_list_vo.dart';
 import '../../../models/playlist.dart';
 import 'dart:async';
 import 'package:dio/dio.dart';
-<<<<<<< HEAD
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-=======
->>>>>>> 0128b2f64ea6850f7931f3405b0c7949544d2d30
 
 class NeteaseUserCenter extends StatefulWidget {
   @override
