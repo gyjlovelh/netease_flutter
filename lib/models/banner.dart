@@ -1,7 +1,5 @@
 
 
-import 'song.dart';
-
 class BannerModel extends Object {
 
   final String bannerId;

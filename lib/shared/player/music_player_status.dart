@@ -8,24 +8,26 @@ class MusicPlayerStatus with ChangeNotifier {
     // 背景播放器
   AudioPlayer _player;
 
+  AudioPlayer get audioPlayer => _player;
+
   AudioPlayerState _playStatus = AudioPlayerState.STOPPED;
 
-  bool _completed;
-  bool get completed => _completed;
+  int _current = 0;
+  int get current => _current;
+
+  int get duration => _player.duration.inSeconds;
 
   // 播放模式
   int _repeatNum = 0;
   RepeatMode _repeatMode = RepeatMode.LIST;
   RepeatMode get repeatMode => _repeatMode;
 
-  String _url;
-
   MusicPlayerStatus() {
     this._player = new AudioPlayer();
-    this._completed = false;
 
     _player.onAudioPositionChanged.listen((Duration duration) {
-      
+      this._current = duration.inSeconds;
+      notifyListeners();
     });
 
     _player.onPlayerStateChanged.listen((AudioPlayerState state) {
@@ -37,28 +39,19 @@ class MusicPlayerStatus with ChangeNotifier {
 
   AudioPlayerState get playerState => this._playStatus;
 
-  void setSongUrl(String url) {
-    if (_player.state != AudioPlayerState.STOPPED) {
-      _player.stop();
-    }
-    this._url = url;
-    this._completed = true;
-    notifyListeners();
-  }
-
-  void play() async {
-    await this._player.play(_url);
+  Future play(String url) async {
+    await this._player.play(url);
     this._playStatus = AudioPlayerState.PLAYING;
     notifyListeners();
   }
 
-  void pause() async {
+  Future pause() async {
     await this._player.pause();
     this._playStatus = AudioPlayerState.PAUSED;
     notifyListeners();
   }
 
-  void stop() async {
+  Future stop() async {
     await this._player.stop();
     this._playStatus = AudioPlayerState.STOPPED;
   }

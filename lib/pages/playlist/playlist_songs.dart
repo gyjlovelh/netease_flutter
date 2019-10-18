@@ -1,7 +1,9 @@
+import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/playlist.dart';
 import 'package:netease_flutter/models/song.dart';
+import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +17,9 @@ class NeteasePlaylistSongs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
+    final provider = Provider.of<MusicChangeNotifier>(context);
+    final stateProvider = Provider.of<MusicPlayerStatus>(context);
+
     String scStr;
     if (detail.subscribedCount > 10000) {
       scStr = (detail.subscribedCount ~/ 1000 / 10).toString() + '万';
@@ -63,8 +68,10 @@ class NeteasePlaylistSongs extends StatelessWidget {
                 SongModel song = detail.tracks[index];
                 return ListTile(
                   // 点击播放
-                  onTap: () {
-                    final provider = Provider.of<MusicChangeNotifier>(context);
+                  onTap: () async {
+                    if (stateProvider.playerState == AudioPlayerState.PLAYING) {
+                      await stateProvider.stop();
+                    }
                     provider.loadMusic(song);
                   },
                   // 复制歌曲名

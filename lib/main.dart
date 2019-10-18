@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'pages/home/home.dart';
 import 'pages/login/login.dart';
 import 'pages/local_musics/local_musics.dart';
+import 'pages/playlist_square/playlist_square.dart';
 
 void main() async {
 
@@ -79,6 +80,8 @@ class _NetState extends State<NeteaseApp> {
               'song_detail': (BuildContext context) => new NeteaseSongDetail(),
               // 歌单界面
               'playlist': (BuildContext context) => new NeteasePlaylist(),
+              // 歌单广场
+              'playlist_square': (BuildContext context) => new NeteasePlaylistSquare(),
               // 本地音乐
               'local_musics': (BuildContext context) => new LocalMusics(),
             }

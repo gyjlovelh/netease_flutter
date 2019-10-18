@@ -16,7 +16,13 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
   @override
   void initState() {
     super.initState();
-    scrollController = new ScrollController(initialScrollOffset: 110.0, keepScrollOffset: true);
+    scrollController = new ScrollController(initialScrollOffset: 300.0, keepScrollOffset: true);
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override

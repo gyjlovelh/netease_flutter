@@ -1,7 +1,12 @@
+import 'dart:async';
+
+import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
+import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
+import 'package:provider/provider.dart';
 
 class NeteaseSongCover extends StatefulWidget {
 
@@ -15,6 +20,7 @@ class NeteaseSongCover extends StatefulWidget {
 
 class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerProviderStateMixin {
   AnimationController controller;
+  StreamSubscription subscription;
 
   Widget iconButton(int pointer) => GestureDetector(
     child: Container(
@@ -39,11 +45,11 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
         controller.forward();
       }
     });
-    controller.forward();
   }
 
   @override
   void dispose() {
+    subscription.cancel();
     controller.dispose();
     super.dispose();
   }
@@ -51,6 +57,20 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
+    final provider = Provider.of<MusicPlayerStatus>(context);
+    AudioPlayer player = provider.audioPlayer;
+
+    subscription = player.onPlayerStateChanged.listen((AudioPlayerState state) {
+      if (state == AudioPlayerState.PLAYING) {
+        controller.forward();
+      } else {
+        controller.stop();
+      }
+    });
+    
+    if (provider.playerState == AudioPlayerState.PLAYING) {
+      controller.forward();
+    }
 
     return Expanded(
       flex: 1,

@@ -139,8 +139,6 @@ class RequestService {
       temp.forEach((line) {
         String time = pattern.stringMatch(line).replaceAll(new RegExp(r'\[|\]'), '');
         String word = line.replaceAll(pattern, '');
-        print('lyric $time - $word');
-
         result.add({"time": time, "lyric": word});
       });
       return result;
@@ -154,4 +152,14 @@ class RequestService {
     return PlaylistModel.fromJson( response.data['playlist'] );
   }
   
+  // 获取精品歌单
+  Future getPlaylistHighquality({int limit, int before, String cat}) async {
+    Response response = await _request('/top/playlist/highquality', queryParameters: {
+      "cat": cat,
+      "limit": limit,
+      "before": before
+    });
+
+    return response.data;
+  }
 }

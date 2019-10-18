@@ -21,15 +21,15 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
     super.initState();
   }
 
-  int iconPointer(AudioPlayerState state) {
-    if (state == AudioPlayerState.STOPPED) {
-      return 0xe74d;
-    } else if (state == AudioPlayerState.PLAYING) {
-      return 0xe6cb;
-    } else if (state == AudioPlayerState.PAUSED) {
-      return 0xe674;
+  int iconPointer(bool completed, AudioPlayerState state) {
+    if (completed) {
+      if (state == AudioPlayerState.PLAYING) {
+        return 0xe6cb;
+      } else {
+        return 0xe674;
+      }
     } else {
-      return 0xe674;
+      return 0xe662;
     }
   }
 
@@ -40,6 +40,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
     final provider = Provider.of<MusicChangeNotifier>(context);
     final stateController = Provider.of<MusicPlayerStatus>(context);
     SongModel song =  provider.currentMusic;
+    String musicUrl = provider.musicUrl;
 
     if (song == null) {
       return Text('no song');
@@ -90,8 +91,9 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                       maxLines: 1,
                     ),
                     Text(
-                      '歌词',
-                      // song != null ? song.name : '--',
+                      provider.musicUrl ?? '--',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                       style: TextStyle(
                         fontSize: screenUtil.setSp(24.0)
                       ),
@@ -106,16 +108,16 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                 width: screenUtil.setWidth(90.0),
                 child: IconButton(
                   onPressed: () {
-                    if (stateController.playerState == AudioPlayerState.STOPPED) {
-
-                    } else if (stateController.playerState == AudioPlayerState.PLAYING) {
-                      stateController.pause();
-                    } else {
-                      stateController.play();
+                    if (musicUrl.isNotEmpty) {
+                      if (stateController.playerState != AudioPlayerState.PLAYING) {
+                        stateController.play(musicUrl);
+                      } else {
+                        stateController.pause();
+                      }
                     }
                   },
                   icon: NeteaseIconData(
-                    iconPointer(stateController.playerState),
+                    iconPointer(musicUrl.isNotEmpty, stateController.playerState),
                     size: screenUtil.setSp(54.0),
                     color: Colors.black54,
                   ),

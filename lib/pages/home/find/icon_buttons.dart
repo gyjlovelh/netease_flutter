@@ -4,9 +4,10 @@ import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 
 class NeteaseIconButtons extends StatelessWidget {
 
-  Widget iconButtonItem(int pointer, {String label}) => Container(
+  Widget iconButtonItem(int pointer, {String label, VoidCallback onPressed}) => Container(
 
     child: GestureDetector(
+      onTap: onPressed,
       child: Column(
         children: <Widget>[
           Container(
@@ -37,7 +38,9 @@ class NeteaseIconButtons extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           iconButtonItem(0xe652, label: '每日推荐'),
-          iconButtonItem(0xe60d, label: '歌单'),
+          iconButtonItem(0xe60d, label: '歌单', onPressed: () {
+            Navigator.of(context).pushNamed('playlist_square');
+          }),
           iconButtonItem(0xe6ab, label: '排行榜'),
           iconButtonItem(0xe608, label: '电台'),
           iconButtonItem(0xe61d, label: '直播')
