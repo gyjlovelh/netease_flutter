@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import './music_list_vo.dart';
 import './music_list_item.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget musicListMine(List<MusicListVO> list) {
   return Container(

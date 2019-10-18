@@ -2,10 +2,9 @@ import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
-import 'package:netease_flutter/shared/pages/icon_data/icon_data.dart';
+import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
-import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:provider/provider.dart';
 
 class NeteasePlayer extends StatefulWidget {

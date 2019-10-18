@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:netease_flutter/shared/pages/icon_data/icon_data.dart';
+import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 
 class NeteaseIconButtons extends StatelessWidget {
 

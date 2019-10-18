@@ -6,8 +6,8 @@ import 'package:netease_flutter/models/playlist.dart';
 import 'package:netease_flutter/pages/playlist/playlist_actions.dart';
 import 'package:netease_flutter/pages/playlist/playlist_panel.dart';
 import 'package:netease_flutter/pages/playlist/playlist_songs.dart';
-import 'package:netease_flutter/shared/pages/icon_data/icon_data.dart';
-import 'package:netease_flutter/shared/pages/player/player.dart';
+import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
+import 'package:netease_flutter/shared/widgets/player/player.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 
 class NeteasePlaylist extends StatefulWidget {
@@ -64,9 +64,21 @@ class _NeteasePlaylistState extends State<NeteasePlaylist> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: <Widget>[
-                          new NeteasePlaylistPanel(detail: detail),
-                          new NeteasePlaylistActions(detail: detail),
-                          new NeteasePlaylistSongs(detail: detail)
+                          Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage('assets/images/bg_blur.jpeg'),
+                                fit: BoxFit.cover
+                              )
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                new NeteasePlaylistPanel(detail: detail),
+                                new NeteasePlaylistActions(detail: detail),
+                                new NeteasePlaylistSongs(detail: detail)
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     )

@@ -48,7 +48,8 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
                   right: screenUtil.setWidth(12.0),
                   top: screenUtil.setHeight(5.0)
                 ),
-                child: Text(getPlayCount(widget.detail.playCount), style: TextStyle(
+                child: Text(getPlayCount(widget.detail.playCount), 
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: screenUtil.setSp(24.0),
                   shadows: [
@@ -75,7 +76,8 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: TextStyle(
-                    fontSize: screenUtil.setSp(36.0)
+                    color: Colors.white,
+                    fontSize: screenUtil.setSp(30.0)
                   ),
                 ),
                 FlatButton(
@@ -86,15 +88,23 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
                       ClipOval(
                         child: Image.network(
                           widget.detail.creator.avatarUrl,
-                          width: screenUtil.setWidth(60.0),
-                          height: screenUtil.setHeight(60.0),
+                          width: screenUtil.setWidth(48.0),
+                          height: screenUtil.setHeight(48.0),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: screenUtil.setWidth(18.0)),
-                        child: Text(widget.detail.creator.nickname)
+                        padding: EdgeInsets.only(left: screenUtil.setWidth(14.0)),
+                        child: Text(
+                          widget.detail.creator.nickname,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: screenUtil.setSp(24.0)
+                          ),
+                        )
                       ),
-                      Icon(Icons.keyboard_arrow_right)
+                      Icon(Icons.keyboard_arrow_right, color: Colors.white, size: screenUtil.setSp(24.0))
                     ],
                   ),
                 ),
@@ -104,7 +114,8 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: TextStyle(
-                      fontSize: screenUtil.setSp(24.0)
+                      color: Colors.grey[300],
+                      fontSize: screenUtil.setSp(22.0)
                     )
                   )
                 )

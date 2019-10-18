@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NeteaseInput extends StatefulWidget {
 
-  String hintText;
-  IconData prefixIcon;
-  TextInputType keyboardType;
-  bool obscureText;
-  TextEditingController controller;
+  final String hintText;
+  final IconData prefixIcon;
+  final TextInputType keyboardType;
+  final bool obscureText;
+  final TextEditingController controller;
 
   NeteaseInput({
     @required this.controller,

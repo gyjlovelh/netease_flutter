@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../shared/pages/icon_data/icon_data.dart';
+import '../../../../shared/widgets/icon_data/icon_data.dart';
 import './music_list_vo.dart';
 
 class MusicListItem extends StatelessWidget {
-  MusicListVO musicListVO;
+  final MusicListVO musicListVO;
 
   MusicListItem({Key key, @required this.musicListVO}) : super(key: key);
 

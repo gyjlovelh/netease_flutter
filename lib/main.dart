@@ -4,7 +4,7 @@ import 'package:netease_flutter/pages/playlist/playlist.dart';
 import 'package:netease_flutter/pages/song_detail/song_detail.dart';
 import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
-import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/states/global.dart';
 import 'package:provider/provider.dart';
 
 import 'pages/home/home.dart';
@@ -12,12 +12,8 @@ import 'pages/login/login.dart';
 import 'pages/local_musics/local_musics.dart';
 
 void main() async {
-  // 强制竖屏。
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown
-  ]);
 
+  await Global.init();
   runApp(NeteaseApp());
 }
 
@@ -30,10 +26,6 @@ class _NetState extends State<NeteaseApp> {
 
   @override
   Widget build(BuildContext context) {
-
-    // var screenInstance = ScreenUtil.getInstance();
-    RequestService.init(baseUrl: 'http://106.14.154.205:3000');
-
     return MultiProvider(
       providers: [
         // 
