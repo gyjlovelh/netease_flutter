@@ -70,7 +70,7 @@ class _NetState extends State<NeteaseApp> {
                 )
               )
             ),
-            initialRoute: "login",
+            initialRoute: "home",
             routes: {
               // 登录页
               'login': (BuildContext context) => new NeteaseLogin(),

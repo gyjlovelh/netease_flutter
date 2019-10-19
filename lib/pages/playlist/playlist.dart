@@ -39,7 +39,7 @@ class _NeteasePlaylistState extends State<NeteasePlaylist> {
                   Text('歌单', style: TextStyle(
                     fontSize: screenUtil.setSp(36.0)
                   )),
-                  Text(arguments['copywriter'], style: TextStyle(
+                  Text(arguments['copywriter'] ?? "", style: TextStyle(
                     fontSize: screenUtil.setSp(20.0)
                   ))
                 ],
