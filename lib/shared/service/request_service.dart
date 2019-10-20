@@ -149,11 +149,37 @@ class RequestService {
   // 获取歌单详情
   Future<PlaylistModel> getPlaylistDetail(int id) async {
     Response response = await _request('/playlist/detail', queryParameters: {"id": id});
-    return PlaylistModel.fromJson( response.data['playlist'] );
+    PlaylistModel model = PlaylistModel.fromJson( response.data['playlist'] );
+    String trackIds = model.tracks.map((item) => item.id).join(',');
+    Response urlRes = await _request('/song/url', queryParameters: {"id": trackIds});
+    List list = urlRes.data['data'];
+
+    model.tracks.asMap().forEach((int index, SongModel item) {
+      item.url = list[index]['url'] ?? "";
+    });
+    return model;
+  }
+
+  // 获取热门歌单分类
+  Future<List> getPlaylistHotCatlist() async {
+    Response response = await _request('/playlist/hot');
+    return response.data['tags'];
+  }
+
+  Future getPlaylist({int limit, int before, String cat}) async {
+    await Future.delayed(Duration(seconds: 2));
+    Response response = await _request('/top/playlist', queryParameters: {
+      "cat": cat,
+      "limit": limit,
+      "before": before
+    });
+
+    return response.data;
   }
   
   // 获取精品歌单
   Future getPlaylistHighquality({int limit, int before, String cat}) async {
+    await Future.delayed(Duration(seconds: 1));
     Response response = await _request('/top/playlist/highquality', queryParameters: {
       "cat": cat,
       "limit": limit,
@@ -161,5 +187,12 @@ class RequestService {
     });
 
     return response.data;
+  }
+
+  // 获取热搜榜数据
+  Future<List> getSearchHotDetail() async {
+    Response response = await _request('/search/hot/detail');
+
+    return response.data['data'];
   }
 }

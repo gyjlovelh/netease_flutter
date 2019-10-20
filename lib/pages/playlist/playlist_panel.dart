@@ -23,7 +23,6 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
     return Container(
-      height: screenUtil.setHeight(380.0),
       padding: EdgeInsets.symmetric(
         horizontal: screenUtil.setWidth(28.0),
         vertical: screenUtil.setHeight(50.0)
@@ -33,7 +32,7 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
         children: <Widget>[
           Container(
             width: screenUtil.setWidth(280.0),
-            height: screenUtil.setHeight(280.0),
+            height: screenUtil.setWidth(280.0),
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(widget.detail.coverImgUrl),
@@ -67,6 +66,7 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
               left: screenUtil.setWidth(36.0)
             ),
             width: screenUtil.setWidth(414.0),
+            height: screenUtil.setWidth(280.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

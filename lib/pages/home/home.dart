@@ -109,7 +109,9 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
                         size: ScreenUtil.getInstance().setSp(36.0),
                         color: Colors.black87,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('search');
+                      },
                     ),
                   )
                 ],

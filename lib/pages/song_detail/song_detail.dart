@@ -24,8 +24,6 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
     final provider = Provider.of<MusicChangeNotifier>(context);
     SongModel song =  provider.currentMusic;
 
-    print(song);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black45,

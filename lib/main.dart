@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:netease_flutter/pages/playlist/playlist.dart';
+import 'package:netease_flutter/pages/search_result/search_result.dart';
 import 'package:netease_flutter/pages/song_detail/song_detail.dart';
 import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
@@ -11,6 +12,7 @@ import 'pages/home/home.dart';
 import 'pages/login/login.dart';
 import 'pages/local_musics/local_musics.dart';
 import 'pages/playlist_square/playlist_square.dart';
+import 'pages/search/search.dart';
 
 void main() async {
 
@@ -70,7 +72,7 @@ class _NetState extends State<NeteaseApp> {
                 )
               )
             ),
-            initialRoute: "login",
+            initialRoute: "home",
             routes: {
               // 登录页
               'login': (BuildContext context) => new NeteaseLogin(),
@@ -82,6 +84,10 @@ class _NetState extends State<NeteaseApp> {
               'playlist': (BuildContext context) => new NeteasePlaylist(),
               // 歌单广场
               'playlist_square': (BuildContext context) => new NeteasePlaylistSquare(),
+              // 搜索界面
+              'search': (BuildContext context) => new NeteaseSearch(),
+              // 搜索结果界面
+              'search_result': (BuildContext context) => new NeteaseSearchResult(),
               // 本地音乐
               'local_musics': (BuildContext context) => new LocalMusics(),
             }

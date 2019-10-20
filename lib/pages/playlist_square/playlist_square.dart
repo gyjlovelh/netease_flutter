@@ -14,23 +14,12 @@ class _NeteasePlaylistSquareState extends State<NeteasePlaylistSquare> with Sing
   
   TabController _tabController;
 
-  List tabs = [];
+  List _tabs = ["推荐", "官方", "精品", "华语", "民谣", "轻音乐", "电子", "摇滚"];
 
   @override
   void initState() {
-    tabs..add({"title": '推荐', "widget": new PlaylistRecommend()})
-      ..add({"title": '官方', "widget": Text('data')})
-      ..add({"title": '精品', "widget": Text('data')})
-      ..add({"title": '华语', "widget": Text('data')})
-
-      ..add({"title": '民谣', "widget": Text('data')})
-      ..add({"title": '轻音乐', "widget": Text('data')})
-      ..add({"title": '电子', "widget": Text('data')})
-      ..add({"title": '摇滚', "widget": Text('data')});
-
     super.initState();
-
-    _tabController = TabController(length: tabs.length, vsync: this);
+    _tabController = TabController(length: _tabs.length, vsync: this);
   }
 
   @override
@@ -50,20 +39,22 @@ class _NeteasePlaylistSquareState extends State<NeteasePlaylistSquare> with Sing
         bottom: TabBar(
           isScrollable: true,
           controller: _tabController,
-          
-          tabs: tabs.map((tab) => Tab(
-            child: Container(
-              width: screenUtil.setWidth(150.0),
-              child: Text(
-                tab['title'], 
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: screenUtil.setSp(30.0)
-                )
+
+          tabs: _tabs.map((item) {
+            return Tab(
+              child: Container(
+                width: screenUtil.setWidth(150.0),
+                child: Text(
+                  item, 
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: screenUtil.setSp(30.0)
+                  )
+                ),
               ),
-            ),
-          )).toList(),
+            );
+          }).toList()
         ),
       ),
       body: Container(
@@ -83,16 +74,7 @@ class _NeteasePlaylistSquareState extends State<NeteasePlaylistSquare> with Sing
               child: Container(
                 child: TabBarView(
                   controller: _tabController,
-                  children: <Widget>[
-                    new PlaylistRecommend(),
-                    Tab(text: '华语',),
-                    Tab(text: '民谣',),
-                    Tab(text: '轻音乐',),
-                    Tab(text: '电子',),
-                    Tab(text: '电子',),
-                    Tab(text: '电子',),
-                    Tab(text: '电子',)
-                  ],
+                  children: _tabs.map((item) => new PlaylistRecommend(cat: item)).toList(),
                 ),
               ),
             ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/recomment_playlist.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/widgets/playcount/playcount.dart';
 
 class NeteaseRecommentPlaylist extends StatelessWidget {
   @override
@@ -41,7 +42,9 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                   fontSize: screenUtil.setSp(24.0),
                   fontWeight: FontWeight.w400
                 )),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed('playlist_square');
+                },
               )
             ],
           ),
@@ -56,12 +59,6 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                   spacing: screenUtil.setWidth(14.0),
                   children: playlist.map((item) {
                     RecommentPlaylistModel model = RecommentPlaylistModel.fromJson(item);
-                    String playCount;
-                    if (model.playCount > 10000) {
-                      playCount = (model.playCount ~/ 10000).toString() + '万';
-                    } else {
-                      playCount = model.playCount.toString() + '次';
-                    }
 
                     return GestureDetector(
                       onTap: () {
@@ -119,20 +116,7 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                                     vertical: screenUtil.setHeight(4.0),
                                     horizontal: screenUtil.setWidth(8.0)
                                   ),
-                                  child: Text(
-                                    playCount,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: screenUtil.setSp(20.0),
-                                      shadows: [
-                                        Shadow(
-                                          offset: Offset.fromDirection(1.0),
-                                          color: Colors.grey,
-                                          blurRadius: 2.0
-                                        )
-                                      ]
-                                    ),
-                                  ),
+                                  child: NeteasePlaycount(playCount: model.playCount)
                                 )
                               ),
                             ),
