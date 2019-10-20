@@ -129,7 +129,7 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
                             maxLines: 2,
                             style: TextStyle(
                               color: Colors.black87,
-                              fontSize: screenUtil.setSp(24.0)
+                              fontSize: screenUtil.setSp(22.0)
                             ),
                           )
                         ],

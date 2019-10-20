@@ -36,7 +36,7 @@ class _NeteasePlaylistState extends State<NeteasePlaylist> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('歌单', style: TextStyle(
+                  Text('歌单' + detail.id.toString(), style: TextStyle(
                     fontSize: screenUtil.setSp(36.0)
                   )),
                   Text(arguments['copywriter'] ?? "", style: TextStyle(

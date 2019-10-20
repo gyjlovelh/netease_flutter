@@ -80,6 +80,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
                     (index + 1).toString(),
                     textAlign: TextAlign.center
                   ),
+                  enabled: song.url.isNotEmpty,
                   title: Text(
                     song.name,
                     overflow: TextOverflow.ellipsis,
