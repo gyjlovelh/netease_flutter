@@ -9,9 +9,13 @@ class SongModel {
   String pic;
   String url;
   List<ArtistModel> ar;
+  List<ArtistModel> artists;
   AlbumModel al;
+  AlbumModel album;
 
-  SongModel({this.name, this.id, this.url, this.ar, this.al});
+  List<String> transNames;
+
+  SongModel({this.name, this.id, this.url, this.ar, this.al, this.album, this.artists, this.transNames});
 
   SongModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -23,7 +27,21 @@ class SongModel {
         ar.add(new ArtistModel.fromJson(v));
       });
     }
+    if (json['artists'] != null) {
+      artists = new List<ArtistModel>();
+      json['artists'].forEach((v) {
+        artists.add(new ArtistModel.fromJson(v));
+      });
+    }
     al = json['al'] != null ? new AlbumModel.fromJson(json['al']) : null;
+    album = json['album'] != null ? new AlbumModel.fromJson(json['album']) : null;
+
+    if (json['transNames'] != null) {
+      transNames = new List<String>();
+      json['transNames'].forEach((v) {
+        transNames.add(v);
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -34,8 +52,17 @@ class SongModel {
     if (this.ar != null) {
       data['ar'] = this.ar.map((v) => v.toJson()).toList();
     }
+    if (this.artists != null) {
+      data['artists'] = this.artists.map((v) => v.toJson()).toList();
+    }
     if (this.al != null) {
       data['al'] = this.al.toJson();
+    }
+    if (this.album != null) {
+      data['album'] = this.album.toJson();
+    }
+    if (this.transNames != null) {
+      data['transNames'] = this.transNames.toList();
     }
     return data;
   }

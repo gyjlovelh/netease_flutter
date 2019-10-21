@@ -42,13 +42,15 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
     SongModel song =  provider.currentMusic;
     String musicUrl = provider.musicUrl;
 
-    if (song == null) {
-      return Text('no song');
-    }
+    // if (song == null) {
+    //   return Text('no song');
+    // }
     
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed('song_detail', arguments: {"id": song.id});
+        if (song != null) {
+          Navigator.of(context).pushNamed('song_detail', arguments: {"id": song.id});
+        }
       },
       child: Container(
         width: double.infinity,
@@ -69,7 +71,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                   ),
                   borderRadius: BorderRadius.circular(99.0),
                   image: DecorationImage(
-                    image: song == null ? AssetImage('assets/images/theme.jpeg') : NetworkImage(song.al.picUrl),
+                    image: song == null ? AssetImage('assets/images/song_cover_default.jpeg') : NetworkImage(song.al.picUrl),
                     fit: BoxFit.cover
                   ),
                 ),
@@ -83,7 +85,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      song == null ? '--' : song.name, 
+                      song == null ? '-' : song.name, 
                       style: TextStyle(
                         fontSize: screenUtil.setSp(30.0)
                       ),
@@ -91,7 +93,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                       maxLines: 1,
                     ),
                     Text(
-                      provider.musicUrl ?? '--',
+                      provider.musicUrl ?? '-',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(
@@ -108,7 +110,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                 width: screenUtil.setWidth(90.0),
                 child: IconButton(
                   onPressed: () {
-                    if (musicUrl.isNotEmpty) {
+                    if (musicUrl != null && musicUrl.isNotEmpty) {
                       if (stateController.playerState != AudioPlayerState.PLAYING) {
                         stateController.play(musicUrl);
                       } else {
@@ -117,7 +119,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                     }
                   },
                   icon: NeteaseIconData(
-                    iconPointer(musicUrl.isNotEmpty, stateController.playerState),
+                    iconPointer(musicUrl != null && musicUrl.isNotEmpty, stateController.playerState),
                     size: screenUtil.setSp(54.0),
                     color: Colors.black54,
                   ),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 
 class NeteaseSearch extends StatefulWidget {
   @override
@@ -10,6 +11,9 @@ class NeteaseSearch extends StatefulWidget {
 }
 
 class _NeteaseSearchState extends State<NeteaseSearch> {
+  TextEditingController _searchController = new TextEditingController();
+
+  dynamic _searchDefault;
 
   Widget drawIcon(String iconUrl) {
     if (iconUrl == null) {
@@ -28,6 +32,17 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    RequestService.getInstance(context: context).getSearchDefault().then((result) {
+        print(result);
+        setState(() {
+          _searchDefault = result;
+        });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     ScreenUtil screenUtil = ScreenUtil.getInstance();
@@ -36,13 +51,33 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
       appBar: AppBar(
         title: Container(
           child: TextField(
+            controller: _searchController,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: screenUtil.setSp(28.0)
+            ),
             decoration: InputDecoration(
-              hintText: "关键字"
+              hintText: _searchDefault == null ? "" : _searchDefault['showKeyword'],
+              hintStyle: TextStyle(
+                color: Colors.white54,
+                fontSize: screenUtil.setSp(28.0)
+              )
             ),
           ),
         ),
         actions: <Widget>[
-          Icon(Icons.search)
+          IconButton(
+            icon: NeteaseIconData(
+              0xe60c
+            ),
+            onPressed: () {
+              if (_searchController.text.isEmpty) {
+                Navigator.of(context).pushNamed('search_result', arguments: _searchDefault['realkeyword']);
+              } else {
+                Navigator.of(context).pushNamed('search_result', arguments: _searchController.text.trim());
+              }
+            },
+          )
         ],
       ),
       body: SingleChildScrollView(
@@ -86,7 +121,9 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                             padding: EdgeInsets.zero,
                             color: Colors.grey[300],
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).pushNamed('search_result', arguments: item);
+                            },
                           ),
                         );
                       }).toList()

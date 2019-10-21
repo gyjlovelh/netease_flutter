@@ -72,7 +72,7 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  widget.detail.name,
+                  widget.detail.name ?? "-",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: TextStyle(
@@ -110,7 +110,7 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
                 ),
                 GestureDetector(
                   child: Text(
-                    widget.detail.description,
+                    widget.detail.description ?? "",
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: TextStyle(

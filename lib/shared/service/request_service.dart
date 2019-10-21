@@ -195,4 +195,23 @@ class RequestService {
 
     return response.data['data'];
   }
+
+  //  默认搜索关键词
+  Future getSearchDefault() async {
+    Response response = await _request('/search/default');
+    return response.data['data'];
+  }
+
+  // 按照类型搜索
+  Future getSearchResult({String keywords, int type, int limit, int offset}) async {
+    await Future.delayed(Duration(seconds: 1));
+    Response response = await _request("/search", queryParameters: {
+      "keywords": keywords,
+      "type": type,
+      "limit": limit,
+      "offset": offset
+    });
+
+    return response.data["result"];
+  }
 }
