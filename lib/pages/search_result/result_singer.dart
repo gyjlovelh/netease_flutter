@@ -1,29 +1,25 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:netease_flutter/models/playlist.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/states/global.dart';
+import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 
-class ResultPlaylist extends StatefulWidget {
-
+class ResultSinger extends StatefulWidget {
   final String searchWord;
-  ResultPlaylist({@required this.searchWord});
+  ResultSinger({@required this.searchWord});
 
   @override
-  _ResultPlaylistState createState() => _ResultPlaylistState();
+  _ResultSingerState createState() => _ResultSingerState();
 }
 
-class _ResultPlaylistState extends State<ResultPlaylist> {
+class _ResultSingerState extends State<ResultSinger> {
   final int _limit = 20;
-  ScrollController _controller;
-  List _plist = List();
-  int _plCount = 0;
-
-  int _offset = 0; // 偏移量
+  int _offset = 0;
   bool _hasMore = true; // 是否已经到底.
+
+  ScrollController _controller;
+  List _singers = List();
+  int _singerCount = 0;
 
   @override
   void initState() {
@@ -33,7 +29,7 @@ class _ResultPlaylistState extends State<ResultPlaylist> {
       if (_controller.position.pixels == _controller.position.maxScrollExtent) {
         // 已经下拉到最底部
         print('============================ 到底了。。。 ============================');
-        if (_offset + _limit > _plCount) {
+        if (_offset + _limit > _singerCount) {
           // 已经到底了
           _hasMore = false;
         } else {
@@ -42,7 +38,6 @@ class _ResultPlaylistState extends State<ResultPlaylist> {
         }
       }
     });
-
     _loadMore();
   }
 
@@ -52,28 +47,6 @@ class _ResultPlaylistState extends State<ResultPlaylist> {
     super.dispose();
   }
 
-  Widget getSubtitle(PlaylistModel model) {
-    String content = "";
-    String playCountStr = "";
-    content += model.trackCount.toString() + "首 ";
-    content += "by " + model.creator.nickname + ",";
-    if (model.playCount > 100000000) {
-      playCountStr = (model.playCount ~/ 100000000).toString() + "亿次";
-    } else if (model.playCount > 100000) {
-      playCountStr = (model.playCount ~/ 1000 / 10).toString() + "万次";
-    } else {
-      playCountStr = model.playCount.toString() + "次";
-    }
-    content += " 播放$playCountStr";
-    return Text(content, 
-      overflow: TextOverflow.ellipsis,
-      maxLines: 1,
-      style: TextStyle(
-        color: Colors.black45,
-        fontSize: ScreenUtil.getInstance().setSp(22.0)
-      )
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,30 +58,53 @@ class _ResultPlaylistState extends State<ResultPlaylist> {
         child: ListView(
           itemExtent: screenUtil.setHeight(120.0),
           controller: _controller,
-          children: _plist.map((item) {
-            PlaylistModel model = PlaylistModel.fromJson(item);
+          children: _singers.map((item) {
+
             return ListTile(
               onTap: () {
-                Navigator.of(context).pushNamed('playlist', arguments: json.encode({"id": model.id}).toString());
+                
               },
               leading: Container(
-                width: screenUtil.setHeight(90.0),
                 height: screenUtil.setHeight(90.0),
+                width: screenUtil.setHeight(90.0),
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(model.coverImgUrl),
+                    image: NetworkImage(
+                      item['img1v1Url']
+                    ),
                     fit: BoxFit.cover
                   ),
-                  borderRadius: BorderRadius.circular(
-                    screenUtil.setWidth(8.0)
-                  )
+                  borderRadius: BorderRadius.circular(999.0)
                 ),
               ),
-              title: Text(model.name, style: TextStyle(
+              title: Text(item['name'], style: TextStyle(
                 color: Colors.black87,
                 fontSize: screenUtil.setSp(28.0)
               )),
-              subtitle: getSubtitle(model),
+              trailing: Container(
+                width: screenUtil.setWidth(180.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(
+                        right: screenUtil.setWidth(10.0)
+                      ),
+                      padding: EdgeInsets.all(screenUtil.setWidth(8.0)),
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(999.0)
+                      ),
+                      child: NeteaseIconData(
+                        0xe68e,
+                        color: Colors.white,
+                        size: screenUtil.setSp(20.0),
+                      ),
+                    ),
+                    Text('已入驻')
+                  ],
+                ),
+              ),
               dense: true,
             );
           }).toList(),
@@ -120,14 +116,14 @@ class _ResultPlaylistState extends State<ResultPlaylist> {
   void _loadMore() async {
     var response = await RequestService.getInstance(context: context).getSearchResult(
       keywords: widget.searchWord,
-      type: 1000,
+      type: 100,
       limit: _limit,
       offset: _offset
     );
 
     setState(() {
-      _plist.addAll(response['playlists']);
-      _plCount = response['playlistCount'];
+      _singers.addAll(response['artists']);
+      _singerCount = response['artistCount'];
     });
   }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:netease_flutter/pages/search_result/result_playlist.dart';
-import 'package:netease_flutter/pages/search_result/result_song.dart';
+import 'package:netease_flutter/pages/search_result/result_user.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
+
+import 'result_playlist.dart';
+import 'result_song.dart';
+import 'result_singer.dart';
 
 class NeteaseSearchResult extends StatefulWidget {
 
@@ -16,7 +19,7 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
 
   dynamic _searchDefault;
 
-  List _tabs = [ "单曲", "云村", "视频", "歌手", "专辑", "歌单", "主播电台", "用户"];
+  List _tabs = [ "单曲", "视频", "歌手", "专辑", "歌单", "用户"];
 
   @override
   void initState() {
@@ -102,6 +105,10 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
                       return new ResultSong(searchWord: sw);
                     } else if (item == "歌单") {
                       return new ResultPlaylist(searchWord: sw);
+                    } else if (item == "歌手") {
+                      return new ResultSinger(searchWord: sw);
+                    } else if (item == "用户") {
+                      return new ResultUser(searchWord: sw);
                     } else {
                       return Text('todo');
                     }
