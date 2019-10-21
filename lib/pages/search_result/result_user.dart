@@ -113,13 +113,18 @@ class _ResultUserState extends State<ResultUser> {
                   ],
                 ),
               ),
-              subtitle: Text(profile.signature ?? "", style: TextStyle(
-                color: Colors.black38,
-                fontSize: screenUtil.setSp(22.0)
-              )),
+              subtitle: Text(profile.signature ?? "", 
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: TextStyle(
+                  color: Colors.black38,
+                  fontSize: screenUtil.setSp(20.0)
+                )
+              ),
               dense: true,
               trailing: Container(
-                height: screenUtil.setHeight(60.0),
+                width: screenUtil.setWidth(120.0),
+                height: screenUtil.setHeight(42.0),
                 decoration: BoxDecoration(
                   border: Border.all(
                     width: screenUtil.setWidth(1.0),
@@ -127,10 +132,12 @@ class _ResultUserState extends State<ResultUser> {
                   ),
                   borderRadius: BorderRadius.circular(999.0)
                 ),
+                padding: EdgeInsets.zero,
                 child: FlatButton(
+                  padding: EdgeInsets.zero,
                   textColor: Colors.redAccent,
                   child: Text('+ 关注', style: TextStyle(
-                    fontSize: screenUtil.setSp(24.0)
+                    fontSize: screenUtil.setSp(22.0)
                   )),
                   shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                   onPressed: () {},

@@ -25,29 +25,31 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                 fontSize: screenUtil.setSp(36.0),
                 fontWeight: FontWeight.w500
               )),
-              FlatButton(
-                highlightColor: Colors.grey[400],
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    width: screenUtil.setWidth(1.0),
-                    color: Colors.grey[400]
+              Container(
+                height: screenUtil.setHeight(42.0),
+                width: screenUtil.setWidth(140.0),
+                child: FlatButton(
+                  highlightColor: Colors.grey[400],
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      width: screenUtil.setWidth(1.0),
+                      color: Colors.grey[400]
+                    ),
+                    borderRadius: BorderRadius.circular(20.0)
                   ),
-                  borderRadius: BorderRadius.circular(20.0)
+                  padding: EdgeInsets.zero,
+                  child: Text('歌单广场', style: TextStyle(
+                    fontSize: screenUtil.setSp(22.0),
+                    fontWeight: FontWeight.w400
+                  )),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('playlist_square');
+                  },
                 ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 0
-                ),
-                child: Text('歌单广场', style: TextStyle(
-                  fontSize: screenUtil.setSp(24.0),
-                  fontWeight: FontWeight.w400
-                )),
-                onPressed: () {
-                  Navigator.of(context).pushNamed('playlist_square');
-                },
               )
             ],
           ),
+          Padding(padding: EdgeInsets.only(bottom: screenUtil.setHeight(20.0)),),
           FutureBuilder(
             future: RequestService.getInstance(context: context).getRecommendPlaylist(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {

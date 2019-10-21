@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/pages/search_result/result_user.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 
+import 'result_album.dart';
 import 'result_playlist.dart';
 import 'result_song.dart';
 import 'result_singer.dart';
@@ -109,6 +110,8 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
                       return new ResultSinger(searchWord: sw);
                     } else if (item == "用户") {
                       return new ResultUser(searchWord: sw);
+                    } else if (item == "专辑") {
+                      return new ResultAlbum(searchWord: sw);
                     } else {
                       return Text('todo');
                     }
