@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/states/global.dart';
 import 'package:netease_flutter/shared/widgets/player/player.dart';
+import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
 
 import 'playlist_recommend.dart';
 
@@ -32,30 +33,28 @@ class _NeteasePlaylistSquareState extends State<NeteasePlaylistSquare> with Sing
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('歌单广场'),
-        backgroundColor: Colors.black38,
-        bottom: TabBar(
-          isScrollable: true,
-          controller: _tabController,
-
-          tabs: _tabs.map((item) {
-            return Tab(
-              child: Container(
-                width: screenUtil.setWidth(150.0),
-                child: Text(
-                  item, 
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: screenUtil.setSp(30.0)
-                  )
-                ),
+    return NeteaseScaffold(
+      appBar: NeteaseAppBar(
+        title: "歌单广场",
+      ),
+      tabbar: TabBar(
+        isScrollable: true,
+        controller: _tabController,
+        tabs: _tabs.map((item) {
+          return Tab(
+            child: Container(
+              width: screenUtil.setWidth(150.0),
+              child: Text(
+                item, 
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: screenUtil.setSp(30.0)
+                )
               ),
-            );
-          }).toList()
-        ),
+            ),
+          );
+        }).toList()
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -66,27 +65,12 @@ class _NeteasePlaylistSquareState extends State<NeteasePlaylistSquare> with Sing
             fit: BoxFit.cover
           )
         ),
-        child: Flex(
-          direction: Axis.vertical,
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Container(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: _tabs.map((item) => new PlaylistRecommend(cat: item)).toList(),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 0,
-              child: Container(
-                height: screenUtil.setHeight(Global.PLAYER_SCALE * screenUtil.height),
-                child: new NeteasePlayer(),
-              ),
-            )
-          ],
-        ),
+        height: ScreenUtil.screenHeightDp - ScreenUtil.statusBarHeight - ScreenUtil.bottomBarHeight - 130.0,
+        child: TabBarView(
+          controller: _tabController,
+          // children: _tabs.map((item) => Text(item)).toList(),
+          children: _tabs.map((item) => new PlaylistRecommend(cat: item)).toList(),
+        )
       )
     );
   }

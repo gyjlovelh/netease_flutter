@@ -54,7 +54,15 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
       },
       child: Container(
         width: double.infinity,
-        height: 12.0,
+        decoration: BoxDecoration(
+          color: Colors.white70,
+          border: Border(
+            top: BorderSide(
+              width: screenUtil.setWidth(1.0),
+              color: Colors.black12
+            )
+          )
+        ),
         child: Flex(
           direction: Axis.horizontal,
           children: <Widget>[

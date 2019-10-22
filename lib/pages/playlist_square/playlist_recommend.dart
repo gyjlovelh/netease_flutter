@@ -71,7 +71,7 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
     return Container(
-      height: screenUtil.setHeight(visible ? 50.0 : 0.0),
+      height: screenUtil.setHeight(50.0),
       child: Center(
         child: Text(message),
       ),
@@ -81,67 +81,64 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
+    
 
     if (_hasInit) {
-      return Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: screenUtil.setHeight(Global.MAIN_SCALE * screenUtil.height - 90 - (_hasMore && _loading == LoadingStatus.COMPLETED ? 0.0 : 50.0)),
-                child: GridView(
-                  controller: _controller,
-                  padding: EdgeInsets.only(
-                    top: screenUtil.setWidth(30.0),
-                    left: screenUtil.setWidth(30.0),
-                    right: screenUtil.setWidth(30.0),
-                    bottom: screenUtil.setWidth(0.0)
-                  ),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 0.7,
-                    mainAxisSpacing: screenUtil.setWidth(18.0),
-                    crossAxisSpacing: screenUtil.setWidth(18.0)
-                  ),
-                  children: _plist.map((item) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushNamed('playlist', arguments: json.encode({"id": item['id'], "copywriter": item['copywriter'] ?? ""}).toString());
-                      },
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            width: screenUtil.setWidth(230.0),
-                            height: screenUtil.setWidth(230.0),
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(item['coverImgUrl']),
-                                fit: BoxFit.cover
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                screenUtil.setWidth(10.0)
-                              )
-                            ),
-                            child: new NeteasePlaycount(playCount: item['playCount']),
-                          ),
-                          Text(item['name'], 
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: screenUtil.setSp(22.0)
-                            ),
-                          )
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
+      return Column(
+        children: <Widget>[
+          Container(
+            height: ScreenUtil.screenHeightDp - ScreenUtil.statusBarHeight - ScreenUtil.bottomBarHeight - 180.0,
+            child: GridView(
+              controller: _controller,
+              padding: EdgeInsets.only(
+                top: screenUtil.setWidth(30.0),
+                left: screenUtil.setWidth(30.0),
+                right: screenUtil.setWidth(30.0),
+                bottom: screenUtil.setWidth(50.0)
               ),
-              customLoading()
-            ],
-          )
-        )
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 0.7,
+                mainAxisSpacing: screenUtil.setWidth(18.0),
+                crossAxisSpacing: screenUtil.setWidth(18.0)
+              ),
+              children: _plist.map((item) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed('playlist', arguments: json.encode({"id": item['id'], "copywriter": item['copywriter'] ?? ""}).toString());
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        width: screenUtil.setWidth(230.0),
+                        height: screenUtil.setWidth(230.0),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(item['coverImgUrl']),
+                            fit: BoxFit.cover
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            screenUtil.setWidth(10.0)
+                          )
+                        ),
+                        child: new NeteasePlaycount(playCount: item['playCount']),
+                      ),
+                      Text(item['name'], 
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: screenUtil.setSp(22.0)
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          customLoading()
+        ],
       );
     } else {
       return Center(

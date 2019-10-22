@@ -64,7 +64,12 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
 
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushNamed('playlist', arguments: json.encode({"id": model.id, "copywriter": model.copywriter}).toString());
+                        Navigator.of(context).pushNamed('playlist', arguments: json.encode({
+                          "id": model.id, 
+                          "name": model.name,
+                          "coverImgUrl": model.picUrl,
+                          "copywriter": model.copywriter
+                        }).toString());
                       },
                       onLongPress: () {
                         return showDialog(

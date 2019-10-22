@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/playlist.dart';
+import 'package:netease_flutter/models/playlist_arguments.dart';
 
 class NeteasePlaylistPanel extends StatefulWidget {
 
   final PlaylistModel detail;
+  final PlaylistArguments arguments;
   
-  NeteasePlaylistPanel({@required this.detail});
+  NeteasePlaylistPanel({@required this.detail, this.arguments});
 
   @override
   _NeteasePlaylistPanelState createState() => _NeteasePlaylistPanelState();
@@ -15,12 +17,33 @@ class NeteasePlaylistPanel extends StatefulWidget {
 class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
 
   String getPlayCount(int playcount) {
+    if (playcount == 0) {
+      return "";
+    }
     return playcount > 10000 ? (playcount ~/ 10000).toString() + '万' : playcount.toString() + '次';
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
+    var detail = widget.detail ?? new PlaylistModel();
+
+    Widget avatorW;
+    if (detail != null && detail.creator != null) {
+      avatorW = Image.network(
+        detail.creator.avatarUrl,
+        fit: BoxFit.cover,
+        width: screenUtil.setWidth(48.0),
+        height: screenUtil.setWidth(48.0),
+      );
+    } else {
+      avatorW = Image.asset(
+        'assets/images/avator_default.jpeg',
+        fit: BoxFit.cover,
+        width: screenUtil.setWidth(48.0),
+        height: screenUtil.setWidth(48.0),
+      );
+    }
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -35,7 +58,7 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
             height: screenUtil.setWidth(280.0),
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(widget.detail.coverImgUrl),
+                image: NetworkImage(widget.arguments.coverImgUrl),
                 fit: BoxFit.cover
               ),
               borderRadius: BorderRadius.circular(screenUtil.setWidth(12.0))
@@ -47,7 +70,7 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
                   right: screenUtil.setWidth(12.0),
                   top: screenUtil.setHeight(5.0)
                 ),
-                child: Text(getPlayCount(widget.detail.playCount), 
+                child: Text(getPlayCount(detail.playCount ?? 0), 
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: screenUtil.setSp(24.0),
@@ -72,7 +95,7 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  widget.detail.name ?? "-",
+                  widget.arguments.name ?? "-",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: TextStyle(
@@ -86,16 +109,12 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
                   child: Row(
                     children: <Widget>[
                       ClipOval(
-                        child: Image.network(
-                          widget.detail.creator.avatarUrl,
-                          width: screenUtil.setWidth(48.0),
-                          height: screenUtil.setHeight(48.0),
-                        ),
+                        child: avatorW
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: screenUtil.setWidth(14.0)),
                         child: Text(
-                          widget.detail.creator.nickname,
+                          detail.creator != null ? detail.creator.nickname : "",
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: TextStyle(
@@ -110,7 +129,7 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
                 ),
                 GestureDetector(
                   child: Text(
-                    widget.detail.description ?? "",
+                    detail.description ?? "",
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: TextStyle(

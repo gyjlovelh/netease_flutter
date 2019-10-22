@@ -42,7 +42,8 @@ flutter:
     - assets/images/theme.jpeg
     - assets/images/bg_blur.jpeg
     - assets/images/song_cover_default.jpeg
-
+    - assets/images/avator_default.jpeg
+    
   fonts:
     - family: iconfont
       fonts:
