@@ -23,6 +23,8 @@ dependencies:
   audioplayer: ^0.5.2
   # 视频播放
   video_player: ^0.10.2
+  # Loading组件
+  flutter_spinkit: ^4.0.0
  
   json_annotation: ^3.0.0
 

@@ -40,19 +40,32 @@ class _NeteasePlaylistSquareState extends State<NeteasePlaylistSquare> with Sing
       tabbar: TabBar(
         isScrollable: true,
         controller: _tabController,
+        labelPadding: EdgeInsets.symmetric(
+          horizontal: screenUtil.setWidth(50.0)
+        ),
+        labelColor: Colors.redAccent,
+        labelStyle: TextStyle(
+          fontSize: screenUtil.setSp(28.0),
+          fontWeight: FontWeight.bold
+        ),
+        unselectedLabelColor: Colors.white,
+        unselectedLabelStyle: TextStyle(
+          fontSize: screenUtil.setSp(28.0)
+        ),
         tabs: _tabs.map((item) {
           return Tab(
-            child: Container(
-              width: screenUtil.setWidth(150.0),
-              child: Text(
-                item, 
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: screenUtil.setSp(30.0)
-                )
-              ),
-            ),
+            text: item,
+            // child: Container(
+            //   width: screenUtil.setWidth(150.0),
+            //   child: Text(
+            //     item, 
+            //     textAlign: TextAlign.center,
+            //     style: TextStyle(
+            //       color: Colors.white70,
+            //       fontSize: screenUtil.setSp(30.0)
+            //     )
+            //   ),
+            // ),
           );
         }).toList()
       ),
