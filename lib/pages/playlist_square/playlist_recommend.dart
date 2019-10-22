@@ -81,7 +81,7 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    
+
 
     if (_hasInit) {
       return Column(
@@ -105,7 +105,12 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
               children: _plist.map((item) {
                 return GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushNamed('playlist', arguments: json.encode({"id": item['id'], "copywriter": item['copywriter'] ?? ""}).toString());
+                    Navigator.of(context).pushNamed('playlist', arguments: json.encode({
+                      "id": item['id'], 
+                      "name": item['name'],
+                      "coverImgUrl": item['coverImgUrl'],
+                      "copywriter": item['copywriter']
+                    }).toString());
                   },
                   child: Column(
                     children: <Widget>[
