@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
-import 'package:netease_flutter/shared/states/global.dart';
 import 'package:netease_flutter/shared/widgets/playcount/playcount.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class PlaylistRecommend extends StatefulWidget {
   final String cat;
@@ -54,27 +54,38 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
   }
 
   Widget customLoading() {
-    String message;
-    bool visible;
+    double height;
     if (_hasMore) {
       if (_loading == LoadingStatus.LOADING) {
-        message = '努力加载中...';
-        visible = true;
+        height = 50.0;
       } else {
-        message = '';
-        visible = false;
+        height = 0;
       }
     } else {
-      visible = true;
-      message = '已经到底了';
+      height = 50.0;
     }
     ScreenUtil screenUtil = ScreenUtil.getInstance();
     
     return Container(
-      height: screenUtil.setHeight(50.0),
-      child: Center(
-        child: Text(message),
-      ),
+      height: height,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SpinKitWave(
+            size: screenUtil.setSp(36.0),
+            color: Colors.redAccent
+          ),
+          Container(
+            margin: EdgeInsets.only(
+              left: 10.0
+            ),
+            child: Text('努力加载中...', style: TextStyle(
+              color: Colors.grey,
+              fontSize: screenUtil.setSp(28.0)
+            )),
+          )
+        ],
+      )
     );
   }
 
@@ -82,19 +93,26 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
+    // 内容区域高度
+    double mainHeight = ScreenUtil.screenHeightDp - ScreenUtil.statusBarHeight - ScreenUtil.bottomBarHeight - 130.0;
+    if (_hasMore && _loading == LoadingStatus.COMPLETED) {
+
+    } else {
+      mainHeight -= 50.0;
+    }
 
     if (_hasInit) {
       return Column(
         children: <Widget>[
           Container(
-            height: ScreenUtil.screenHeightDp - ScreenUtil.statusBarHeight - ScreenUtil.bottomBarHeight - 180.0,
+            height: mainHeight,
             child: GridView(
               controller: _controller,
               padding: EdgeInsets.only(
                 top: screenUtil.setWidth(30.0),
                 left: screenUtil.setWidth(30.0),
                 right: screenUtil.setWidth(30.0),
-                bottom: screenUtil.setWidth(50.0)
+                bottom: screenUtil.setWidth(30.0)
               ),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
@@ -147,7 +165,24 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
       );
     } else {
       return Center(
-        child: Text('努力加载中...'),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SpinKitWave(
+              size: screenUtil.setSp(36.0),
+              color: Colors.redAccent
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                left: 10.0
+              ),
+              child: Text('努力加载中...', style: TextStyle(
+                color: Colors.grey,
+                fontSize: screenUtil.setSp(28.0)
+              )),
+            )
+          ],
+        )
       );
     }
   }

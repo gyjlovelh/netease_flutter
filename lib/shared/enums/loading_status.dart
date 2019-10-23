@@ -3,7 +3,5 @@
 enum LoadingStatus {
   LOADING,
 
-  COMPLETED,
-
-  IDEL,
+  COMPLETED
 }
