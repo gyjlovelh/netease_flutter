@@ -16,10 +16,13 @@ import 'pages/login/login.dart';
 import 'pages/local_musics/local_musics.dart';
 import 'pages/playlist_square/playlist_square.dart';
 import 'pages/search/search.dart';
+import 'package:path_provider/path_provider.dart';
+
+String sDCardDir;//sd卡项目目录
 
 void main() async {
-
   await Global.init();
+  sDCardDir = (await getExternalStorageDirectory()).path;
   runApp(NeteaseApp());
 }
 

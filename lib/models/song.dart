@@ -1,8 +1,4 @@
 
-import 'package:json_annotation/json_annotation.dart';
-
-part 'song.g.dart';
-@JsonSerializable()
 class SongModel {
   String name;
   int id;
@@ -67,7 +63,7 @@ class SongModel {
     return data;
   }
 }
-@JsonSerializable()
+
 class ArtistModel {
   int id;
   String name;
@@ -86,7 +82,7 @@ class ArtistModel {
     return data;
   }
 }
-@JsonSerializable()
+
 class AlbumModel {
   int id;
   String name;

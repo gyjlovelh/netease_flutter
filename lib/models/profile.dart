@@ -1,8 +1,4 @@
 
-import 'package:json_annotation/json_annotation.dart';
-
-part 'profile.g.dart';
-@JsonSerializable(nullable: true)
 class ProfileModel {
   int authStatus;
   bool followed;

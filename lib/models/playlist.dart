@@ -1,10 +1,7 @@
 
 import 'package:netease_flutter/models/profile.dart';
 import 'package:netease_flutter/models/song.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-part 'playlist.g.dart';
-@JsonSerializable()
 class PlaylistModel {
   List<ProfileModel> subscribers;
   bool subscribed;

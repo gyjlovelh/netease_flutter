@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../shared/widgets/icon_data/icon_data.dart';
+import './scan_local_musics.dart';
 
 class LocalMusics extends StatefulWidget {
   @override
@@ -25,8 +26,8 @@ class _LocalMusicsState extends State<LocalMusics>
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
-            leading: Icon(
-              Icons.backspace,
+            leading: NeteaseIconData(
+              0xe62d,
               color: Colors.black,
             ),
             title: Text('本地音乐',style: TextStyle(color: Colors.black),),
@@ -48,7 +49,7 @@ class _LocalMusicsState extends State<LocalMusics>
               //   onPressed: () {},
               // ),
               PopupMenuButton(
-                icon: Icon(Icons.more,color: Colors.black,),
+                child: NeteaseIconData(0xe8f5,color: Colors.black,),
                 itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
                   PopupMenuItem(child: Text('扫描本地音乐'),),
                   PopupMenuItem(child: Text('选择排序方式'),),
@@ -78,10 +79,10 @@ class _LocalMusicsState extends State<LocalMusics>
           body: TabBarView(
             controller: _tabController,
             children: <Widget>[
-              Text('单曲'),
-              Text('歌手'),
-              Text('专辑'),
-              Text('文件夹'),
+              ScanLocalMusics(),
+              ScanLocalMusics(),
+              ScanLocalMusics(),
+              ScanLocalMusics(),
             ],
           ),
         ),
