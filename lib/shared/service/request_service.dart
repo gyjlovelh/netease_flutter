@@ -214,4 +214,12 @@ class RequestService {
 
     return response.data["result"];
   }
+
+  // 所有榜单内容摘要
+  Future<List> getToplistDetail() async {
+    await Future.delayed(Duration(seconds: 1));
+    Response response = await _request('/toplist/detail');
+
+    return response.data['list'];
+  }
 }

@@ -17,14 +17,23 @@ class _NeteaseFindState extends State<NeteaseFind> {
 
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: Column(
-        children: <Widget>[
-          new NeteaseSwiper(),
-          new NeteaseIconButtons(),
-          Divider(height: screenUtil.setHeight(66.0)),
-          new NeteaseRecommentPlaylist()
-        ],
-      ),
+      child: RefreshIndicator(
+        onRefresh: () async {
+          print('上拉刷新');
+          Future.delayed(Duration(seconds: 2), () {
+            print('object');
+          });
+        },
+        displacement: 50.0,
+        child: Column(
+          children: <Widget>[
+            new NeteaseSwiper(),
+            new NeteaseIconButtons(),
+            Divider(height: screenUtil.setHeight(66.0)),
+            new NeteaseRecommentPlaylist(),
+          ],
+        ),
+      )
     );
   }
 }

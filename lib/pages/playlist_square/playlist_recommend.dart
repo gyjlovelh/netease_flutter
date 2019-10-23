@@ -65,7 +65,7 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
       height = 50.0;
     }
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-
+    
     return Container(
       height: height,
       child: Row(

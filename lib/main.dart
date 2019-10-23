@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:netease_flutter/pages/playlist/playlist.dart';
+import 'package:netease_flutter/pages/rank_list/rank_list.dart';
 import 'package:netease_flutter/pages/search_result/search_result.dart';
 import 'package:netease_flutter/pages/song_detail/song_detail.dart';
 import 'package:netease_flutter/shared/player/music_change.dart';
@@ -8,6 +9,8 @@ import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/states/global.dart';
 import 'package:provider/provider.dart';
 
+import 'pages/advertising/advertising.dart';
+import 'pages/comment/comment.dart';
 import 'pages/home/home.dart';
 import 'pages/login/login.dart';
 import 'pages/local_musics/local_musics.dart';
@@ -72,8 +75,10 @@ class _NetState extends State<NeteaseApp> {
                 )
               )
             ),
-            initialRoute: "home",
+            initialRoute: "advertising",
             routes: {
+              // 广告引导页
+              'advertising': (BuildContext context) => new NeteaseAdvertising(),
               // 登录页
               'login': (BuildContext context) => new NeteaseLogin(),
               // 主页
@@ -90,6 +95,10 @@ class _NetState extends State<NeteaseApp> {
               'search_result': (BuildContext context) => new NeteaseSearchResult(),
               // 本地音乐
               'local_musics': (BuildContext context) => new LocalMusics(),
+              // 排行榜
+              'rank_list': (BuildContext context) => new NeteaseRankList(),
+              // 评论界面 【需要传入Id和评论对象类型】
+              'comment': (BuildContext context) => new NeteaseComment()
             }
           );
         },
