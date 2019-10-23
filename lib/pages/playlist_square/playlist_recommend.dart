@@ -69,7 +69,7 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
       message = '已经到底了';
     }
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-
+    
     return Container(
       height: screenUtil.setHeight(50.0),
       child: Center(

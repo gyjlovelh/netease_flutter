@@ -20,6 +20,22 @@ class NeteasePlaylistSongs extends StatelessWidget {
     final provider = Provider.of<MusicChangeNotifier>(context);
     final stateProvider = Provider.of<MusicPlayerStatus>(context);
 
+    if (detail == null) {
+      return Container(
+        margin: EdgeInsets.only(top: 14.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(25.0),
+            topLeft: Radius.circular(25.0)
+          ),
+          color: Colors.white
+        ),
+        child: Center(
+          child: Text('loading'),
+        ),
+      );
+    }
+
     String scStr;
     if (detail.subscribedCount > 10000) {
       scStr = (detail.subscribedCount ~/ 1000 / 10).toString() + '万';

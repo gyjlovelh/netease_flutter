@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/playlist.dart';
@@ -34,8 +36,14 @@ class NeteasePlaylistActions extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          actionItem(0xe618, label: detail.commentCount.toString()),
-          actionItem(0xe624, label: detail.shareCount.toString()),
+          actionItem(0xe618, label: detail == null ? "评论" : detail.commentCount.toString(), onPressed: () {
+            Navigator.of(context).pushNamed('comment', arguments: json.encode({
+              "id": detail.id,
+              "type": "playlist",
+              "commentCount": detail.commentCount
+            }).toString());
+          }),
+          actionItem(0xe624, label: detail == null ? "分享" : detail.shareCount.toString()),
           actionItem(0xe617, label: '下载'),
           actionItem(0xe618, label: '多选'),
         ],

@@ -40,7 +40,7 @@ class _NeteaseScaffoldState extends State<NeteaseScaffold> {
       left: 0,
       right: 0,
       top: 0,
-      bottom: 0,
+      bottom: ScreenUtil.bottomBarHeight,
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -60,7 +60,7 @@ class _NeteaseScaffoldState extends State<NeteaseScaffold> {
             ),
             ///底部抵消播放条高度
             Container(
-              height: ScreenUtil.bottomBarHeight + 50.0,
+              height: 50.0,
               color: Colors.transparent,
             )
           ],

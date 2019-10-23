@@ -55,7 +55,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white70,
+          color: Colors.white.withOpacity(0.85),
           border: Border(
             top: BorderSide(
               width: screenUtil.setWidth(1.0),
@@ -95,7 +95,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                     Text(
                       song == null ? '-' : song.name, 
                       style: TextStyle(
-                        fontSize: screenUtil.setSp(30.0)
+                        fontSize: screenUtil.setSp(28.0)
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -105,7 +105,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(
-                        fontSize: screenUtil.setSp(24.0)
+                        fontSize: screenUtil.setSp(20.0)
                       ),
                     )
                   ],
