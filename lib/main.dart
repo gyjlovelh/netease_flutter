@@ -19,10 +19,12 @@ import 'pages/search/search.dart';
 import 'package:path_provider/path_provider.dart';
 
 String sDCardDir;//sd卡项目目录
+List<String> mp3Files = List<String>();//本地音乐列表
 
 void main() async {
   await Global.init();
   sDCardDir = (await getExternalStorageDirectory()).path;
+  print('sDCardDir = '+sDCardDir);
   runApp(NeteaseApp());
 }
 
