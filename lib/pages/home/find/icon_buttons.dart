@@ -20,7 +20,7 @@ class NeteaseIconButtons extends StatelessWidget {
             child: NeteaseIconData(pointer, color: Colors.white, size: ScreenUtil.getInstance().setSp(42.0),),
           ),
           Text(label, style: TextStyle(
-            color: Colors.black87,
+            color: Colors.white,
             fontSize: ScreenUtil.getInstance().setSp(24.0)
           ))
         ],

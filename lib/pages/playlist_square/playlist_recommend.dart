@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 import 'package:netease_flutter/shared/widgets/playcount/playcount.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -64,28 +65,10 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
     } else {
       height = 50.0;
     }
-    ScreenUtil screenUtil = ScreenUtil.getInstance();
     
     return Container(
       height: height,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SpinKitWave(
-            size: screenUtil.setSp(36.0),
-            color: Colors.redAccent
-          ),
-          Container(
-            margin: EdgeInsets.only(
-              left: 10.0
-            ),
-            child: Text('努力加载中...', style: TextStyle(
-              color: Colors.grey,
-              fontSize: screenUtil.setSp(28.0)
-            )),
-          )
-        ],
-      )
+      child: NeteaseLoading()
     );
   }
 
@@ -150,7 +133,7 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(
-                          color: Colors.black87,
+                          color: Colors.white70,
                           fontSize: screenUtil.setSp(22.0)
                         ),
                       )
@@ -164,26 +147,7 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
         ],
       );
     } else {
-      return Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SpinKitWave(
-              size: screenUtil.setSp(36.0),
-              color: Colors.redAccent
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                left: 10.0
-              ),
-              child: Text('努力加载中...', style: TextStyle(
-                color: Colors.grey,
-                fontSize: screenUtil.setSp(28.0)
-              )),
-            )
-          ],
-        )
-      );
+      return new NeteaseLoading();
     }
   }
 

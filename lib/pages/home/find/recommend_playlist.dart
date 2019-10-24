@@ -22,6 +22,7 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text('推荐歌单', style: TextStyle(
+                color: Colors.white,
                 fontSize: screenUtil.setSp(36.0),
                 fontWeight: FontWeight.w500
               )),
@@ -39,6 +40,7 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                   ),
                   padding: EdgeInsets.zero,
                   child: Text('歌单广场', style: TextStyle(
+                    color: Colors.white,
                     fontSize: screenUtil.setSp(22.0),
                     fontWeight: FontWeight.w400
                   )),
@@ -132,6 +134,7 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                               maxLines: 2, 
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
+                                color: Colors.white,
                                 fontSize: screenUtil.setSp(24.0)
                               ),
                             )

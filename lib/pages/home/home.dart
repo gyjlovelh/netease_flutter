@@ -123,7 +123,7 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(
-                    'assets/images/theme.jpeg'
+                    'assets/images/theme_1.jpg'
                   ),
                   fit: BoxFit.cover
                 )

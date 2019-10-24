@@ -54,18 +54,7 @@ class _NeteasePlaylistSquareState extends State<NeteasePlaylistSquare> with Sing
         ),
         tabs: _tabs.map((item) {
           return Tab(
-            text: item,
-            // child: Container(
-            //   width: screenUtil.setWidth(150.0),
-            //   child: Text(
-            //     item, 
-            //     textAlign: TextAlign.center,
-            //     style: TextStyle(
-            //       color: Colors.white70,
-            //       fontSize: screenUtil.setSp(30.0)
-            //     )
-            //   ),
-            // ),
+            text: item
           );
         }).toList()
       ),
@@ -73,7 +62,7 @@ class _NeteasePlaylistSquareState extends State<NeteasePlaylistSquare> with Sing
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              'assets/images/theme.jpeg'
+              'assets/images/theme_1.jpg'
             ),
             fit: BoxFit.cover
           )

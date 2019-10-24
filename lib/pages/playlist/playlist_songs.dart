@@ -37,19 +37,24 @@ class NeteasePlaylistSongs extends StatelessWidget {
           topRight: Radius.circular(25.0),
           topLeft: Radius.circular(25.0)
         ),
-        color: Colors.white
+        image: DecorationImage(
+          image: AssetImage('assets/images/theme_1.jpg'),
+          fit: BoxFit.cover
+        )
       ),
       child: Column(
         children: <Widget>[
           ListTile(
             onTap: () {},
             onLongPress: () {},
-            leading: NeteaseIconData(0xe674),
+            leading: NeteaseIconData(0xe674, color: Colors.white70),
             title: Text('播放全部', style: TextStyle(
+              color: Colors.white70,
               fontSize: screenUtil.setSp(30.0)
             )),
             subtitle: status == LoadingStatus.LOADED ? Text('共${detail.trackCount.toString()}首', style: TextStyle(
-              fontSize: screenUtil.setSp(22.0)
+              fontSize: screenUtil.setSp(22.0),
+              color: Colors.white70,
             )) : Text(''),
             dense: true,
             trailing: RaisedButton(
@@ -60,6 +65,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20.0)
               ),
               child: Text('+ 收藏 ($scStr)', style: TextStyle(
+                color: Colors.white70,
                 fontSize: screenUtil.setSp(24.0)
               ))
             ),
@@ -95,7 +101,11 @@ class NeteasePlaylistSongs extends StatelessWidget {
               onLongPress: () {},
               leading: Text(
                 (index + 1).toString(),
-                textAlign: TextAlign.center
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: screenUtil.setSp(30.0)
+                ),
               ),
               enabled: song.url.isNotEmpty,
               title: Text(
@@ -103,6 +113,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 style: TextStyle(
+                  color: Colors.white70,
                   fontSize: screenUtil.setSp(30.0),
                   fontWeight: FontWeight.w500
                 ),
@@ -113,7 +124,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 style: TextStyle(
-                  color: Colors.black54,
+                  color: Colors.white54,
                   fontSize: screenUtil.setSp(24.0)
                 ),
               ),
@@ -126,12 +137,14 @@ class NeteasePlaylistSongs extends StatelessWidget {
                     GestureDetector(
                       child: NeteaseIconData(
                         0xe613,
+                        color: Colors.white70,
                         size: screenUtil.setSp(42.0),
                       ),
                     ),
                     GestureDetector(
                       child: NeteaseIconData(
                         0xe8f5,
+                        color: Colors.white70,
                         size: screenUtil.setSp(42.0),
                       ),
                     ),
@@ -139,7 +152,6 @@ class NeteasePlaylistSongs extends StatelessWidget {
                 )
               ),
               dense: true,
-              isThreeLine: false,
             );
           },
         )

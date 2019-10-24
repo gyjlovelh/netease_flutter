@@ -31,7 +31,8 @@ dependencies:
   path_provider: ^1.4.0
   #Toast
   toast: ^0.1.5
-
+  
+  
 dev_dependencies:
 
 
@@ -42,6 +43,7 @@ flutter:
   assets:
     - assets/images/login_bg.jpg
     - assets/images/theme.jpeg
+    - assets/images/theme_1.jpg
     - assets/images/bg_blur.jpeg
     - assets/images/song_cover_default.jpeg
     - assets/images/avator_default.jpeg
