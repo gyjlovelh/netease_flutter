@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:io';
 import 'package:toast/toast.dart';
 import '../../main.dart';
+import '../../shared/widgets/dialog/loading_dialog.dart';
 
 //本地音乐播放列表
 class ScanLocalMusics extends StatefulWidget {
@@ -22,13 +23,17 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: noneMusic(),
+      child: musicContent(context),
     );
   }
 
   void showFileName() {
     print('开始扫描本地音乐');
     mp3Files.clear();
+
+    // Navigator.of(context).pushNamed('loading');
+    // Navigator.of(context).push(MaterialPageRoute(builder:(context){return LoadingDialog();},));
+    // Navigator.push(context, DialogRouter(LoadingDialog()));
 
     //扫描本地音乐    /storage/emulated/0
     var directory = Directory('/storage/emulated/0');
@@ -57,7 +62,7 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
     }
   }
 
-  Widget noneMusic() {
+  Widget musicContent(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -87,7 +92,12 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
                     style: TextStyle(fontSize: ScreenUtil().setSp(32.0)),
                   ),
                   onPressed: () {
+                    //todo 弹框未生效
+                    Navigator.push(context, DialogRouter(LoadingDialog()));
+                    // Navigator.of(context).pushNamed('playlist_square');
                     showFileName();
+
+                    Navigator.pop(context);
                   },
                 )
               : Container(),

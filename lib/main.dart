@@ -17,6 +17,7 @@ import 'pages/local_musics/local_musics.dart';
 import 'pages/playlist_square/playlist_square.dart';
 import 'pages/search/search.dart';
 import 'package:path_provider/path_provider.dart';
+import './shared/widgets/dialog/loading_dialog.dart';
 
 String sDCardDir;//sd卡项目目录
 List<String> mp3Files = List<String>();//本地音乐列表
@@ -103,7 +104,9 @@ class _NetState extends State<NeteaseApp> {
               // 排行榜
               'rank_list': (BuildContext context) => new NeteaseRankList(),
               // 评论界面 【需要传入Id和评论对象类型】
-              'comment': (BuildContext context) => new NeteaseComment()
+              'comment': (BuildContext context) => new NeteaseComment(),
+              //“加载中”弹框
+              'loading': (BuildContext context) => new LoadingDialog(),
             }
           );
         },
