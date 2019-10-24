@@ -222,4 +222,28 @@ class RequestService {
 
     return response.data['list'];
   }
+
+  ///评论类接口
+  Future getComments({@required int id, int limit, int offset, int before, String type}) async {
+    String url;
+    if (type == "music") {
+      url = "/comment/music";
+    } else if (type == "album") {
+      url = "/comment/album";
+    } else if (type == "playlist") {
+      url = "/comment/playlist";
+    } else if (type == "mv") {
+      url = "/comment/mv";
+    } else {
+      url = "/comment/music";
+    }
+    Response response = await _request(url, queryParameters: {
+      "id": id,
+      "limit": limit,
+      "offset": offset,
+      "before": before
+    });
+
+    return response.data;
+  }
 }

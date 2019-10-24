@@ -95,7 +95,7 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
 
     // 内容区域高度
     double mainHeight = ScreenUtil.screenHeightDp - ScreenUtil.statusBarHeight - ScreenUtil.bottomBarHeight - 130.0;
-    if (_hasMore && _loading == LoadingStatus.COMPLETED) {
+    if (_hasMore && _loading == LoadingStatus.LOADED) {
 
     } else {
       mainHeight -= 50.0;
@@ -210,7 +210,7 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
           _hasInit = true;
         }
         _hasMore = response['more'];
-        _loading = LoadingStatus.COMPLETED;
+        _loading = LoadingStatus.LOADED;
         List playlists = response['playlists'];
         _plist.addAll(playlists);
       });

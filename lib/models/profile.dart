@@ -17,8 +17,6 @@ class ProfileModel {
   String backgroundUrl;
   int authority;
   bool mutual;
-  String expertTags;
-  String experts;
   int djStatus;
   int vipType;
 
@@ -40,8 +38,6 @@ class ProfileModel {
       this.backgroundUrl,
       this.authority,
       this.mutual,
-      this.expertTags,
-      this.experts,
       this.djStatus,
       this.vipType});
 
@@ -63,8 +59,6 @@ class ProfileModel {
     backgroundUrl = json['backgroundUrl'];
     authority = json['authority'];
     mutual = json['mutual'];
-    expertTags = json['expertTags'];
-    experts = json['experts'];
     djStatus = json['djStatus'];
     vipType = json['vipType'];
   }
@@ -88,8 +82,6 @@ class ProfileModel {
     data['backgroundUrl'] = this.backgroundUrl;
     data['authority'] = this.authority;
     data['mutual'] = this.mutual;
-    data['expertTags'] = this.expertTags;
-    data['experts'] = this.experts;
     data['djStatus'] = this.djStatus;
     data['vipType'] = this.vipType;
     return data;

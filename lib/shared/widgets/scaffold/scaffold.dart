@@ -7,11 +7,14 @@ class NeteaseScaffold extends StatefulWidget {
   final Widget body;
   final NeteaseAppBar appBar;
   final TabBar tabbar;
+  final Widget customFooter;
+  // final bool showPlayer;
 
   NeteaseScaffold({
     @required this.body,
     @required this.appBar,
-    this.tabbar
+    this.tabbar,
+    this.customFooter
   });
 
   @override
@@ -109,9 +112,11 @@ class _NeteaseScaffoldState extends State<NeteaseScaffold> {
       right: 0,
       bottom: ScreenUtil.bottomBarHeight,
       height: 50.0,
-      child: new NeteasePlayer(),
+      child: widget.customFooter ?? new NeteasePlayer(),
     );
     contents.add(playerW);
+    
+    
     
     return Scaffold(
       body: ConstrainedBox(

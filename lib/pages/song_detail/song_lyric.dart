@@ -28,34 +28,47 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
   @override
   Widget build(BuildContext context) {
     final notifier = Provider.of<MusicChangeNotifier>(context);
+    ScreenUtil screenUtil = ScreenUtil.getInstance();
     
-    return Expanded(
-      flex: 1,
-      child: Container(
-        padding: EdgeInsets.only(
-          // top: ScreenUtil.getInstance().setHeight(300.0)
-        ),
-        child: ListView(
-          controller: scrollController,
-          children: notifier.lyric.map((item) => Container(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: Text(
-              item['lyric'],
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: ScreenUtil.getInstance().setSp(32.0),
-                shadows: [
-                  Shadow(
-                    color: Colors.black87,
-                    blurRadius: 3.0
-                  )
-                ]
-              )
-            ),
-          )).toList(),
-        ),
-      )
-    );
+    return CustomScrollView(
+        slivers :<Widget>[
+          SliverFixedExtentList(
+            itemExtent: screenUtil.setHeight(500.0),
+            delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+              return Container();
+            }, childCount: 1)
+          ),
+          SliverFixedExtentList(
+            itemExtent: 40.0,
+            delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+              var item = notifier.lyric[index];
+
+              return Container(
+                padding: EdgeInsets.only(bottom: 10.0),
+                child: Text(
+                  item['lyric'],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: screenUtil.setSp(30.0),
+                    shadows: [
+                      Shadow(
+                        color: Colors.black26,
+                        blurRadius: screenUtil.setWidth(8.0)
+                      )
+                    ]
+                  ),
+                ),
+              );
+            }, childCount: notifier.lyric.length),
+          ),
+          SliverFixedExtentList(
+            itemExtent: screenUtil.setHeight(300.0),
+            delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+              return null;
+            }, childCount: 1)
+          ),
+        ]
+      );
   }
 }

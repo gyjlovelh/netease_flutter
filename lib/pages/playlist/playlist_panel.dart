@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/playlist.dart';
 import 'package:netease_flutter/models/playlist_arguments.dart';
+import 'package:netease_flutter/shared/enums/loading_status.dart';
 
 class NeteasePlaylistPanel extends StatefulWidget {
 
   final PlaylistModel detail;
   final PlaylistArguments arguments;
+  final LoadingStatus status;
   
-  NeteasePlaylistPanel({@required this.detail, this.arguments});
+  NeteasePlaylistPanel({@required this.detail, this.arguments, this.status});
 
   @override
   _NeteasePlaylistPanelState createState() => _NeteasePlaylistPanelState();
@@ -17,7 +19,7 @@ class NeteasePlaylistPanel extends StatefulWidget {
 class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
 
   String getPlayCount(int playcount) {
-    if (playcount == 0) {
+    if (widget.status != LoadingStatus.LOADED || playcount == 0) {
       return "";
     }
     return playcount > 10000 ? (playcount ~/ 10000).toString() + '万' : playcount.toString() + '次';
@@ -29,7 +31,7 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
     var detail = widget.detail ?? new PlaylistModel();
 
     Widget avatorW;
-    if (detail != null && detail.creator != null) {
+    if (widget.status == LoadingStatus.LOADED) {
       avatorW = Image.network(
         detail.creator.avatarUrl,
         fit: BoxFit.cover,
@@ -104,7 +106,9 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
                   ),
                 ),
                 FlatButton(
-                  onPressed: () {},
+                  onPressed: widget.status != LoadingStatus.LOADED ? null : () {
+                    
+                  },
                   padding: EdgeInsets.zero,
                   child: Row(
                     children: <Widget>[
@@ -114,7 +118,7 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
                       Padding(
                         padding: EdgeInsets.only(left: screenUtil.setWidth(14.0)),
                         child: Text(
-                          detail.creator != null ? detail.creator.nickname : "",
+                          widget.status == LoadingStatus.LOADED ? detail.creator.nickname : "",
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: TextStyle(
@@ -143,7 +147,6 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
           )
         ],
       )
-    );
-                        
+    );                   
   }
 }

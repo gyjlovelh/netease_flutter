@@ -1,8 +1,10 @@
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:netease_flutter/models/playlist.dart';
 import 'package:netease_flutter/models/song.dart';
+import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/player/music_change.dart';
@@ -11,36 +13,21 @@ import 'package:provider/provider.dart';
 class NeteasePlaylistSongs extends StatelessWidget {
 
   final PlaylistModel detail;
+  final LoadingStatus status;
   
-  NeteasePlaylistSongs({@required this.detail});  
+  NeteasePlaylistSongs({@required this.detail, this.status});  
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    final provider = Provider.of<MusicChangeNotifier>(context);
-    final stateProvider = Provider.of<MusicPlayerStatus>(context);
 
-    if (detail == null) {
-      return Container(
-        margin: EdgeInsets.only(top: 14.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(25.0),
-            topLeft: Radius.circular(25.0)
-          ),
-          color: Colors.white
-        ),
-        child: Center(
-          child: Text('loading'),
-        ),
-      );
-    }
-
-    String scStr;
-    if (detail.subscribedCount > 10000) {
-      scStr = (detail.subscribedCount ~/ 1000 / 10).toString() + '万';
-    } else {
-      scStr = detail.subscribedCount.toString();
+    String scStr = "0";
+    if (status == LoadingStatus.LOADED) {
+      if (detail.subscribedCount > 10000) {
+        scStr = (detail.subscribedCount ~/ 1000 / 10).toString() + '万';
+      } else {
+        scStr = detail.subscribedCount.toString();
+      }
     }
 
     return Container(
@@ -55,13 +42,15 @@ class NeteasePlaylistSongs extends StatelessWidget {
       child: Column(
         children: <Widget>[
           ListTile(
+            onTap: () {},
+            onLongPress: () {},
             leading: NeteaseIconData(0xe674),
             title: Text('播放全部', style: TextStyle(
               fontSize: screenUtil.setSp(30.0)
             )),
-            subtitle: Text('共' + detail.trackCount.toString() + '首', style: TextStyle(
+            subtitle: status == LoadingStatus.LOADED ? Text('共${detail.trackCount.toString()}首', style: TextStyle(
               fontSize: screenUtil.setSp(22.0)
-            )),
+            )) : Text(''),
             dense: true,
             trailing: RaisedButton(
               onPressed: () {},
@@ -75,76 +64,110 @@ class NeteasePlaylistSongs extends StatelessWidget {
               ))
             ),
           ),
-          Container(
-            height: screenUtil.setHeight(900.0),
-            child: ListView.builder(
-              itemCount: detail.tracks.length,
-              itemExtent: screenUtil.setHeight(120.0),
-              itemBuilder: (BuildContext context, int index) {
-                SongModel song = detail.tracks[index];
-                return ListTile(
-                  // 点击播放
-                  onTap: () async {
-                    if (stateProvider.playerState == AudioPlayerState.PLAYING) {
-                      await stateProvider.stop();
-                    }
-                    provider.loadMusic(song);
-                  },
-                  // 复制歌曲名
-                  onLongPress: () {},
-                  leading: Text(
-                    (index + 1).toString(),
-                    textAlign: TextAlign.center
-                  ),
-                  enabled: song.url.isNotEmpty,
-                  title: Text(
-                    song.name,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: screenUtil.setSp(30.0),
-                      fontWeight: FontWeight.w500
-                    ),
-                  ),
-                  // contentPadding: EdgeInsets.zero,
-                  subtitle: Text(
-                    song.ar.map((item) => item.name).join(',') + ' - ' + song.al.name,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: screenUtil.setSp(24.0)
-                    ),
-                  ),
-                  trailing: Container(
-                    // color: Colors.tealAccent,
-                    width: screenUtil.setWidth(110.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        GestureDetector(
-                          child: NeteaseIconData(
-                            0xe613,
-                            size: screenUtil.setSp(42.0),
-                          ),
-                        ),
-                        GestureDetector(
-                          child: NeteaseIconData(
-                            0xe8f5,
-                            size: screenUtil.setSp(42.0),
-                          ),
-                        ),
-                      ],
-                    )
-                  ),
-                  dense: true,
-                  isThreeLine: false,
-                );
-              },
-            )
-          )
+          drawSongs(context)
         ],
       )
     );
+  }
+
+  Widget drawSongs(BuildContext context) {
+    ScreenUtil screenUtil = ScreenUtil.getInstance();
+    final provider = Provider.of<MusicChangeNotifier>(context);
+    final stateProvider = Provider.of<MusicPlayerStatus>(context);
+
+    if (status == LoadingStatus.LOADED) {
+      return Container(
+        height: screenUtil.setHeight(950.0),
+        child: ListView.builder(
+          itemCount: detail.tracks.length,
+          itemExtent: screenUtil.setHeight(120.0),
+          itemBuilder: (BuildContext context, int index) {
+            SongModel song = detail.tracks[index];
+            return ListTile(
+              // 点击播放
+              onTap: () async {
+                if (stateProvider.playerState == AudioPlayerState.PLAYING) {
+                  await stateProvider.stop();
+                }
+                provider.loadMusic(song);
+              },
+              // 复制歌曲名
+              onLongPress: () {},
+              leading: Text(
+                (index + 1).toString(),
+                textAlign: TextAlign.center
+              ),
+              enabled: song.url.isNotEmpty,
+              title: Text(
+                song.name,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: TextStyle(
+                  fontSize: screenUtil.setSp(30.0),
+                  fontWeight: FontWeight.w500
+                ),
+              ),
+              // contentPadding: EdgeInsets.zero,
+              subtitle: Text(
+                song.ar.map((item) => item.name).join(',') + ' - ' + song.al.name,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: screenUtil.setSp(24.0)
+                ),
+              ),
+              trailing: Container(
+                // color: Colors.tealAccent,
+                width: screenUtil.setWidth(110.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    GestureDetector(
+                      child: NeteaseIconData(
+                        0xe613,
+                        size: screenUtil.setSp(42.0),
+                      ),
+                    ),
+                    GestureDetector(
+                      child: NeteaseIconData(
+                        0xe8f5,
+                        size: screenUtil.setSp(42.0),
+                      ),
+                    ),
+                  ],
+                )
+              ),
+              dense: true,
+              isThreeLine: false,
+            );
+          },
+        )
+      );
+    } else {
+      return Container(
+        height: screenUtil.setHeight(500.0),
+        child: Center(
+          child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SpinKitWave(
+                size: screenUtil.setSp(36.0),
+                color: Colors.redAccent
+              ),
+              Container(
+                margin: EdgeInsets.only(
+                  left: 10.0
+                ),
+                child: Text('努力加载中...', style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: screenUtil.setSp(28.0)
+                )),
+              )
+            ],
+          ),
+        ),
+      );
+    }
   }
 }

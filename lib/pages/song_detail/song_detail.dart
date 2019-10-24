@@ -17,6 +17,14 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
 
   bool showLyric = false;
 
+  Widget showMain(SongModel song) {
+    if (showLyric) {
+      return new NeteaseSongLyric();
+    } else {
+      return new NeteaseSongCover(song: song);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
@@ -56,7 +64,17 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
         child: Flex(
           direction: Axis.vertical,
           children: <Widget>[
-            new NeteaseSongCover(song: song),
+            Expanded(
+              flex: 1,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    showLyric = !showLyric;
+                  });
+                },
+                child: showMain(song),
+              ),
+            ),
             // new NeteaseSongLyric(),
             new NeteasePlayIconAction(song: song)
           ],
