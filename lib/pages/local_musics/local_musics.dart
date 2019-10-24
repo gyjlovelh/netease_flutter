@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../shared/widgets/icon_data/icon_data.dart';
 import './scan_local_musics.dart';
+import '../../main.dart';
+import 'dart:io';
 
 class LocalMusics extends StatefulWidget {
   @override
@@ -8,8 +10,9 @@ class LocalMusics extends StatefulWidget {
 }
 
 class _LocalMusicsState extends State<LocalMusics>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin { //SingleTickerProviderStateMixin
   TabController _tabController;
+
   @override
   void setState(fn) {
     // TODO: implement setState
@@ -30,7 +33,10 @@ class _LocalMusicsState extends State<LocalMusics>
               0xe62d,
               color: Colors.black,
             ),
-            title: Text('本地音乐',style: TextStyle(color: Colors.black),),
+            title: Text(
+              '本地音乐',
+              style: TextStyle(color: Colors.black),
+            ),
             actions: <Widget>[
               IconButton(
                 icon: NeteaseIconData(
@@ -49,12 +55,40 @@ class _LocalMusicsState extends State<LocalMusics>
               //   onPressed: () {},
               // ),
               PopupMenuButton(
-                child: NeteaseIconData(0xe8f5,color: Colors.black,),
+                child: Container(
+                  margin: EdgeInsets.only(right: 4.0),
+                  child: NeteaseIconData(
+                    0xe8f5,
+                    color: Colors.black,
+                  ),
+                ),
                 itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-                  PopupMenuItem(child: Text('扫描本地音乐'),),
-                  PopupMenuItem(child: Text('选择排序方式'),),
-                  PopupMenuItem(child: Text('获取封面歌词'),),
-                  PopupMenuItem(child: Text('升级音质'),)
+                  PopupMenuItem(
+                    child: GestureDetector(
+                      child: Text('扫描本地音乐'),
+                      onTap: () {
+                        print('开始扫描本地音乐');
+                        mp3Files.clear();
+                        //todo 扫描本地音乐    /storage/emulated/0
+                        var directory = Directory('/storage/emulated/0');
+                        List<FileSystemEntity> files = directory.listSync();
+                        print('files.length = ' + files.length.toString());
+                        for (int i = 0; i < files.length; i++) {
+                          // fileName = files[i].path;
+                          getAllfilesInDir(files[i]);
+                        }
+                      },
+                    ),
+                  ),
+                  PopupMenuItem(
+                    child: Text('选择排序方式'),
+                  ),
+                  PopupMenuItem(
+                    child: Text('获取封面歌词'),
+                  ),
+                  PopupMenuItem(
+                    child: Text('升级音质'),
+                  )
                 ],
               )
             ],
@@ -129,5 +163,31 @@ class _LocalMusicsState extends State<LocalMusics>
       //   ),
       // ),
     );
+  }
+
+  void getAllfilesInDir(FileSystemEntity file) {
+    if (FileSystemEntity.isFileSync(file.path)) {
+      //判断是文件还是文件夹
+      //判断是否是.mp3文件
+      if (file.path.endsWith('.mp3')) {
+        setState(() {
+          mp3Files.add(file.path);
+          print('mp3Files.length = '+mp3Files.length.toString());
+          // fileName = file.path;
+          // print('---------->>>>>>>>>>>>>>>>filename:' + fileName);
+        });
+      }
+    } else {
+      List<FileSystemEntity> files2 = Directory(file.path).listSync();
+      if (files2 != null && files2.length != 0) {
+        for (int j = 0; j < files2.length; j++) {
+          // setState(() {
+          // fileName = files2[j].path;
+          // print('---------->>>>>>>>>>>>>>>>filename:' + fileName);
+          // });
+          getAllfilesInDir(files2[j]);
+        }
+      } else {}
+    }
   }
 }
