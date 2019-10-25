@@ -14,7 +14,6 @@ class ScanLocalMusics extends StatefulWidget {
 
 class ScanLocalMusicsState extends State<ScanLocalMusics>
     with AutomaticKeepAliveClientMixin {
-  
   //切换时保持页面状态
   @override
   // TODO: implement wantKeepAlive
@@ -45,7 +44,8 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
   }
 
   void getAllfilesInDir(FileSystemEntity file) {
-    if (FileSystemEntity.isFileSync(file.path)) {//判断是文件还是文件夹
+    if (FileSystemEntity.isFileSync(file.path)) {
+      //判断是文件还是文件夹
       //判断是否是.mp3文件
       if (file.path.endsWith('.mp3')) {
         setState(() {
@@ -93,11 +93,38 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
                   ),
                   onPressed: () {
                     //todo 弹框未生效
-                    Navigator.push(context, DialogRouter(LoadingDialog()));
+                    // Navigator.push(context, DialogRouter(LoadingDialog()));
                     // Navigator.of(context).pushNamed('playlist_square');
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('扫描中...'),
+                          );
+                        },
+                        barrierDismissible: false);
+
                     showFileName();
 
                     Navigator.pop(context);
+
+                    if (mp3Files.length == 0) {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('未扫描到音乐文件!'),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text('确定'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          });
+                    }
                   },
                 )
               : Container(),
@@ -106,17 +133,28 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
               itemCount: mp3Files.length,
               itemBuilder: (context, index) {
                 String path = mp3Files[index];
-                return GestureDetector(
-                  onTap: () {
-                    //todo 播放音乐
-                    Toast.show('播放音乐 : '+path.substring(path.lastIndexOf('/') + 1), context);
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(left: 4.0),
-                    padding: EdgeInsets.only(top: 4.0),
-                    width: double.infinity,
-                    child: Text(path.substring(path.lastIndexOf('/') + 1)),
-                  ),
+                return Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        //todo 播放音乐
+                        Toast.show(
+                            '播放音乐 : ' +
+                                path.substring(path.lastIndexOf('/') + 1),
+                            context);
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 4.0),
+                        padding: EdgeInsets.only(top: 4.0),
+                        width: double.infinity,
+                        child: Text(path.substring(path.lastIndexOf('/') + 1)),
+                      ),
+                    ),
+                    Divider(
+                      color: Colors.grey,
+                      height: ScreenUtil().setHeight(0.5),
+                    ),
+                  ],
                 );
               },
             ),

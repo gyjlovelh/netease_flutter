@@ -5,7 +5,6 @@ import 'package:netease_flutter/models/song.dart';
 import '../../models/playlist.dart';
 
 class RequestService {
-
   static Dio _dio;
 
   static String _baseUrl;
@@ -18,24 +17,20 @@ class RequestService {
     _baseUrl = baseUrl;
     _dio = new Dio();
 
-    _dio.interceptors.add(InterceptorsWrapper(
-      onResponse: (Response response) {
-        if (response.statusCode == 200) {
-          return response;
-        } else {
-          showDialog(
+    _dio.interceptors.add(InterceptorsWrapper(onResponse: (Response response) {
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        showDialog(
             context: _context,
             builder: (context) => AlertDialog(
-              content: Text(response.toString()),
-            )
-          );
-          return response;
-        }
-      },
-      onError: (DioError e) {
-        return e;
+                  content: Text(response.toString()),
+                ));
+        return response;
       }
-    ));
+    }, onError: (DioError e) {
+      return e;
+    }));
   }
 
   static RequestService getInstance({@required BuildContext context}) {
@@ -52,7 +47,7 @@ class RequestService {
 
   RequestService._();
 
-  Future<Response<T>> _request<T> (
+  Future<Response<T>> _request<T>(
     String path, {
     data,
     Map<String, dynamic> queryParameters,
@@ -61,53 +56,48 @@ class RequestService {
     ProgressCallback onSendProgress,
     ProgressCallback onReceiveProgress,
   }) async {
-
-    return await _dio.post(
-      _baseUrl + path,
-      data: data,
-      queryParameters: queryParameters,
-      options: options,
-      cancelToken: cancelToken,
-      onSendProgress: onSendProgress,
-      onReceiveProgress: onReceiveProgress
-    );
+    return await _dio.post(_baseUrl + path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress);
   }
 
   /*
    * 手机号登录
    */
   Future<ProfileModel> login({String phone, String password}) async {
-    Response response = await _request('/login/cellphone', queryParameters: {
-      "phone": phone,
-      "password": password
-    });
-    
-    return ProfileModel.fromJson( response.data['profile'] );
+    Response response = await _request('/login/cellphone',
+        queryParameters: {"phone": phone, "password": password});
+
+    return ProfileModel.fromJson(response.data['profile']);
   }
 
   /*
    * 轮播图数据
    */
   Future<List> getBanner() async {
-    Response response = await _request('/banner', queryParameters: {
-      "type": 2
-    });
+    Response response = await _request('/banner', queryParameters: {"type": 2});
 
     return response.data['banners'];
   }
 
   // 获取推荐歌单
   Future<List> getRecommendPlaylist() async {
-    Response response = await _request('/personalized', queryParameters: {"limit": 6});
+    Response response =
+        await _request('/personalized', queryParameters: {"limit": 6});
     return response.data['result'];
   }
 
   // 获取歌曲详情
   Future<SongModel> getSongDetail(int id) async {
-    Response response = await _request('/song/detail', queryParameters: {"ids": id});
+    Response response =
+        await _request('/song/detail', queryParameters: {"ids": id});
     Response urlRes = await _request('/song/url', queryParameters: {"id": id});
 
-    SongModel song = SongModel.fromJson( response.data['songs'][0] );
+    SongModel song = SongModel.fromJson(response.data['songs'][0]);
     song.url = urlRes.data['data'][0]['url'];
 
     return song;
@@ -137,7 +127,8 @@ class RequestService {
       });
 
       temp.forEach((line) {
-        String time = pattern.stringMatch(line).replaceAll(new RegExp(r'\[|\]'), '');
+        String time =
+            pattern.stringMatch(line).replaceAll(new RegExp(r'\[|\]'), '');
         String word = line.replaceAll(pattern, '');
         result.add({"time": time, "lyric": word});
       });
@@ -148,10 +139,12 @@ class RequestService {
 
   // 获取歌单详情
   Future<PlaylistModel> getPlaylistDetail(int id) async {
-    Response response = await _request('/playlist/detail', queryParameters: {"id": id});
-    PlaylistModel model = PlaylistModel.fromJson( response.data['playlist'] );
+    Response response =
+        await _request('/playlist/detail', queryParameters: {"id": id});
+    PlaylistModel model = PlaylistModel.fromJson(response.data['playlist']);
     String trackIds = model.tracks.map((item) => item.id).join(',');
-    Response urlRes = await _request('/song/url', queryParameters: {"id": trackIds});
+    Response urlRes =
+        await _request('/song/url', queryParameters: {"id": trackIds});
     List list = urlRes.data['data'];
 
     model.tracks.asMap().forEach((int index, SongModel item) {
@@ -168,23 +161,17 @@ class RequestService {
 
   Future getPlaylist({int limit, int before, String cat}) async {
     await Future.delayed(Duration(seconds: 2));
-    Response response = await _request('/top/playlist', queryParameters: {
-      "cat": cat,
-      "limit": limit,
-      "before": before
-    });
+    Response response = await _request('/top/playlist',
+        queryParameters: {"cat": cat, "limit": limit, "before": before});
 
     return response.data;
   }
-  
+
   // 获取精品歌单
   Future getPlaylistHighquality({int limit, int before, String cat}) async {
     await Future.delayed(Duration(seconds: 1));
-    Response response = await _request('/top/playlist/highquality', queryParameters: {
-      "cat": cat,
-      "limit": limit,
-      "before": before
-    });
+    Response response = await _request('/top/playlist/highquality',
+        queryParameters: {"cat": cat, "limit": limit, "before": before});
 
     return response.data;
   }
@@ -203,7 +190,8 @@ class RequestService {
   }
 
   // 按照类型搜索
-  Future getSearchResult({String keywords, int type, int limit, int offset}) async {
+  Future getSearchResult(
+      {String keywords, int type, int limit, int offset}) async {
     await Future.delayed(Duration(seconds: 1));
     Response response = await _request("/search", queryParameters: {
       "keywords": keywords,
@@ -224,7 +212,12 @@ class RequestService {
   }
 
   ///评论类接口
-  Future getComments({@required int id, int limit, int offset, int before, String type}) async {
+  Future getComments(
+      {@required int id,
+      int limit,
+      int offset,
+      int before,
+      String type}) async {
     String url;
     if (type == "music") {
       url = "/comment/music";
@@ -243,6 +236,39 @@ class RequestService {
       "offset": offset,
       "before": before
     });
+
+    return response.data;
+  }
+
+  //创建的歌单
+  Future getPlayList() async {
+    Response response =
+        await _request('/user/playlist', queryParameters: {'uid': 406330413});
+
+    return response.data;
+  }
+
+  //新建歌单  todo 报错：301
+  Future addPlayList(String name, bool isPrivacy) async {
+    Response response;
+    switch (isPrivacy) {
+      case false:
+        response = await _request('/playlist/create',
+            queryParameters: {'name': 406330413});
+        break;
+      case true:
+        response = await _request('/playlist/create',
+            queryParameters: {'name': 406330413, 'privacy': 10});
+        break;
+    }
+
+    return response.data;
+  }
+
+  //删除歌单
+  Future deletePlayList(int id) async {
+    Response response =
+        await _request('/playlist/delete', queryParameters: {'id': id});
 
     return response.data;
   }
