@@ -85,6 +85,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                   child: Stack(
                     overflow: Overflow.visible,
                     children: <Widget>[
+                      // 背景条
                       Container(
                         width: screenUtil.setWidth(500.0),
                         height: screenUtil.setHeight(3.0),
@@ -92,6 +93,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                           color: Colors.white30
                         ),
                       ),
+                      // 左侧已播放进度条
                       Positioned(
                         left: screenUtil.setWidth(0.0),
                         child: ClipRRect(
@@ -105,6 +107,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                           ),
                         ),
                       ),
+                      // 进度条拖拽点
                       Positioned(
                         left: screenUtil.setWidth(progress(stateController.current, stateController.duration) - 3),
                         top: screenUtil.setHeight(-7.0),

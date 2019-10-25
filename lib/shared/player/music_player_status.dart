@@ -53,6 +53,7 @@ class MusicPlayerStatus with ChangeNotifier {
 
   Future stop() async {
     await this._player.stop();
+    this._current = 0;
     this._playStatus = AudioPlayerState.STOPPED;
   }
 

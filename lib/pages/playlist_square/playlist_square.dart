@@ -43,7 +43,7 @@ class _NeteasePlaylistSquareState extends State<NeteasePlaylistSquare> with Sing
         labelPadding: EdgeInsets.symmetric(
           horizontal: screenUtil.setWidth(50.0)
         ),
-        labelColor: Colors.redAccent,
+        labelColor: Theme.of(context).textSelectionColor,
         labelStyle: TextStyle(
           fontSize: screenUtil.setSp(28.0),
           fontWeight: FontWeight.bold

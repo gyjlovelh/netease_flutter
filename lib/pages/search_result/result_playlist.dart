@@ -69,7 +69,7 @@ class _ResultPlaylistState extends State<ResultPlaylist> {
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
       style: TextStyle(
-        color: Colors.black45,
+        color: Colors.white70,
         fontSize: ScreenUtil.getInstance().setSp(22.0)
       )
     );
@@ -89,7 +89,11 @@ class _ResultPlaylistState extends State<ResultPlaylist> {
             PlaylistModel model = PlaylistModel.fromJson(item);
             return ListTile(
               onTap: () {
-                Navigator.of(context).pushNamed('playlist', arguments: json.encode({"id": model.id}).toString());
+                Navigator.of(context).pushNamed('playlist', arguments: json.encode({
+                  "id": model.id, 
+                  "name": model.name,
+                  "coverImgUrl": model.coverImgUrl
+                }).toString());
               },
               leading: Container(
                 width: screenUtil.setHeight(90.0),
@@ -105,7 +109,7 @@ class _ResultPlaylistState extends State<ResultPlaylist> {
                 ),
               ),
               title: Text(model.name, style: TextStyle(
-                color: Colors.black87,
+                color: Colors.white,
                 fontSize: screenUtil.setSp(28.0)
               )),
               subtitle: getSubtitle(model),

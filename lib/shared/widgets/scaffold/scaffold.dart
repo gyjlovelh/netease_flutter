@@ -140,7 +140,7 @@ class NeteaseAppBar extends StatelessWidget {
   NeteaseAppBar({
     @required this.title,
     this.subtitle,
-    this.backgroundColor = const Color.fromRGBO(75, 49, 49, 0.1),
+    this.backgroundColor = const Color.fromRGBO(17, 60, 103, 1),
     this.actions
   });
 

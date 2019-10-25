@@ -78,7 +78,7 @@ class _ResultSingerState extends State<ResultSinger> {
                 ),
               ),
               title: Text(item['name'], style: TextStyle(
-                color: Colors.black87,
+                color: Colors.white,
                 fontSize: screenUtil.setSp(28.0)
               )),
               trailing: Container(
@@ -98,10 +98,13 @@ class _ResultSingerState extends State<ResultSinger> {
                       child: NeteaseIconData(
                         0xe68e,
                         color: Colors.white,
-                        size: screenUtil.setSp(20.0),
+                        size: screenUtil.setSp(18.0),
                       ),
                     ),
-                    Text('已入驻')
+                    Text('已入驻', style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: screenUtil.setSp(24.0)
+                    ))
                   ],
                 ),
               ),

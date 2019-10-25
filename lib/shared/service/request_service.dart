@@ -129,8 +129,13 @@ class RequestService {
       temp.forEach((line) {
         String time =
             pattern.stringMatch(line).replaceAll(new RegExp(r'\[|\]'), '');
+
+        List<String> times = time.split('.')[0].split(':');
+        int minute = int.parse(times[0]);
+        int second = int.parse(times[1]);
+
         String word = line.replaceAll(pattern, '');
-        result.add({"time": time, "lyric": word});
+        result.add({"time": time, "lyric": word, "second": minute * 60 + second});
       });
       return result;
     }

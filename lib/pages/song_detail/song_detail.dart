@@ -46,13 +46,7 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
               fontSize: screenUtil.setSp(24.0)
             ))
           ],
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.share),
-            onPressed: () {},
-          ),
-        ],
+        )
       ),
       body: Container(
         decoration: BoxDecoration(

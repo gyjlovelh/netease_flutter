@@ -51,8 +51,8 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
 
   @override
   void dispose() {
-    controller.dispose();
     subscription.cancel();
+    controller.dispose();
     super.dispose();
   }
 

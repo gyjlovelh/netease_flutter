@@ -59,7 +59,7 @@ class _ResultSongState extends State<ResultSong> {
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
         style: TextStyle(
-        color: Colors.black87,
+        color: Colors.white,
         fontSize: screenUtil.setSp(28.0)
       ))
     );
@@ -78,7 +78,7 @@ class _ResultSongState extends State<ResultSong> {
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
         style: TextStyle(
-          color: Colors.black38,
+          color: Colors.white70,
           fontSize: screenUtil.setSp(24.0)
         ),
       ),
@@ -105,7 +105,7 @@ class _ResultSongState extends State<ResultSong> {
                   child: NeteaseIconData(
                     0xe8f5,
                     size: screenUtil.setSp(36.0),
-                    color: Colors.black26,
+                    color: Colors.white70,
                   ),
                   onTap: () {},
                 ),

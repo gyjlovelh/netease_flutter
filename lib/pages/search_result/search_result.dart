@@ -87,7 +87,7 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              'assets/images/theme.jpeg'
+              'assets/images/theme_1.jpg'
             ),
             fit: BoxFit.cover
           )

@@ -41,7 +41,8 @@ class _NeteaseSwiperState extends State<NeteaseSwiper> {
                     image: DecorationImage(
                       image: NetworkImage(item.pic),
                       fit: BoxFit.cover
-                    )
+                    ),
+                    color: Colors.white70
                   ),
                   child: Align(
                     alignment: Alignment.bottomRight,

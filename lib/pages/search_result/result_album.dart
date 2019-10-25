@@ -69,9 +69,10 @@ class _ResultAlbumState extends State<ResultAlbum> {
               ),
               title: Text(item['name'], style: TextStyle(
                 fontSize: screenUtil.setSp(28.0),
-                color: Colors.black87
+                color: Colors.white
               )),
               subtitle: Text(item['artist']['name'], style: TextStyle(
+                color: Colors.white70,
                 fontSize: screenUtil.setSp(22.0)
               )),
             );

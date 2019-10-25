@@ -105,7 +105,7 @@ class _ResultUserState extends State<ResultUser> {
                         right: 5.0,
                       ),
                       child: Text(profile.nickname, style: TextStyle(
-                        color: Colors.black87,
+                        color: Colors.white,
                         fontSize: screenUtil.setSp(28.0)
                       )),
                     ),
@@ -117,7 +117,7 @@ class _ResultUserState extends State<ResultUser> {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 style: TextStyle(
-                  color: Colors.black38,
+                  color: Colors.white70,
                   fontSize: screenUtil.setSp(20.0)
                 )
               ),
