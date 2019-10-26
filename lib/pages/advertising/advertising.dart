@@ -49,10 +49,10 @@ class _NeteaseAdvertisingState extends State<NeteaseAdvertising> {
           )
         ),
         child: Align(
-          alignment: Alignment.topRight,
+          alignment: Alignment.bottomRight,
           child: Padding(
             padding: EdgeInsets.only(
-              top: 50.0,
+              bottom: 50.0,
               right: 30.0
             ),
             child: Container(
