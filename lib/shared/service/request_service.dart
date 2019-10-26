@@ -270,7 +270,7 @@ class RequestService {
     return response.data;
   }
 
-  //删除歌单
+  //删除歌单 todo 报错：301
   Future deletePlayList(int id) async {
     Response response =
         await _request('/playlist/delete', queryParameters: {'id': id});

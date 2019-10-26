@@ -31,6 +31,7 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
           list.map((i) => PlaylistModel.fromJson(i)).toList();
       for (int i = 0; i < playList.length; i++) {
         musicList.add(MusicListVO(
+            id: playList[i].id,
             header: playList[i].coverImgUrl,
             title: playList[i].name,
             trackCount: playList[i].trackCount));
@@ -508,13 +509,18 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
         return AlertDialog(
           title: Text('确定要删除此歌单吗？'),
           actions: <Widget>[
-            RaisedButton(child: Text('取消',style: TextStyle(color: Colors.red),),onPressed: (){
+            RaisedButton(color: Colors.white,child: Text('取消',style: TextStyle(color: Colors.red),),onPressed: (){
               Navigator.of(context).pop();
             },),
-            RaisedButton(child: Text('确定',style: TextStyle(color: Colors.red),),onPressed: (){
+            RaisedButton(color: Colors.white,child: Text('确定',style: TextStyle(color: Colors.red),),onPressed: (){
               Navigator.of(context).pop();
               //todo 删除歌单
-              // RequestService.getInstance(context: context).deletePlayList(musicList[index].);
+              RequestService.getInstance(context: context).deletePlayList(musicList[index].id)
+              .then((val){
+                setState(() {
+                  Toast.show('删除成功', context);
+                });
+              });
             },),
           ],
         );
