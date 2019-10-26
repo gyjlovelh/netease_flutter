@@ -107,7 +107,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
                   fontSize: screenUtil.setSp(30.0)
                 ),
               ),
-              enabled: song.url.isNotEmpty,
+              enabled: song != null && song.url != null && song.url.isNotEmpty,
               title: Text(
                 song.name,
                 overflow: TextOverflow.ellipsis,
@@ -130,18 +130,19 @@ class NeteasePlaylistSongs extends StatelessWidget {
               ),
               trailing: Container(
                 // color: Colors.tealAccent,
-                width: screenUtil.setWidth(110.0),
+                width: screenUtil.setWidth(50.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
+                    // GestureDetector(
+                    //   child: NeteaseIconData(
+                    //     0xe613,
+                    //     color: Colors.white70,
+                    //     size: screenUtil.setSp(42.0),
+                    //   ),
+                    // ),
                     GestureDetector(
-                      child: NeteaseIconData(
-                        0xe613,
-                        color: Colors.white70,
-                        size: screenUtil.setSp(42.0),
-                      ),
-                    ),
-                    GestureDetector(
+                      onTap: () {},
                       child: NeteaseIconData(
                         0xe8f5,
                         color: Colors.white70,

@@ -48,6 +48,8 @@ flutter:
     - assets/images/song_cover_default.jpeg
     - assets/images/avator_default.jpeg
     - assets/images/ad_cover.jpeg
+    - assets/images/player_bar.jpg
+    - assets/images/lyric_bg.jpg
     
   fonts:
     - family: iconfont

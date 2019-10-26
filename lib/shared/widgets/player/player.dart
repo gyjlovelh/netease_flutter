@@ -55,7 +55,10 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.85),
+          image: DecorationImage(
+            image: AssetImage('assets/images/player_bar.jpg'),
+            fit: BoxFit.cover
+          ),
           border: Border(
             top: BorderSide(
               width: screenUtil.setWidth(1.0),
@@ -75,7 +78,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                 decoration: BoxDecoration(
                   border: Border.all(
                     width: screenUtil.setWidth(1.0),
-                    color: Colors.redAccent
+                    color: Theme.of(context).primaryColor
                   ),
                   borderRadius: BorderRadius.circular(99.0),
                   image: DecorationImage(
@@ -95,6 +98,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                     Text(
                       song == null ? '-' : song.name, 
                       style: TextStyle(
+                        color: Colors.white,
                         fontSize: screenUtil.setSp(28.0)
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -105,6 +109,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(
+                        color: Colors.white70,
                         fontSize: screenUtil.setSp(20.0)
                       ),
                     )
@@ -129,7 +134,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                   icon: NeteaseIconData(
                     iconPointer(musicUrl != null && musicUrl.isNotEmpty, stateController.playerState),
                     size: screenUtil.setSp(54.0),
-                    color: Colors.black54,
+                    color: Colors.white70,
                   ),
                 )
               ),
@@ -143,7 +148,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                   icon: NeteaseIconData(
                     0xe604,
                     size: screenUtil.setSp(54.0),
-                    color: Colors.black54,
+                    color: Colors.white70,
                   ),
                 )
               ),

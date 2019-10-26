@@ -60,11 +60,20 @@ class _NetState extends State<NeteaseApp> {
               primaryColor: Color.fromRGBO(17, 60, 103, 1),
               textSelectionColor: Color.fromRGBO(38, 150, 167, 1),
               scaffoldBackgroundColor: Color.fromRGBO(17, 60, 103, 1),
-          
+              
+              disabledColor: Colors.white24,
+              
               accentColor: Colors.teal,
               fontFamily: 'iconfont',
               iconTheme: IconThemeData(
                 color: Colors.red
+              ),
+              // 播放条滑块样式
+              sliderTheme: SliderThemeData(
+                trackHeight: 1.5,
+                activeTrackColor: Colors.tealAccent,
+                inactiveTrackColor: Colors.grey,
+                thumbColor: Colors.white
               ),
               // tabbar样式
               tabBarTheme: TabBarTheme(

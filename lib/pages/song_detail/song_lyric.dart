@@ -21,7 +21,8 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
   @override
   void initState() {
     super.initState();
-    scrollController = new ScrollController(initialScrollOffset: ScreenUtil.getInstance().setHeight(300.0));
+  
+    scrollController = new ScrollController(initialScrollOffset: 0);
 
     _scrollListener = () {};
     scrollController.addListener(_scrollListener);
@@ -81,10 +82,10 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: _focusIndex == item['second'] ? Colors.tealAccent : Colors.white,
-                  fontSize: screenUtil.setSp(30.0),
+                  fontSize: screenUtil.setSp(28.0),
                   shadows: [
                     Shadow(
-                      color: Colors.black26,
+                      color: Theme.of(context).primaryColor,
                       blurRadius: screenUtil.setWidth(8.0)
                     )
                   ]
@@ -94,7 +95,7 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
           }, childCount: notifier.lyric.length),
         ),
         SliverFixedExtentList(
-          itemExtent: screenUtil.setHeight(300.0),
+          itemExtent: screenUtil.setHeight(400.0),
           delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
             return null;
           }, childCount: 1)

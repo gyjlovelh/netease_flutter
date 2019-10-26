@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/pages/song_detail/song_lyric.dart';
 import 'package:netease_flutter/shared/player/music_change.dart';
+import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
 import 'package:provider/provider.dart';
 
 import 'play_icon_action.dart';
@@ -34,7 +35,6 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black45,
         title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,29 +49,34 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
         )
       ),
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/bg_blur.jpeg'),
-            fit: BoxFit.cover
-          )
-        ),
-        child: Flex(
-          direction: Axis.vertical,
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    showLyric = !showLyric;
-                  });
-                },
-                child: showMain(song),
+        // onPointerMove: (PointerMoveEvent event) => setState(() => print(event)),
+        // 进度条拖拽结束
+        // onPointerUp: (PointerUpEvent event) => setState(() => print(event)),
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/lyric_bg.jpg'),
+              fit: BoxFit.cover
+            )
+          ),
+          child: Flex(
+            direction: Axis.vertical,
+            children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      showLyric = !showLyric;
+                    });
+                  },
+                  child: showMain(song),
+                ),
               ),
-            ),
-            // new NeteaseSongLyric(),
-            new NeteasePlayIconAction(song: song)
-          ],
+              // new NeteaseSongLyric(),
+              new NeteasePlayIconAction(song: song)
+            ],
+          ),
         ),
       )
     );

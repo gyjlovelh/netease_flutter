@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,6 +21,9 @@ class NeteasePlayIconAction extends StatefulWidget {
 
 class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with SingleTickerProviderStateMixin {
   
+  bool _isPointerDown = false;
+  double _sliderValue = 0;
+
   @override
   void initState() {
     super.initState();
@@ -61,7 +66,6 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
     return Expanded(
       flex: 0,
       child: Container(
-        // color: Colors.deepOrange,
         height: screenUtil.setHeight(240.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,47 +86,23 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                   ),
                 ),
                 Container(
-                  child: Stack(
-                    overflow: Overflow.visible,
-                    children: <Widget>[
-                      // 背景条
-                      Container(
-                        width: screenUtil.setWidth(500.0),
-                        height: screenUtil.setHeight(3.0),
-                        decoration: BoxDecoration(
-                          color: Colors.white30
-                        ),
-                      ),
-                      // 左侧已播放进度条
-                      Positioned(
-                        left: screenUtil.setWidth(0.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(screenUtil.setWidth(10.0)),
-                          child: Container(
-                            width: screenUtil.setWidth(
-                              progress(stateController.current, stateController.duration)
-                            ),
-                            height: screenUtil.setHeight(3.0),
-                            color: Colors.white70,
-                          ),
-                        ),
-                      ),
-                      // 进度条拖拽点
-                      Positioned(
-                        left: screenUtil.setWidth(progress(stateController.current, stateController.duration) - 3),
-                        top: screenUtil.setHeight(-7.0),
-                        child: GestureDetector(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(99.0),
-                              color: Colors.white
-                            ),
-                            width: screenUtil.setWidth(17.0),
-                            height: screenUtil.setWidth(17.0)
-                          ),
-                        )
-                      )
-                    ],
+                  width: screenUtil.setWidth(500.0),
+                  child: Slider(
+                    min: 0,
+                    max: stateController.duration.toDouble() ?? 100,
+                    value: _isPointerDown ? _sliderValue : stateController.current.toDouble(),
+                    onChanged: (double v) => setState(() => _sliderValue = v),
+                    onChangeStart: (double v) => setState(() => _isPointerDown = true),
+                    onChangeEnd: (double v) {      
+                      // 防止圆点抖动
+                      Timer(Duration(milliseconds: 500), () {
+                        _isPointerDown = false;
+                      });
+                      setState(() {
+                        _sliderValue = v;
+                        stateController.audioPlayer.seek(v);
+                      });
+                    },
                   ),
                 ),
                 Container(

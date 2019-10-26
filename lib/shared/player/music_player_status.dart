@@ -32,8 +32,8 @@ class MusicPlayerStatus with ChangeNotifier {
 
     _player.onPlayerStateChanged.listen((AudioPlayerState state) {
       this._playStatus = state;
-      // notifyListeners();
-      print(state);
+      notifyListeners();
+      // print(state);
     });
   }
 
@@ -42,19 +42,20 @@ class MusicPlayerStatus with ChangeNotifier {
   Future play(String url) async {
     await this._player.play(url);
     this._playStatus = AudioPlayerState.PLAYING;
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future pause() async {
     await this._player.pause();
     this._playStatus = AudioPlayerState.PAUSED;
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future stop() async {
     await this._player.stop();
     this._current = 0;
     this._playStatus = AudioPlayerState.STOPPED;
+    // notifyListeners();
   }
 
   /*
