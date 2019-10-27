@@ -6,6 +6,8 @@ import 'package:netease_flutter/models/comment.dart';
 import 'package:netease_flutter/models/comment_arguments.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
+import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
 
 class NeteaseComment extends StatefulWidget {
@@ -23,9 +25,31 @@ class _NeteaseCommentState extends State<NeteaseComment> {
   List _hotComments = [];
   List _comments = [];
 
+  bool _moreHotComment = true;
+  bool _moreComment = true;
+  int _lastItemTime;
+
+  ScrollController _controller;
+
   @override
   void initState() {
     super.initState();
+    _controller = new ScrollController();
+    _controller.addListener(() {
+      if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+        // 已经下拉到最底部
+        print('============================ 到底了。。。 ============================');
+        if (_comments.isNotEmpty) {
+          _lastItemTime = _comments.last['time'];
+        }
+        _loadCommentMore();        
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   Widget publishDate(CommentModel comment) {
@@ -46,21 +70,183 @@ class _NeteaseCommentState extends State<NeteaseComment> {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
     return GestureDetector(
+      onTap: () {},
       child: Container(
-        width: screenUtil.setWidth(110.0),
+        width: screenUtil.setWidth(150.0),
+        padding: EdgeInsets.only(
+          right: screenUtil.setWidth(30.0)
+        ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Icon(Icons.ac_unit, size: screenUtil.setSp(30.0), color: Colors.white60,),
-            Text(
-              "${comment.likedCount}",
-              style: TextStyle(
-                color: Colors.white60
+            Padding(
+              padding: EdgeInsets.only(
+                top: screenUtil.setHeight(3.0),
+                right: screenUtil.setWidth(8.0)
+              ),
+              child: Text(
+                "${comment.likedCount}",
+                style: TextStyle(
+                  color: Colors.white60,
+                  fontSize: screenUtil.setSp(24.0)
+                ),
               ),
             ),
+            NeteaseIconData(
+              0xe631,
+              color: Colors.white60,
+              size: screenUtil.setSp(32.0),
+            )
           ],
         ),
       ),
     );
+  }
+
+  Widget listTitle(String title) {
+    ScreenUtil screenUtil = ScreenUtil.getInstance();
+
+    return SliverFixedExtentList(
+      itemExtent: screenUtil.setHeight(70.0),
+      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+        return Container(
+          margin: EdgeInsets.only(
+            top: screenUtil.setHeight(30.0)
+          ),
+          padding: EdgeInsets.only(
+            left: screenUtil.setWidth(30.0)
+          ),
+          child: Text(
+            '$title',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: screenUtil.setSp(26.0),
+              fontWeight: FontWeight.bold
+            ),
+          ),
+        );
+      }, childCount: 1),
+    );
+  }
+
+  Widget commentList(List list) {
+    ScreenUtil screenUtil = ScreenUtil.getInstance();
+
+    return SliverList(
+      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+        CommentModel comment = CommentModel.fromJson(list[index]);
+        return GestureDetector(
+          child: Container(
+            child: Flex(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  flex: 0,
+                  child: Container(
+                    padding: EdgeInsets.all(screenUtil.setWidth(30.0)),
+                    width: screenUtil.setWidth(120.0),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: ClipOval(
+                        child: Image.network(comment.user.avatarUrl, fit: BoxFit.cover),
+                      ),
+                    )
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: screenUtil.setHeight(30.0)
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(comment.user.nickname, style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: screenUtil.setSp(24.0)
+                                )),
+                                publishDate(comment)
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: screenUtil.setHeight(30.0)
+                            ),
+                            child: likeBtn(comment),
+                          )
+                        ],
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(
+                          right: screenUtil.setWidth(50.0),
+                          bottom: screenUtil.setHeight(30.0)
+                        ),
+                        width: screenUtil.setWidth(630.0),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              width: screenUtil.setWidth(1.0),
+                              color: Colors.white24
+                            )
+                          )
+                        ),
+                        child: Text(
+                          comment.content,
+                          style: TextStyle(
+                            color: Colors.white
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      }, childCount: list.length),
+    );
+  }
+
+  Widget whenLoadMore() {
+
+    if (_moreComment) {
+      if (status == LoadingStatus.LOADING) {
+        return SliverFixedExtentList(
+          itemExtent: 50.0,
+          delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+            return NeteaseLoading();
+          }, childCount: 1)
+        );
+      } else {
+        return SliverFixedExtentList(
+          itemExtent: 10.0,
+          delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+            return Text('');
+          }, childCount: 1),
+        );
+      }
+    } else {
+      return SliverFixedExtentList(
+        itemExtent: 50.0,
+        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+          return Text('到底了...');
+        }, childCount: 1),
+      );
+    }
   }
 
   @override
@@ -78,79 +264,80 @@ class _NeteaseCommentState extends State<NeteaseComment> {
         title: '评论(${arguments.commentCount})',
       ),
       body: Container(
-        height: 400.0,
+        height: 10.0,
+        decoration: BoxDecoration(
+          color: Colors.white70,
+          image: DecorationImage(
+            image: AssetImage('assets/images/theme_1.jpg'),
+            fit: BoxFit.cover
+          )
+        ),
         child: CustomScrollView(
+          controller: _controller,
           slivers: <Widget>[
             SliverFixedExtentList(
-              itemExtent: screenUtil.setHeight(250.0),
+              itemExtent: screenUtil.setHeight(200.0),
               delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
                 if (detail == null) {
-                  return Container();
+                  return NeteaseLoading();
                 } else {
-                  return ListTile(
-                    leading: Container(
-                      height: screenUtil.setHeight(200.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(screenUtil.setWidth(12.0)),
-                        child: Image.network(
-                          detail['coverImgUrl'],
-                          height: screenUtil.setHeight(200.0),
-                          width: screenUtil.setWidth(200.0),
-                          fit: BoxFit.cover,
+                  return Card(
+                    color: Colors.transparent,
+                    margin: EdgeInsets.all(0.0),
+                    clipBehavior: Clip.antiAlias,
+                    semanticContainer: true,
+                    child: Flex(
+                      direction: Axis.horizontal,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 0,
+                          child: Padding(
+                            padding: EdgeInsets.all(12.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12.0),
+                              child: Image.network(
+                                detail['coverImgUrl'],
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          ),
                         ),
-                      ),
-                    ),
-                    dense: true,
-                    title: Text(detail['name'], style: TextStyle(
-                      color: Colors.white
-                    )),
-                    subtitle: Text(arguments.id.toString()),
-                    // subtitle: Text(detail['creator']['nickname'], style: TextStyle(
-                    //   color: Colors.white70
-                    // )),
+                        Expanded(
+                          flex: 1,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.all(0.0),
+                            title: Text(
+                              detail['name'],
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: screenUtil.setSp(30.0)
+                              ),
+                            ),
+                            subtitle: Text(
+                              "${detail['creator']['nickname']}",
+                              style: TextStyle(
+                                color: Colors.white70
+                              ),
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.arrow_forward_ios, color: Colors.white70),
+                              onPressed: () {},
+                            ),
+                          ),
+                        )
+                      ],
+                    )
                   );
                 }
               }, childCount: 1),
             ),
-            SliverFixedExtentList(
-              itemExtent: screenUtil.setWidth(250.0),
-              delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                CommentModel comment = CommentModel.fromJson(_hotComments[index]);
-                return ListTile(
-                  leading: ClipOval(
-                    child: Image.network(
-                      comment.user.avatarUrl, 
-                      fit: BoxFit.cover,
-                      height: screenUtil.setWidth(65.0),
-                      width: screenUtil.setWidth(65.0),
-                    ),
-                  ),
-                  title: Container(
-                    height: screenUtil.setHeight(70.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(comment.user.nickname, style: TextStyle(
-                          color: Colors.white,
-                          fontSize: screenUtil.setSp(24.0)
-                        )),
-                        publishDate(comment)
-                      ],
-                    ),
-                  ),
-                  subtitle: Text(
-                    comment.content, 
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    style: TextStyle(
-                      color: Colors.white70
-                    )
-                  ),
-                  trailing: likeBtn(comment)
-                );
-              }, childCount: _hotComments.length),
-            )
+            listTitle("精彩评论"),
+            commentList(_hotComments),
+            listTitle("最新评论"),
+            commentList(_comments),
+            // whenLoadMore()
           ],
         ),
       ),
@@ -174,14 +361,20 @@ class _NeteaseCommentState extends State<NeteaseComment> {
     final result = await RequestService.getInstance(context: context).getComments(
       type: arguments.type,
       id: arguments.id,
-      limit: 20
-    );
+      limit: 5,
+      before: _lastItemTime
+    );    
 
-    print(result);
+    status = LoadingStatus.LOADED;
     
     setState(() {
-      _hotComments.addAll(result['hotComments']);
+      if (_hotComments.isEmpty) {
+        _hotComments = result['hotComments'];
+        _moreHotComment = result['moreHot'];
+      }
       _comments.addAll(result['comments']);
+
+      _moreComment = result['more'];
     });
 
   }
