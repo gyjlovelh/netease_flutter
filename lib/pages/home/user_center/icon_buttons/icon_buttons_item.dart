@@ -30,7 +30,7 @@ class IconButtonsItem extends StatelessWidget {
             ),
             Text(itemVO.label,
                 style: TextStyle(
-                    color: Colors.black87,
+                    color: Colors.white,
                     fontSize: ScreenUtil.getInstance().setSp(24.0)))
           ],
         ),
