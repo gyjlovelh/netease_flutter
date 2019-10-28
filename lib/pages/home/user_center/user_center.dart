@@ -70,12 +70,13 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
                   left: 25.0, right: 25.0, top: 12.0, bottom: 12.0),
               child: NeteaseIconData(
                 pointer,
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
             Text(
               title,
-              style: TextStyle(fontSize: ScreenUtil().setSp(25.0)),
+              style: TextStyle(
+                  fontSize: ScreenUtil().setSp(25.0), color: Colors.white),
             ),
           ],
         ),
@@ -96,16 +97,16 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
                     return ListTile(
                       leading: Image.network(musicList[index].header),
                       title:
-                          Text(index == 0 ? '我喜欢的音乐' : musicList[index].title),
+                          Text(index == 0 ? '我喜欢的音乐' : musicList[index].title,style: TextStyle(color: Colors.white),),
                       subtitle:
-                          Text(musicList[index].trackCount.toString() + '首'),
+                          Text(musicList[index].trackCount.toString() + '首',style: TextStyle(color: Colors.white),),
                       trailing: index == 0
                           ? null
                           : GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 mShowBottomSheet2(index);
                               },
-                              child: NeteaseIconData(0xe62b),
+                              child: NeteaseIconData(0xe62b,color: Colors.white,),
                             ),
                     );
                   },
@@ -136,12 +137,14 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
   Widget build(BuildContext context) {
     setListData();
 
-    return MaterialApp(
+    return mContent()
+        /*MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: mContent(),
       ),
-    );
+    )*/
+        ;
   }
 
   Widget mContent() {
@@ -171,8 +174,8 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
                 flex: 0,
                 child: IconButton(
                   icon: _downOrUp
-                      ? NeteaseIconData(0xe646)
-                      : NeteaseIconData(0xe626),
+                      ? NeteaseIconData(0xe646,color: Colors.white,)
+                      : NeteaseIconData(0xe626,color: Colors.white,),
                   onPressed: changeState,
                 ),
               ),
@@ -183,6 +186,7 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
                   child: Text(
                     '创建的歌单',
                     style: TextStyle(
+                        color: Colors.white,
                         fontSize: ScreenUtil().setSp(30.0),
                         fontWeight: FontWeight.w700),
                   ),
@@ -191,14 +195,14 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
               Expanded(
                 flex: 0,
                 child: IconButton(
-                  icon: NeteaseIconData(0xe64b),
+                  icon: NeteaseIconData(0xe64b,color: Colors.white,),
                   onPressed: newPlayList,
                 ),
               ),
               Expanded(
                 flex: 0,
                 child: IconButton(
-                  icon: NeteaseIconData(0xe62b),
+                  icon: NeteaseIconData(0xe62b,color: Colors.white,),
                   onPressed: mShowBottomSheet,
                 ),
               ),
@@ -472,27 +476,26 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
               ),
               mDivider(0.5),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   mDeletePlayList(index);
                 },
                 child: Row(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(
-                        left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
-                    child: NeteaseIconData(
-                      0xe67f,
-                      color: Colors.black,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(
+                          left: 10.0, right: 10.0, top: 10.0, bottom: 10.0),
+                      child: NeteaseIconData(
+                        0xe67f,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                    child: Text('删除'),
-                  ),
-                ],
+                    Container(
+                      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      child: Text('删除'),
+                    ),
+                  ],
+                ),
               ),
-              ),
-              
               mDivider(0.5),
             ],
           ),
@@ -505,23 +508,38 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
   void mDeletePlayList(int index) {
     showDialog(
       context: context,
-      builder: (context){
+      builder: (context) {
         return AlertDialog(
           title: Text('确定要删除此歌单吗？'),
           actions: <Widget>[
-            RaisedButton(color: Colors.white,child: Text('取消',style: TextStyle(color: Colors.red),),onPressed: (){
-              Navigator.of(context).pop();
-            },),
-            RaisedButton(color: Colors.white,child: Text('确定',style: TextStyle(color: Colors.red),),onPressed: (){
-              Navigator.of(context).pop();
-              //todo 删除歌单
-              RequestService.getInstance(context: context).deletePlayList(musicList[index].id)
-              .then((val){
-                setState(() {
-                  Toast.show('删除成功', context);
+            RaisedButton(
+              color: Colors.white,
+              child: Text(
+                '取消',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            RaisedButton(
+              color: Colors.white,
+              child: Text(
+                '确定',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                //todo 删除歌单
+                RequestService.getInstance(context: context)
+                    .deletePlayList(musicList[index].id)
+                    .then((val) {
+                  setState(() {
+                    Toast.show('删除成功', context);
+                  });
                 });
-              });
-            },),
+              },
+            ),
           ],
         );
       },
