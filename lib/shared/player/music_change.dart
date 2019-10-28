@@ -19,14 +19,13 @@ class MusicChangeNotifier with ChangeNotifier {
   List get lyric => _lyric;
 
   void loadMusic(SongModel song) async {
-    this.setCurrentMusic(song);
-    RequestService.getInstance(context: null).getSongLyric(song.id).then((lyric) {
-      this.setMusiclyric(lyric);
-    });
+    final url = await RequestService.getInstance(context: null).getSongUrl(song.id);
+    this.setMusicUrl(url);
 
-    RequestService.getInstance(context: null).getSongUrl(song.id).then((url) {
-      this.setMusicUrl(url);
-    });
+    this.setCurrentMusic(song);
+
+    final lyric = await RequestService.getInstance(context: null).getSongLyric(song.id);
+    this.setMusiclyric(lyric);
   }
 
   void setCurrentMusic(SongModel song) {

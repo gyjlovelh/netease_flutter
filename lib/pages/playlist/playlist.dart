@@ -47,7 +47,7 @@ class _NeteasePlaylistState extends State<NeteasePlaylist> {
           gradient: LinearGradient(
             begin: FractionalOffset(0, 0),
             end: FractionalOffset(1, 1),
-            colors: [Color.fromRGBO(75, 49, 49, 1), Color.fromRGBO(40, 56, 53, 1)]
+            colors: [Color.fromRGBO(40, 61, 76, 1), Color.fromRGBO(69, 105, 123, 1)]
           ),
         ),
         child: Column(

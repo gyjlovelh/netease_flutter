@@ -52,7 +52,9 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
   @override
   void dispose() {
     subscription.cancel();
+    subscription = null;
     controller.dispose();
+    controller = null;
     super.dispose();
   }
 
@@ -63,6 +65,9 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
     AudioPlayer player = provider.audioPlayer;
 
     subscription = player.onPlayerStateChanged.listen((AudioPlayerState state) {
+      if (controller == null) {
+        return;
+      }
       if (state == AudioPlayerState.PLAYING) {
         controller.forward();
       } else {

@@ -57,7 +57,7 @@ class _NetState extends State<NeteaseApp> {
             theme: ThemeData(
               brightness: Brightness.light,
               primaryColorLight: Colors.blueAccent,
-              primaryColor: Color.fromRGBO(17, 60, 103, 1),
+              primaryColor: Color.fromRGBO(44, 66, 82, 1),
               textSelectionColor: Color.fromRGBO(38, 150, 167, 1),
               scaffoldBackgroundColor: Color.fromRGBO(17, 60, 103, 1),
               

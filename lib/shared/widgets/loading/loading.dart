@@ -16,7 +16,8 @@ class NeteaseLoading extends StatelessWidget {
             itemBuilder: (_, int index) {
               return DecoratedBox(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
+                  // color: Theme.of(context).primaryColor,
+                  color: Colors.tealAccent,
                   borderRadius: BorderRadius.circular(screenUtil.setWidth(2.0)),
                 ),
               );

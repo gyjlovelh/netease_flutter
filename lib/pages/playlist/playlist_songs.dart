@@ -8,6 +8,7 @@ import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/player/music_change.dart';
+import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 import 'package:provider/provider.dart';
 
 class NeteasePlaylistSongs extends StatelessWidget {
@@ -19,7 +20,9 @@ class NeteasePlaylistSongs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final stateProvider = Provider.of<MusicPlayerStatus>(context);
     ScreenUtil screenUtil = ScreenUtil.getInstance();
+    
 
     String scStr = "0";
     if (status == LoadingStatus.LOADED) {
@@ -45,7 +48,9 @@ class NeteasePlaylistSongs extends StatelessWidget {
       child: Column(
         children: <Widget>[
           ListTile(
-            onTap: () {},
+            onTap: () {
+              stateProvider.choosePlayList(detail.tracks);
+            },
             onLongPress: () {},
             leading: NeteaseIconData(0xe674, color: Colors.white70),
             title: Text('播放全部', style: TextStyle(
@@ -95,7 +100,10 @@ class NeteasePlaylistSongs extends StatelessWidget {
                 if (stateProvider.playerState == AudioPlayerState.PLAYING) {
                   await stateProvider.stop();
                 }
+                stateProvider.choosePlayList(detail.tracks);
                 provider.loadMusic(song);
+                stateProvider.stop();
+                stateProvider.play(provider.currentMusic.url);
               },
               // 复制歌曲名
               onLongPress: () {},
@@ -134,13 +142,6 @@ class NeteasePlaylistSongs extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    // GestureDetector(
-                    //   child: NeteaseIconData(
-                    //     0xe613,
-                    //     color: Colors.white70,
-                    //     size: screenUtil.setSp(42.0),
-                    //   ),
-                    // ),
                     GestureDetector(
                       onTap: () {},
                       child: NeteaseIconData(
@@ -161,24 +162,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
       return Container(
         height: screenUtil.setHeight(500.0),
         child: Center(
-          child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SpinKitWave(
-                size: screenUtil.setSp(36.0),
-                color: Colors.redAccent
-              ),
-              Container(
-                margin: EdgeInsets.only(
-                  left: 10.0
-                ),
-                child: Text('努力加载中...', style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: screenUtil.setSp(28.0)
-                )),
-              )
-            ],
-          ),
+          child: NeteaseLoading()
         ),
       );
     }

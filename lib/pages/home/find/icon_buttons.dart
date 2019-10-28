@@ -14,7 +14,7 @@ class NeteaseIconButtons extends StatelessWidget {
             margin: EdgeInsets.only(bottom: ScreenUtil.getInstance().setHeight(15.0)),
             padding: EdgeInsets.all(ScreenUtil.getInstance().setWidth(24.0)),
             decoration: BoxDecoration(
-              color: Colors.redAccent,
+              color: Color.fromRGBO(130, 158, 172, 1),
               borderRadius: BorderRadius.circular(99.0)
             ),
             child: NeteaseIconData(pointer, color: Colors.white, size: ScreenUtil.getInstance().setSp(42.0),),
