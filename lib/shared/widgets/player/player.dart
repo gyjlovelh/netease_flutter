@@ -33,6 +33,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
@@ -144,7 +145,9 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
               child: Container(
                 width: screenUtil.setWidth(90.0),
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    stateController.showMusicListSheet(context);
+                  },
                   icon: NeteaseIconData(
                     0xe604,
                     size: screenUtil.setSp(54.0),

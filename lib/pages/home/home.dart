@@ -57,9 +57,10 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
                 border: Border(
                   bottom: BorderSide(
                     width: sc.setHeight(1.0),
-                    color: Colors.grey[200]
+                    color: Color.fromRGBO(42, 64, 79, 1)
                   )
-                )
+                ),
+                color: Color.fromRGBO(42, 64, 79, 1)
               ),
               height: sc.setHeight(topActionHeight),
               child: Row(
@@ -73,7 +74,7 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
                       icon: NeteaseIconData(
                         0xe77c, 
                         size: ScreenUtil.getInstance().setSp(36.0),
-                        color: Colors.black87,
+                        color: Colors.white70,
                       ),
                       onPressed: () {
                         globalKey.currentState.openDrawer();
@@ -89,6 +90,8 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
                         fontSize: sc.setSp(36.0),
                         fontWeight: FontWeight.bold
                       ),
+                      labelColor: Theme.of(context).textSelectionColor,
+                      unselectedLabelColor: Colors.white70,
                       unselectedLabelStyle: TextStyle(
                         fontSize: sc.setSp(34.0)
                       ),
@@ -107,7 +110,7 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
                       icon: NeteaseIconData(
                         0xe60c,
                         size: ScreenUtil.getInstance().setSp(36.0),
-                        color: Colors.black87,
+                        color: Colors.white70,
                       ),
                       onPressed: () {
                         Navigator.of(context).pushNamed('search');

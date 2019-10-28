@@ -165,7 +165,7 @@ class RequestService {
   }
 
   Future getPlaylist({int limit, int before, String cat}) async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
     Response response = await _request('/top/playlist',
         queryParameters: {"cat": cat, "limit": limit, "before": before});
 
@@ -235,6 +235,7 @@ class RequestService {
     } else {
       url = "/comment/music";
     }
+    await Future.delayed(Duration(milliseconds: 1000));
     Response response = await _request(url, queryParameters: {
       "id": id,
       "limit": limit,

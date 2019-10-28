@@ -93,6 +93,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text('历史记录', style: TextStyle(
+                        color: Colors.white,
                         fontSize: screenUtil.setSp(28.0),
                         fontWeight: FontWeight.bold
                       )),
@@ -116,10 +117,11 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                           padding: EdgeInsets.zero,
                           child: FlatButton(
                             child: Text(item, style: TextStyle(
+                              color: Colors.white,
                               fontSize: screenUtil.setSp(24.0)
                             )),
                             padding: EdgeInsets.zero,
-                            color: Colors.grey[300],
+                            color: Theme.of(context).textSelectionColor,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                             onPressed: () {
                               Navigator.of(context).pushNamed('search_result', arguments: item);
@@ -143,7 +145,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                 '热搜榜',
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                  color: Colors.black87,
+                  color: Colors.white,
                   fontSize: screenUtil.setSp(28.0)
                 ),
               ),
@@ -165,7 +167,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                         leading: Text(
                           (index + 1).toString(),
                           style: TextStyle(
-                            color: index < 3 ? Colors.redAccent : Colors.grey,
+                            color: index < 3 ? Theme.of(context).textSelectionColor : Colors.white70,
                             fontSize: screenUtil.setSp(30.0),
                             fontWeight: FontWeight.bold
                           ),
@@ -175,6 +177,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                             Text(
                               item['searchWord'],
                               style: TextStyle(
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: screenUtil.setSp(30.0)
                               ),
@@ -185,14 +188,14 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                         subtitle: Text(
                           item['content'],
                           style: TextStyle(
-                            color: Colors.grey,
+                            color: Colors.white70,
                             fontSize: screenUtil.setSp(24.0)
                           )
                         ),
                         trailing: Text(
                           item['score'].toString(),
                           style: TextStyle(
-                            color: Colors.grey[400],
+                            color: Colors.white70,
                             fontSize: screenUtil.setSp(24.0)
                           ),
                         ),

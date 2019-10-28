@@ -39,10 +39,12 @@ class _NeteaseCommentState extends State<NeteaseComment> {
       if (_controller.position.pixels == _controller.position.maxScrollExtent) {
         // 已经下拉到最底部
         print('============================ 到底了。。。 ============================');
-        if (_comments.isNotEmpty) {
-          _lastItemTime = _comments.last['time'];
-        }
-        _loadCommentMore();        
+        if (status != LoadingStatus.LOADING) {
+          if (_comments.isNotEmpty) {
+            _lastItemTime = _comments.last['time'];
+          }
+          _loadCommentMore();     
+        } 
       }
     });
   }
@@ -281,54 +283,63 @@ class _NeteaseCommentState extends State<NeteaseComment> {
                 if (detail == null) {
                   return NeteaseLoading();
                 } else {
-                  return Card(
-                    color: Colors.transparent,
-                    margin: EdgeInsets.all(0.0),
-                    clipBehavior: Clip.antiAlias,
-                    semanticContainer: true,
-                    child: Flex(
-                      direction: Axis.horizontal,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 0,
-                          child: Padding(
-                            padding: EdgeInsets.all(12.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12.0),
-                              child: Image.network(
-                                detail['coverImgUrl'],
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: ListTile(
-                            contentPadding: EdgeInsets.all(0.0),
-                            title: Text(
-                              detail['name'],
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: screenUtil.setSp(30.0)
-                              ),
-                            ),
-                            subtitle: Text(
-                              "${detail['creator']['nickname']}",
-                              style: TextStyle(
-                                color: Colors.white70
-                              ),
-                            ),
-                            trailing: IconButton(
-                              icon: Icon(Icons.arrow_forward_ios, color: Colors.white70),
-                              onPressed: () {},
+                  return GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Card(
+                      color: Colors.transparent,
+                      margin: EdgeInsets.all(0.0),
+                      clipBehavior: Clip.antiAlias,
+                      semanticContainer: true,
+                      child: Flex(
+                        direction: Axis.horizontal,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 0,
+                            child: Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12.0),
+                                child: Image.network(
+                                  detail['coverImgUrl'],
+                                  fit: BoxFit.cover,
+                                ),
+                              )
                             ),
                           ),
-                        )
-                      ],
-                    )
+                          Expanded(
+                            flex: 1,
+                            child: ListTile(
+                              contentPadding: EdgeInsets.all(0.0),
+                              title: Text(
+                                detail['name'],
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: screenUtil.setSp(30.0)
+                                ),
+                              ),
+                              subtitle: Text(
+                                "by ${detail['id']} ${detail['creator']['nickname']}",
+                                style: TextStyle(
+                                  color: Colors.white70
+                                ),
+                              ),
+                              trailing: Padding(
+                                padding: EdgeInsets.only(
+                                  right: screenUtil.setWidth(20.0)
+                                ),
+                                child: NeteaseIconData(
+                                  0xe626,
+                                  color: Colors.white70,
+                                  size: screenUtil.setSp(42.0),
+                                ),
+                              )
+                            ),
+                          )
+                        ],
+                      )
+                    ),
                   );
                 }
               }, childCount: 1),
@@ -337,7 +348,7 @@ class _NeteaseCommentState extends State<NeteaseComment> {
             commentList(_hotComments),
             listTitle("最新评论"),
             commentList(_comments),
-            // whenLoadMore()
+            whenLoadMore()
           ],
         ),
       ),
@@ -358,15 +369,17 @@ class _NeteaseCommentState extends State<NeteaseComment> {
   }
 
   void _loadCommentMore() async {
+    
+    setState(() {
+      status = LoadingStatus.LOADING;
+    });
+
     final result = await RequestService.getInstance(context: context).getComments(
       type: arguments.type,
       id: arguments.id,
       limit: 5,
       before: _lastItemTime
-    );    
-
-    status = LoadingStatus.LOADED;
-    
+    );        
     setState(() {
       if (_hotComments.isEmpty) {
         _hotComments = result['hotComments'];
@@ -375,6 +388,7 @@ class _NeteaseCommentState extends State<NeteaseComment> {
       _comments.addAll(result['comments']);
 
       _moreComment = result['more'];
+      status = LoadingStatus.LOADED;
     });
 
   }

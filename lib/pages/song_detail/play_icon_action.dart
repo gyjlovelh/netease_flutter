@@ -95,7 +95,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                     onChangeStart: (double v) => setState(() => _isPointerDown = true),
                     onChangeEnd: (double v) {      
                       // 防止圆点抖动
-                      Timer(Duration(milliseconds: 500), () {
+                      Timer(Duration(milliseconds: 100), () {
                         _isPointerDown = false;
                       });
                       setState(() {
@@ -141,7 +141,9 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                   }
                 ),
                 actionIconButton(0xeaad, onPressed: () {}),
-                actionIconButton(0xe604, onPressed: () {})
+                actionIconButton(0xe604, onPressed: () {
+                  stateController.showMusicListSheet(context);
+                })
               ],
             )
           ],
