@@ -147,16 +147,21 @@ class _NeteaseCommentState extends State<NeteaseComment> {
               children: <Widget>[
                 Expanded(
                   flex: 0,
-                  child: Container(
-                    padding: EdgeInsets.all(screenUtil.setWidth(30.0)),
-                    width: screenUtil.setWidth(120.0),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: ClipOval(
-                        child: Image.network(comment.user.avatarUrl, fit: BoxFit.cover),
-                      ),
-                    )
-                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed('user', arguments: comment.user.userId);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(screenUtil.setWidth(30.0)),
+                      width: screenUtil.setWidth(120.0),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: ClipOval(
+                          child: Image.network(comment.user.avatarUrl, fit: BoxFit.cover),
+                        ),
+                      )
+                    ),
+                  )
                 ),
                 Expanded(
                   flex: 1,

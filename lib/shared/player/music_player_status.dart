@@ -145,8 +145,7 @@ class MusicPlayerStatus with ChangeNotifier {
                   ],
                 ),
               ),
-              Container(
-                height: screenUtil.setHeight(650.0),
+              Expanded(
                 child: ListView.builder(
                   itemCount: _musicList.length,
                   itemExtent: screenUtil.setHeight(100.0),
@@ -172,7 +171,7 @@ class MusicPlayerStatus with ChangeNotifier {
                             ),
                           ) : Text(''),
                           Container(
-                            width: screenUtil.setWidth(530.0),
+                            width: screenUtil.setWidth(500.0),
                             child: Text(
                               "${song.name} - ${song.ar.map((item) => item.name).join(',')}",
                               overflow: TextOverflow.ellipsis,
