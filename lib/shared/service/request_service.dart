@@ -16,16 +16,18 @@ class RequestService {
   static init({String baseUrl}) {
     _baseUrl = baseUrl;
     _dio = new Dio();
+    _dio.options.receiveTimeout = 8000;
+    _dio.options.connectTimeout = 5000;
 
     _dio.interceptors.add(InterceptorsWrapper(onResponse: (Response response) {
       if (response.statusCode == 200) {
         return response;
       } else {
         showDialog(
-            context: _context,
-            builder: (context) => AlertDialog(
-                  content: Text(response.toString()),
-                ));
+          context: _context,
+          builder: (context) => AlertDialog(
+            content: Text("$response"),
+          ));
         return response;
       }
     }, onError: (DioError e) {
@@ -96,17 +98,22 @@ class RequestService {
     Response response =
         await _request('/song/detail', queryParameters: {"ids": id});
     Response urlRes = await _request('/song/url', queryParameters: {"id": id});
-
     SongModel song = SongModel.fromJson(response.data['songs'][0]);
     song.url = urlRes.data['data'][0]['url'];
 
     return song;
   }
 
-  // 获取歌曲播放链接
-  Future<String> getSongUrl(int id) async {
-    Response urlRes = await _request('/song/url', queryParameters: {"id": id});
-    return urlRes.data['data'][0]['url'];
+  // 音乐是否可用【全部都没版权？？？】
+  Future checkMusic(int id) async {
+    try {
+      print("$id");
+      Response response = await _request('/check/music', queryParameters: {"id": id, "br": 320000});
+
+      return response.data;
+    } on DioError catch (error) {
+      return error.response;
+    }
   }
 
   // 获取歌曲歌词
@@ -152,8 +159,10 @@ class RequestService {
         await _request('/song/url', queryParameters: {"id": trackIds});
     List list = urlRes.data['data'];
 
+    // 歌曲url不是按顺序返回
     model.tracks.asMap().forEach((int index, SongModel item) {
-      item.url = list[index]['url'] ?? "";
+      final target = list.firstWhere((song) => song['id'] == item.id);
+      item.url = target['url'];
     });
     return model;
   }

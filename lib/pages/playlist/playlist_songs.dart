@@ -6,10 +6,12 @@ import 'package:netease_flutter/models/playlist.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
+import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 class NeteasePlaylistSongs extends StatelessWidget {
 
@@ -97,13 +99,16 @@ class NeteasePlaylistSongs extends StatelessWidget {
             return ListTile(
               // 点击播放
               onTap: () async {
-                if (stateProvider.playerState == AudioPlayerState.PLAYING) {
-                  await stateProvider.stop();
+                if (song.url.isEmpty) {
+                  Toast.show("亲爱的,暂无版权", context);
+                } else {
+                  if (stateProvider.playerState == AudioPlayerState.PLAYING) {
+                    await stateProvider.stop();
+                  }
+                  stateProvider.choosePlayList(detail.tracks);
+                  provider.loadMusic(song);
+                  stateProvider.play(provider.currentMusic.url);
                 }
-                stateProvider.choosePlayList(detail.tracks);
-                provider.loadMusic(song);
-                stateProvider.stop();
-                stateProvider.play(provider.currentMusic.url);
               },
               // 复制歌曲名
               onLongPress: () {},

@@ -24,8 +24,6 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
   AnimationController controller;
   StreamSubscription subscription;
 
-  int commentCount = 0;
-
   Widget iconButton(int pointer, {VoidCallback onPressed}) => IconButton(
     icon: NeteaseIconData(
       pointer,
@@ -45,8 +43,6 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
         controller.forward();
       }
     });
-
-    _loadPageData();
   }
 
   @override
@@ -130,7 +126,7 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
                 iconButton(0xe618, onPressed: () {
                   Navigator.of(context).pushNamed('comment', arguments: json.encode({
                     "id": 123,
-                    "commentCount": commentCount
+                    "commentCount": 0
                   }));
                 }),
                 iconButton(0xe66f),
@@ -140,18 +136,5 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
         )
       ]
     );
-  }
-
-  _loadPageData() async {
-
-    var result = await RequestService.getInstance(context: context).getComments(
-      id: widget.song.id,
-      limit: 0,
-      type: "music"
-    );
-
-    setState(() {
-      commentCount = result['total'];
-    });
   }
 }

@@ -19,10 +19,8 @@ class MusicChangeNotifier with ChangeNotifier {
   List get lyric => _lyric;
 
   void loadMusic(SongModel song) async {
-    final url = await RequestService.getInstance(context: null).getSongUrl(song.id);
-    this.setMusicUrl(url);
-
     this.setCurrentMusic(song);
+    this.setMusicUrl(song.url);
 
     final lyric = await RequestService.getInstance(context: null).getSongLyric(song.id);
     this.setMusiclyric(lyric);

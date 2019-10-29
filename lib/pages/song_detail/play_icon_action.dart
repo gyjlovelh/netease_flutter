@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,9 @@ import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
+import 'package:netease_flutter/shared/widgets/music_list/music_list.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 class NeteasePlayIconAction extends StatefulWidget {
 
@@ -125,10 +128,19 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                   stateController.repeatMode == RepeatMode.LIST ? 0xe63e : 
                   stateController.repeatMode == RepeatMode.RANDOM ? 0xe61b : 0xe640, 
                   onPressed: () {
-                    stateController.changeRepeatMode();       
+                    stateController.changeRepeatMode();  
+                    String message = '';
+                    if (stateController.repeatMode == RepeatMode.SINGLE) {
+                      message = "单曲循环";
+                    } else if (stateController.repeatMode == RepeatMode.LIST) {
+                      message = "列表循环";
+                    } else if (stateController.repeatMode == RepeatMode.RANDOM) {
+                      message = "随机播放";
+                    }
+                    Toast.show('$message', context, duration: 2);
                   }
                 ),
-                actionIconButton(0xe605, onPressed: () {}),
+                actionIconButton(0xe605, onPressed: _prev),
                 actionIconButton(
                   stateController.playerState == AudioPlayerState.PLAYING ? 0xe6cb : 0xe674, 
                   size: screenUtil.setSp(100.0), 
@@ -140,9 +152,14 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                     }
                   }
                 ),
-                actionIconButton(0xeaad, onPressed: () {}),
+                actionIconButton(0xeaad, onPressed: _next),
                 actionIconButton(0xe604, onPressed: () {
-                  stateController.showMusicListSheet(context);
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return new NeteaseMusicList();
+                    }
+                  );   
                 })
               ],
             )
@@ -150,5 +167,52 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
         ),
       ),
     );    
+  }
+
+  /*
+   * 上一首
+   */
+  void _prev() async {
+    final stateController = Provider.of<MusicPlayerStatus>(context);
+    final provider = Provider.of<MusicChangeNotifier>(context);
+
+    List<SongModel> list = stateController.musicList;
+
+    int index = list.map((item) => item.id).toList().indexOf(provider.currentMusic.id);
+    
+    stateController.stop();
+    ///TODO,上一首定位到历史播放的前一位。
+    if (index == 0) {
+      provider.loadMusic(list.last);
+    } else {
+      provider.loadMusic(list[index - 1]);
+    }
+    stateController.play(provider.currentMusic.url);
+  }
+
+  /*
+   * 单曲循环和列表循环模式下，下一首歌为列表中下一首
+   * 随机播放模式下，为随机数且不包含当前项
+   */
+  void _next() async {
+    final stateController = Provider.of<MusicPlayerStatus>(context);
+    final provider = Provider.of<MusicChangeNotifier>(context);
+
+    List<SongModel> list = stateController.musicList;
+
+    int index = list.map((item) => item.id).toList().indexOf(provider.currentMusic.id);
+    stateController.stop();
+    var target;
+    if (stateController.repeatMode == RepeatMode.RANDOM) {
+      target = list[Random().nextInt(list.length)];
+    } else {
+      if (index == list.length - 1) {
+        target = list.first;
+      } else {
+        target = list[index + 1];
+      }
+    }
+    provider.loadMusic(target);
+    stateController.play(provider.currentMusic.url);
   }
 }

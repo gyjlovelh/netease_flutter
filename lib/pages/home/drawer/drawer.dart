@@ -126,9 +126,15 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
                   horizontal: horizontalWidth,
                   vertical: 30.0
                 ),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/theme_1.jpg'),
+                    fit: BoxFit.cover
+                  )
+                ),
                 width: double.infinity,
                 height: screenUtil.setHeight(420.0),
-                color: Colors.grey[300],
+                // color: Colors.grey[300],
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.end,

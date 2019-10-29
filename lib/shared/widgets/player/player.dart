@@ -5,6 +5,7 @@ import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
+import 'package:netease_flutter/shared/widgets/music_list/music_list.dart';
 import 'package:provider/provider.dart';
 
 class NeteasePlayer extends StatefulWidget {
@@ -146,7 +147,12 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                 width: screenUtil.setWidth(90.0),
                 child: IconButton(
                   onPressed: () {
-                    stateController.showMusicListSheet(context);
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return new NeteaseMusicList();
+                      }
+                    );   
                   },
                   icon: NeteaseIconData(
                     0xe604,
