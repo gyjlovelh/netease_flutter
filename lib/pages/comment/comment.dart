@@ -26,6 +26,7 @@ class _NeteaseCommentState extends State<NeteaseComment> {
   List _comments = [];
 
   bool _moreHotComment = true;
+  int _limit = 20;
   bool _moreComment = true;
   int _lastItemTime;
 
@@ -382,7 +383,7 @@ class _NeteaseCommentState extends State<NeteaseComment> {
     final result = await RequestService.getInstance(context: context).getComments(
       type: arguments.type,
       id: arguments.id,
-      limit: 5,
+      limit: _limit,
       before: _lastItemTime
     );        
     setState(() {

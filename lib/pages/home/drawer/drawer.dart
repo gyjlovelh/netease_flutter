@@ -217,7 +217,9 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
                     bottomAction(
                       pointer: 0xe74d,
                       label: '退出',
-                      onPressed: () {}
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('login');
+                      }
                     )
                   ],
                 ),

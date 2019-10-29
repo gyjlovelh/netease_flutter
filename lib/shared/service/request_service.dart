@@ -295,4 +295,11 @@ class RequestService {
 
     return response.data;
   }
+
+  // 查询个人详情
+  Future getUserDetail(int uid) async {
+    Response response = await _request('/user/detail', queryParameters: {'uid': uid});
+
+    return response.data;
+  }
 }

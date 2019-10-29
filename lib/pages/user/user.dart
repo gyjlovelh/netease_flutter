@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:netease_flutter/models/profile.dart';
+import 'package:netease_flutter/shared/enums/loading_status.dart';
+import 'package:netease_flutter/shared/service/request_service.dart';
 
 class NeteaseUser extends StatefulWidget {
   @override
@@ -8,6 +12,9 @@ class NeteaseUser extends StatefulWidget {
 class _NeteaseUserState extends State<NeteaseUser> with SingleTickerProviderStateMixin {
 
   TabController _tabController;
+  LoadingStatus status = LoadingStatus.UNINIT;
+
+  ProfileModel _profile;
 
   @override
   void initState() {
@@ -23,27 +30,89 @@ class _NeteaseUserState extends State<NeteaseUser> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    int userId = ModalRoute.of(context).settings.arguments;
+    ScreenUtil screenUtil = ScreenUtil.getInstance();
+
+    if (status == LoadingStatus.UNINIT) {
+      _loadPageData();
+    }
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
             pinned: true,
             elevation: 0,
-            expandedHeight: 250,
+            expandedHeight: screenUtil.setHeight(500.0),
             flexibleSpace: FlexibleSpaceBar(
-              title: Text('$userId'),
-              background: Image.network(
-                'http://img1.mukewang.com/5c18cf540001ac8206000338.jpg',
-                fit: BoxFit.cover,
-              ),
+              // title: Text('${_profile.nickname}'),
+              centerTitle: false,
+              background: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage("${_profile.backgroundUrl}"),
+                    fit: BoxFit.cover
+                  )
+                ),
+                child: Container(
+                  height: screenUtil.setHeight(300),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      ClipOval(
+                        child: Image.network(
+                          "${_profile.avatarUrl}",
+                          height: screenUtil.setWidth(150.0),
+                          width: screenUtil.setWidth(150.0),
+                        ),
+                      ),
+                      Flex(
+                        direction: Axis.horizontal,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text('${_profile.nickname}'),
+                                Text('粉丝/关注'),
+                                Text('等级')
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 0,
+                            child: Container(
+                              width: screenUtil.setWidth(280.0),
+                              child: Row(
+                                children: <Widget>[
+                                  RaisedButton.icon(
+                                    icon: Icon(Icons.add),
+                                    label: Text('关注'),
+                                    onPressed: () {},
+                                  ),
+                                  RaisedButton.icon(
+                                    icon: Icon(Icons.message),
+                                    label: Text('发私信'),
+                                    onPressed: () {},
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              )
             ),
           ),
           SliverPersistentHeader(
             pinned: true,
             delegate: StickyTabBarDelegate(
               child: TabBar(
-                labelColor: Colors.black,
+                labelColor: Theme.of(context).textSelectionColor,
+                unselectedLabelColor: Colors.white70,
                 controller: _tabController,
                 tabs: <Widget>[
                   Tab(text: '主页'),
@@ -64,6 +133,16 @@ class _NeteaseUserState extends State<NeteaseUser> with SingleTickerProviderStat
         ],
       ),
     );
+  }
+
+  void _loadPageData() async {
+    int userId = ModalRoute.of(context).settings.arguments;
+    final result = await RequestService.getInstance(context: context).getUserDetail(userId);
+
+    setState(() {
+      status = LoadingStatus.LOADED;
+     _profile = ProfileModel.fromJson(result['profile']);
+    });
   }
 }
 
