@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:netease_flutter/pages/my_loved_musics_list/my_loved_musics_list.dart';
 import 'package:netease_flutter/pages/playlist/playlist.dart';
 import 'package:netease_flutter/pages/rank_list/rank_list.dart';
 import 'package:netease_flutter/pages/search_result/search_result.dart';
@@ -122,6 +123,8 @@ class _NetState extends State<NeteaseApp> {
               'user': (BuildContext context) => new NeteaseUser(),
               //“加载中”弹框
               'loading': (BuildContext context) => new LoadingDialog(),
+              //我的歌单
+              'my_loved_musics_list': (BuildContext context) => new MyLovedMusicsList(),
             }
           );
         },

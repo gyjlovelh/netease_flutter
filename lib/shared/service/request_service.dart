@@ -287,4 +287,12 @@ class RequestService {
 
     return response.data;
   }
+
+  //获取我喜欢的音乐
+  Future getMyLovedMusicsList(int uid) async {
+    Response response =
+        await _request('/likelist', queryParameters: {'uid': uid});
+
+    return response.data;
+  }
 }

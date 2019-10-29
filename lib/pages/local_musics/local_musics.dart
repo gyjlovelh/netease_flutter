@@ -10,7 +10,8 @@ class LocalMusics extends StatefulWidget {
 }
 
 class _LocalMusicsState extends State<LocalMusics>
-    with TickerProviderStateMixin { //SingleTickerProviderStateMixin
+    with TickerProviderStateMixin {
+  //SingleTickerProviderStateMixin
   TabController _tabController;
 
   @override
@@ -28,23 +29,29 @@ class _LocalMusicsState extends State<LocalMusics>
         length: 4,
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.white,
-            leading: NeteaseIconData(
-              0xe62d,
-              color: Colors.black,
+            backgroundColor: Colors.transparent,
+            leading: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: NeteaseIconData(
+                0xe62d,
+                color: Colors.white,
+              ),
             ),
             title: Text(
               '本地音乐',
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(color: Colors.white),
             ),
             actions: <Widget>[
               IconButton(
                 icon: NeteaseIconData(
                   0xe60c,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
                 onPressed: () {
                   //todo 跳转到搜索界面
+                  Navigator.of(context).pushNamed('search');
                 },
               ),
               // IconButton(
@@ -59,7 +66,7 @@ class _LocalMusicsState extends State<LocalMusics>
                   margin: EdgeInsets.only(right: 4.0),
                   child: NeteaseIconData(
                     0xe8f5,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
                 itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
@@ -95,16 +102,28 @@ class _LocalMusicsState extends State<LocalMusics>
             bottom: TabBar(
               tabs: <Widget>[
                 Tab(
-                  child: Text('单曲'),
+                  child: Text(
+                    '单曲',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 Tab(
-                  child: Text('歌手'),
+                  child: Text(
+                    '歌手',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 Tab(
-                  child: Text('专辑'),
+                  child: Text(
+                    '专辑',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 Tab(
-                  child: Text('文件夹'),
+                  child: Text(
+                    '文件夹',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
               controller: _tabController,
@@ -172,7 +191,7 @@ class _LocalMusicsState extends State<LocalMusics>
       if (file.path.endsWith('.mp3')) {
         setState(() {
           mp3Files.add(file.path);
-          print('mp3Files.length = '+mp3Files.length.toString());
+          print('mp3Files.length = ' + mp3Files.length.toString());
           // fileName = file.path;
           // print('---------->>>>>>>>>>>>>>>>filename:' + fileName);
         });
