@@ -4,7 +4,7 @@ import './icon_buttons_vo.dart';
 
 Widget iconButtonsMine(List<IconButtonsVO> list) {
   return Container(
-    // height: ScreenUtil().setHeight(40.0),
+    // height: ScreenUtil.instance.setHeight(40.0),
     child: ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: list.length,

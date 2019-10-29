@@ -71,14 +71,14 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
               ? NeteaseIconData(
                   0xe62e,
                   color: Colors.grey,
-                  size: ScreenUtil().setSp(200.0),
+                  size: ScreenUtil.instance.setSp(200.0),
                 )
               : Container(),
           mp3Files.length == 0
               ? Text(
                   '暂无本地音乐',
                   style: TextStyle(
-                      color: Colors.grey, fontSize: ScreenUtil().setSp(25.0)),
+                      color: Colors.grey, fontSize: ScreenUtil.instance.setSp(25.0)),
                 )
               : Container(),
           mp3Files.length == 0
@@ -89,7 +89,7 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
                   color: Colors.white,
                   child: Text(
                     '一键扫描',
-                    style: TextStyle(fontSize: ScreenUtil().setSp(32.0)),
+                    style: TextStyle(fontSize: ScreenUtil.instance.setSp(32.0)),
                   ),
                   onPressed: () {
                     //todo 弹框未生效
@@ -147,12 +147,12 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
                         margin: EdgeInsets.only(left: 4.0),
                         padding: EdgeInsets.only(top: 4.0),
                         width: double.infinity,
-                        child: Text(path.substring(path.lastIndexOf('/') + 1)),
+                        child: Text(path.substring(path.lastIndexOf('/') + 1),style: TextStyle(color: Colors.white),),
                       ),
                     ),
                     Divider(
                       color: Colors.grey,
-                      height: ScreenUtil().setHeight(0.5),
+                      height: ScreenUtil.instance.setHeight(0.5),
                     ),
                   ],
                 );

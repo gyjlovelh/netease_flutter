@@ -5,10 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../shared/widgets/icon_data/icon_data.dart';
 import './music_list/music_list_vo.dart';
 import '../../../models/playlist.dart';
-import 'dart:async';
-import 'package:dio/dio.dart';
 import 'package:toast/toast.dart';
 import '../../../shared/service/request_service.dart';
+import '../../my_loved_musics_list/my_loved_musics_list.dart';
 
 class NeteaseUserCenter extends StatefulWidget {
   @override
@@ -76,7 +75,7 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
             Text(
               title,
               style: TextStyle(
-                  fontSize: ScreenUtil().setSp(25.0), color: Colors.white),
+                  fontSize: ScreenUtil.instance.setSp(25.0), color: Colors.white),
             ),
           ],
         ),
@@ -94,20 +93,35 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
                 child: ListView.builder(
                   itemCount: musicList.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: Image.network(musicList[index].header),
-                      title:
-                          Text(index == 0 ? '我喜欢的音乐' : musicList[index].title,style: TextStyle(color: Colors.white),),
-                      subtitle:
-                          Text(musicList[index].trackCount.toString() + '首',style: TextStyle(color: Colors.white),),
-                      trailing: index == 0
-                          ? null
-                          : GestureDetector(
-                              onTap: () {
-                                mShowBottomSheet2(index);
-                              },
-                              child: NeteaseIconData(0xe62b,color: Colors.white,),
-                            ),
+                    return GestureDetector(
+                      onTap: (){
+                        //跳转到对应的歌单列表
+                        Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                          return MyLovedMusicsList(imgUrl:musicList[index].header,title:musicList[index].title,index: index,);
+                        }));
+                      },
+                      child: ListTile(
+                        leading: Image.network(musicList[index].header),
+                        title: Text(
+                          index == 0 ? '我喜欢的音乐' : musicList[index].title,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        subtitle: Text(
+                          musicList[index].trackCount.toString() + '首',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        trailing: index == 0
+                            ? null
+                            : GestureDetector(
+                                onTap: () {
+                                  mShowBottomSheet2(index);
+                                },
+                                child: NeteaseIconData(
+                                  0xe62b,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
                     );
                   },
                 ),
@@ -117,7 +131,7 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
 
   Widget mDivider(double h) {
     return Divider(
-      height: ScreenUtil().setHeight(h),
+      height: ScreenUtil.instance.setHeight(h),
       color: Colors.grey,
     );
   }
@@ -174,8 +188,14 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
                 flex: 0,
                 child: IconButton(
                   icon: _downOrUp
-                      ? NeteaseIconData(0xe646,color: Colors.white,)
-                      : NeteaseIconData(0xe626,color: Colors.white,),
+                      ? NeteaseIconData(
+                          0xe646,
+                          color: Colors.white,
+                        )
+                      : NeteaseIconData(
+                          0xe626,
+                          color: Colors.white,
+                        ),
                   onPressed: changeState,
                 ),
               ),
@@ -187,7 +207,7 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
                     '创建的歌单',
                     style: TextStyle(
                         color: Colors.white,
-                        fontSize: ScreenUtil().setSp(30.0),
+                        fontSize: ScreenUtil.instance.setSp(30.0),
                         fontWeight: FontWeight.w700),
                   ),
                 ),
@@ -195,14 +215,20 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
               Expanded(
                 flex: 0,
                 child: IconButton(
-                  icon: NeteaseIconData(0xe64b,color: Colors.white,),
+                  icon: NeteaseIconData(
+                    0xe64b,
+                    color: Colors.white,
+                  ),
                   onPressed: newPlayList,
                 ),
               ),
               Expanded(
                 flex: 0,
                 child: IconButton(
-                  icon: NeteaseIconData(0xe62b,color: Colors.white,),
+                  icon: NeteaseIconData(
+                    0xe62b,
+                    color: Colors.white,
+                  ),
                   onPressed: mShowBottomSheet,
                 ),
               ),
@@ -219,6 +245,7 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
   //新建歌单
   void newPlayList() {
     playlistName.text = '';
+    checkPrimaryList = false;
     showDialog(
         context: context,
         builder: (context) {
@@ -303,7 +330,7 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
       context: context,
       builder: (builder) {
         return Container(
-          height: ScreenUtil().setHeight(400.0),
+          height: ScreenUtil.instance.setHeight(400.0),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -319,7 +346,7 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
                 child: Text(
                   '创建的歌单',
                   style: TextStyle(
-                    fontSize: ScreenUtil().setSp(25.0),
+                    fontSize: ScreenUtil.instance.setSp(25.0),
                     color: Colors.grey,
                   ),
                   textAlign: TextAlign.left,
@@ -404,7 +431,7 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
       context: context,
       builder: (builder) {
         return Container(
-          height: ScreenUtil().setHeight(400.0),
+          height: ScreenUtil.instance.setHeight(400.0),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -420,7 +447,7 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
                 child: Text(
                   '歌单 : ' + musicList[index].trackCount.toString(),
                   style: TextStyle(
-                    fontSize: ScreenUtil().setSp(25.0),
+                    fontSize: ScreenUtil.instance.setSp(25.0),
                     color: Colors.black,
                   ),
                   textAlign: TextAlign.left,
