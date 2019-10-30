@@ -322,4 +322,10 @@ class RequestService {
     Response response = await _request('/user/playlist', queryParameters: {'uid': uid});
     return response.data;
   }
+
+  Future getUserRecord({int uid, int type}) async {
+    Response response = await _request('/user/record', queryParameters: {'uid': uid, "type": type});
+
+    return response.data;
+  }
 }

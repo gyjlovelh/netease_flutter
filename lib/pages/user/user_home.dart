@@ -146,7 +146,10 @@ class _UserHomeState extends State<UserHome> {
         textColor: Colors.white70,
         child: Text('更多歌单 > '),
         onPressed: () {
-          // Navigator.of(context).pushNamed('')
+          Navigator.of(context).pushNamed('playlist_of_user', arguments: json.encode({
+            "userId": widget.profile.userId,
+            "nickname": widget.profile.nickname
+          }));
         },
       ),
     );
@@ -183,7 +186,7 @@ class _UserHomeState extends State<UserHome> {
         contents.add(commentTitle(title: "收藏的歌单", desc: "(${_storePlaylist.length})"));
         List _list = _storePlaylist.sublist(0, min<int>(3, _storePlaylist.length));
         contents.addAll(_list.map((item) => commentListTile(item)).toList());
-        if (_createPlaylist.length > 3) {
+        if (_storePlaylist.length > 3) {
           contents.add(morePlaylist());
         }
       }
