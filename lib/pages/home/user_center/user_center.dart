@@ -8,6 +8,7 @@ import '../../../models/playlist.dart';
 import 'package:toast/toast.dart';
 import '../../../shared/service/request_service.dart';
 import 'dart:convert';
+import '../../../shared/states/global.dart';
 
 class NeteaseUserCenter extends StatefulWidget {
   @override
@@ -247,8 +248,9 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
               ),
             ],
           ),
+          
           Expanded(
-            child: showList(),
+            child: Global.mSp.getInt(Constant.userId) == null ? Center(child: Text('未登录账号',style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(35),color: Colors.white,decoration: TextDecoration.underline,),)) : showList(),
           ),
         ],
       ),
