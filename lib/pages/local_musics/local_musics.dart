@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../shared/widgets/icon_data/icon_data.dart';
 import './scan_local_musics.dart';
-import '../../main.dart';
+import '../../shared/states/global.dart';
 import 'dart:io';
 
 class LocalMusics extends StatefulWidget {
@@ -12,7 +12,10 @@ class LocalMusics extends StatefulWidget {
 class _LocalMusicsState extends State<LocalMusics>
     with TickerProviderStateMixin {
   //SingleTickerProviderStateMixin
+
   TabController _tabController;
+
+  List<String> mp3Files = Global.mMp3Files;
 
   @override
   void setState(fn) {
@@ -54,13 +57,7 @@ class _LocalMusicsState extends State<LocalMusics>
                   Navigator.of(context).pushNamed('search');
                 },
               ),
-              // IconButton(
-              //   icon: NeteaseIconData(
-              //     0xe62b,
-              //     color: Colors.black,
-              //   ),
-              //   onPressed: () {},
-              // ),
+
               PopupMenuButton(
                 child: Container(
                   margin: EdgeInsets.only(right: 4.0),
@@ -140,70 +137,22 @@ class _LocalMusicsState extends State<LocalMusics>
           ),
         ),
       ),
-
-      // Scaffold(
-      //   appBar: AppBar(
-      //     backgroundColor: Colors.white,
-      //     leading: Icon(Icons.backspace),
-      //     title: Text('本地音乐'),
-      //     actions: <Widget>[
-      //       IconButton(
-      //         icon: NeteaseIconData(0xe60c),
-      //         onPressed: () {
-      //           //todo 跳转到搜索界面
-      //         },
-      //       ),
-      //       IconButton(
-      //         icon: NeteaseIconData(0xe62b),
-      //         onPressed: () {},
-      //       ),
-      //     ],
-      //   ),
-      //   body: MaterialApp(
-      //     home: DefaultTabController(
-      //       length: 4,
-      //       child: TabBar(
-      //         tabs: <Widget>[
-      //           Tab(
-      //             child: Text('单曲'),
-      //           ),
-      //           Tab(
-      //             child: Text('歌手'),
-      //           ),
-      //           Tab(
-      //             child: Text('专辑'),
-      //           ),
-      //           Tab(
-      //             child: Text('文件夹'),
-      //           ),
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      // ),
     );
   }
 
   void getAllfilesInDir(FileSystemEntity file) {
-    if (FileSystemEntity.isFileSync(file.path)) {
-      //判断是文件还是文件夹
+    if (FileSystemEntity.isFileSync(file.path)) {//判断是文件还是文件夹
       //判断是否是.mp3文件
       if (file.path.endsWith('.mp3')) {
         setState(() {
           mp3Files.add(file.path);
           print('mp3Files.length = ' + mp3Files.length.toString());
-          // fileName = file.path;
-          // print('---------->>>>>>>>>>>>>>>>filename:' + fileName);
         });
       }
     } else {
       List<FileSystemEntity> files2 = Directory(file.path).listSync();
       if (files2 != null && files2.length != 0) {
         for (int j = 0; j < files2.length; j++) {
-          // setState(() {
-          // fileName = files2[j].path;
-          // print('---------->>>>>>>>>>>>>>>>filename:' + fileName);
-          // });
           getAllfilesInDir(files2[j]);
         }
       } else {}

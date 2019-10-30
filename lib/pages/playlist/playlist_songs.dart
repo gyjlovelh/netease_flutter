@@ -100,7 +100,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
               // 点击播放
               onTap: () async {
                 if (song.url.isEmpty) {
-                  Toast.show("亲爱的,暂无版权", context);
+                  Toast.show("亲爱的,暂无版权,么么哒~", context);
                 } else {
                   if (stateProvider.playerState == AudioPlayerState.PLAYING) {
                     await stateProvider.stop();

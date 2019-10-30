@@ -17,17 +17,12 @@ import 'pages/login/login.dart';
 import 'pages/local_musics/local_musics.dart';
 import 'pages/playlist_square/playlist_square.dart';
 import 'pages/search/search.dart';
-import 'package:path_provider/path_provider.dart';
+
 import './shared/widgets/dialog/loading_dialog.dart';
 import 'pages/user/user.dart';
 
-String sDCardDir;//sd卡项目目录
-List<String> mp3Files = List<String>();//本地音乐列表
-
 void main() async {
   await Global.init();
-  sDCardDir = (await getExternalStorageDirectory()).path;
-  print('sDCardDir = '+sDCardDir);
   runApp(NeteaseApp());
 }
 
