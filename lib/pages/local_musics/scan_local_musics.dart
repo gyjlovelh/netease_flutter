@@ -3,8 +3,11 @@ import '../../shared/widgets/icon_data/icon_data.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:io';
 import 'package:toast/toast.dart';
-import '../../main.dart';
-import '../../shared/widgets/dialog/loading_dialog.dart';
+import '../../shared/states/global.dart';
+import 'package:provider/provider.dart';
+import 'package:netease_flutter/shared/player/music_change.dart';
+import 'package:netease_flutter/shared/player/music_player_status.dart';
+import 'package:audioplayer/audioplayer.dart';
 
 //本地音乐播放列表
 class ScanLocalMusics extends StatefulWidget {
@@ -14,6 +17,8 @@ class ScanLocalMusics extends StatefulWidget {
 
 class ScanLocalMusicsState extends State<ScanLocalMusics>
     with AutomaticKeepAliveClientMixin {
+  List<String> mp3Files = Global.mMp3Files;
+
   //切换时保持页面状态
   @override
   // TODO: implement wantKeepAlive
@@ -44,8 +49,8 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
   }
 
   void getAllfilesInDir(FileSystemEntity file) {
+    //判断是文件还是文件夹
     if (FileSystemEntity.isFileSync(file.path)) {
-      //判断是文件还是文件夹
       //判断是否是.mp3文件
       if (file.path.endsWith('.mp3')) {
         setState(() {
@@ -78,7 +83,8 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
               ? Text(
                   '暂无本地音乐',
                   style: TextStyle(
-                      color: Colors.grey, fontSize: ScreenUtil.instance.setSp(25.0)),
+                      color: Colors.grey,
+                      fontSize: ScreenUtil.instance.setSp(25.0)),
                 )
               : Container(),
           mp3Files.length == 0
@@ -103,9 +109,11 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
                           );
                         },
                         barrierDismissible: false);
+                    Toast.show('正在扫描...', context);
 
                     showFileName();
 
+                    Toast.show('扫描完成', context);
                     Navigator.pop(context);
 
                     if (mp3Files.length == 0) {
@@ -138,6 +146,18 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
                     GestureDetector(
                       onTap: () {
                         //todo 播放音乐
+                        File file = File(mp3Files[index]);
+                        file.exists().then((isExists) {
+                          if (isExists) {
+                            playMusic(index);
+                          } else {
+                            setState(() {
+                              Toast.show('该歌曲不存在', context);
+                              Global.mMp3Files.remove(index);
+                            });
+                          }
+                        });
+                        playMusic(index);
                         Toast.show(
                             '播放音乐 : ' +
                                 path.substring(path.lastIndexOf('/') + 1),
@@ -147,7 +167,10 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
                         margin: EdgeInsets.only(left: 4.0),
                         padding: EdgeInsets.only(top: 4.0),
                         width: double.infinity,
-                        child: Text(path.substring(path.lastIndexOf('/') + 1),style: TextStyle(color: Colors.white),),
+                        child: Text(
+                          path.substring(path.lastIndexOf('/') + 1),
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                     Divider(
@@ -162,5 +185,17 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
         ],
       ),
     );
+  }
+
+  void playMusic(int index) async {
+    final provider = Provider.of<MusicChangeNotifier>(context);
+    final stateProvider = Provider.of<MusicPlayerStatus>(context);
+
+    if (stateProvider.playerState == AudioPlayerState.PLAYING) {
+      await stateProvider.stop();
+    }
+    // stateProvider.choosePlayList(detail.tracks);
+    // provider.loadMusic(song);
+    stateProvider.playLocal(mp3Files[index]);
   }
 }

@@ -7,7 +7,7 @@ import './music_list/music_list_vo.dart';
 import '../../../models/playlist.dart';
 import 'package:toast/toast.dart';
 import '../../../shared/service/request_service.dart';
-import '../../my_loved_musics_list/my_loved_musics_list.dart';
+import 'dart:convert';
 
 class NeteaseUserCenter extends StatefulWidget {
   @override
@@ -75,7 +75,8 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
             Text(
               title,
               style: TextStyle(
-                  fontSize: ScreenUtil.instance.setSp(25.0), color: Colors.white),
+                  fontSize: ScreenUtil.instance.setSp(25.0),
+                  color: Colors.white),
             ),
           ],
         ),
@@ -94,11 +95,20 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
                   itemCount: musicList.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         //跳转到对应的歌单列表
-                        Navigator.of(context).push(MaterialPageRoute(builder: (_){
-                          return MyLovedMusicsList(imgUrl:musicList[index].header,title:musicList[index].title,index: index,);
-                        }));
+                        // Navigator.of(context).push(MaterialPageRoute(builder: (_){
+                        //   return MyLovedMusicsList(imgUrl:musicList[index].header,title:musicList[index].title,index: index,);
+                        // }));
+                        Navigator.of(context).pushNamed('playlist',
+                            arguments: json.encode({
+                              "id": musicList[index].id, //model.id
+                              "name": index == 0
+                                  ? '我喜欢的音乐'
+                                  : musicList[index].title, //model.name
+                              "coverImgUrl": musicList[index].header,
+                              // "copywriter": model.copywriter
+                            }).toString());
                       },
                       child: ListTile(
                         leading: Image.network(musicList[index].header),
@@ -128,7 +138,7 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
               ))
         : Container();
   }
-
+  
   Widget mDivider(double h) {
     return Divider(
       height: ScreenUtil.instance.setHeight(h),
@@ -151,14 +161,13 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
   Widget build(BuildContext context) {
     setListData();
 
-    return mContent()
+    return mContent();
         /*MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: mContent(),
       ),
     )*/
-        ;
   }
 
   Widget mContent() {
@@ -166,9 +175,13 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
       margin: EdgeInsets.only(top: 10.0),
       child: Column(
         children: <Widget>[
-          Expanded(
-            child: iconButtonsMine(getListData()),
-          ),
+          // Expanded(
+          //   child: ,
+          // ),
+          Container(
+              height: ScreenUtil.instance.setHeight(150.0),
+              child: iconButtonsMine(getListData()),
+            ),
           mDivider(0.5),
           userActionItem(0xe680, '本地音乐', () {
             Navigator.of(context).pushNamed('local_musics');

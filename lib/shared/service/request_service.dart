@@ -2,7 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:netease_flutter/models/profile.dart';
 import 'package:netease_flutter/models/song.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/playlist.dart';
+import '../../shared/states/global.dart';
 
 class RequestService {
   static Dio _dio;
@@ -12,6 +14,8 @@ class RequestService {
   static BuildContext _context;
 
   static RequestService _instance;
+
+  SharedPreferences _sp = Global.mSp;
 
   static init({String baseUrl}) {
     _baseUrl = baseUrl;
@@ -24,10 +28,10 @@ class RequestService {
         return response;
       } else {
         showDialog(
-          context: _context,
-          builder: (context) => AlertDialog(
-            content: Text("$response"),
-          ));
+            context: _context,
+            builder: (context) => AlertDialog(
+                  content: Text("$response"),
+                ));
         return response;
       }
     }, onError: (DioError e) {
@@ -108,7 +112,8 @@ class RequestService {
   Future checkMusic(int id) async {
     try {
       print("$id");
-      Response response = await _request('/check/music', queryParameters: {"id": id, "br": 320000});
+      Response response = await _request('/check/music',
+          queryParameters: {"id": id, "br": 320000});
 
       return response.data;
     } on DioError catch (error) {
@@ -142,7 +147,8 @@ class RequestService {
         int second = int.parse(times[1]);
 
         String word = line.replaceAll(pattern, '');
-        result.add({"time": time, "lyric": word, "second": minute * 60 + second});
+        result
+            .add({"time": time, "lyric": word, "second": minute * 60 + second});
       });
       return result;
     }
@@ -257,9 +263,9 @@ class RequestService {
 
   //创建的歌单
   Future getPlayList() async {
-    Response response =
-        await _request('/user/playlist', queryParameters: {'uid': 406330413});
-
+    // print('userid : '+_sp.getInt(Constant.userId).toString());
+    Response response = await _request('/user/playlist',
+        queryParameters: {'uid': _sp.getInt(Constant.userId)});
     return response.data;
   }
 
@@ -269,11 +275,11 @@ class RequestService {
     switch (isPrivacy) {
       case false:
         response = await _request('/playlist/create',
-            queryParameters: {'name': 406330413});
+            queryParameters: {'name': _sp.getInt(Constant.userId)});
         break;
       case true:
         response = await _request('/playlist/create',
-            queryParameters: {'name': 406330413, 'privacy': 10});
+            queryParameters: {'name': _sp.getInt(Constant.userId), 'privacy': 10});
         break;
     }
 
@@ -298,7 +304,8 @@ class RequestService {
 
   // 查询个人详情
   Future getUserDetail(int uid) async {
-    Response response = await _request('/user/detail', queryParameters: {'uid': uid});
+    Response response =
+        await _request('/user/detail', queryParameters: {'uid': uid});
 
     return response.data;
   }

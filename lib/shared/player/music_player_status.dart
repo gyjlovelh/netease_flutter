@@ -56,6 +56,13 @@ class MusicPlayerStatus with ChangeNotifier {
     // notifyListeners();
   }
 
+  //播放本地音乐
+  Future playLocal(String path) async {
+    await this._player.play(path,isLocal: true);
+    this._playStatus = AudioPlayerState.PLAYING;
+    // notifyListeners();
+  }
+
   Future pause() async {
     await this._player.pause();
     this._playStatus = AudioPlayerState.PAUSED;
