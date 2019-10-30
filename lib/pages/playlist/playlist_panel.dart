@@ -107,7 +107,7 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
                 ),
                 FlatButton(
                   onPressed: widget.status != LoadingStatus.LOADED ? null : () {
-                    
+                    Navigator.of(context).pushNamed('user', arguments: detail.creator.userId);
                   },
                   padding: EdgeInsets.zero,
                   child: Row(

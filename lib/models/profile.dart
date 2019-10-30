@@ -19,6 +19,10 @@ class ProfileModel {
   bool mutual;
   int djStatus;
   int vipType;
+  int follows;
+  int followeds;
+  int allSubscribedCount; // 订阅数
+  int playlistBeSubscribedCount; // 歌单被收藏数量
 
   ProfileModel(
       {this.authStatus,
@@ -39,7 +43,12 @@ class ProfileModel {
       this.authority,
       this.mutual,
       this.djStatus,
-      this.vipType});
+      this.vipType,
+      this.followeds,
+      this.follows,
+      this.allSubscribedCount,
+      this.playlistBeSubscribedCount
+    });
 
   ProfileModel.fromJson(Map<String, dynamic> json) {
     authStatus = json['authStatus'];
@@ -60,7 +69,11 @@ class ProfileModel {
     authority = json['authority'];
     mutual = json['mutual'];
     djStatus = json['djStatus'];
+    follows = json['follows'];
+    followeds = json['followeds'];
     vipType = json['vipType'];
+    allSubscribedCount = json['allSubscribedCount'];
+    playlistBeSubscribedCount = json['playlistBeSubscribedCount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -84,6 +97,10 @@ class ProfileModel {
     data['mutual'] = this.mutual;
     data['djStatus'] = this.djStatus;
     data['vipType'] = this.vipType;
+    data['followeds'] = this.followeds;
+    data['follows'] = this.follows;
+    data['allSubscribedCount'] = this.allSubscribedCount;
+    data['playlistBeSubscribedCount'] = this.playlistBeSubscribedCount;
     return data;
   }
 }

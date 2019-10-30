@@ -15,6 +15,7 @@ import 'pages/comment/comment.dart';
 import 'pages/home/home.dart';
 import 'pages/login/login.dart';
 import 'pages/local_musics/local_musics.dart';
+import 'pages/play_record/play_recod.dart';
 import 'pages/playlist_square/playlist_square.dart';
 import 'pages/search/search.dart';
 import 'package:path_provider/path_provider.dart';
@@ -121,6 +122,8 @@ class _NetState extends State<NeteaseApp> {
               'comment': (BuildContext context) => new NeteaseComment(),
               // 用户主页
               'user': (BuildContext context) => new NeteaseUser(),
+              // 用户播放记录 [uid: 用户id, nickname: 用户昵称]
+              'play_record': (BuildContext context) => new NeteasePlayRecord(),
               //“加载中”弹框
               'loading': (BuildContext context) => new LoadingDialog(),
               //我的歌单

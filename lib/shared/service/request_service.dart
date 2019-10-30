@@ -302,4 +302,17 @@ class RequestService {
 
     return response.data;
   }
+
+  // 查询用户信息，歌单，收藏，mv，dj数量
+  Future getUserSubcount(int uid) async {
+    Response response = await _request('/user/subcount', queryParameters: {'uid': uid});
+
+    return response.data;
+  }
+
+  // 获取用户歌单 
+  Future getUserPlaylist(int uid) async {
+    Response response = await _request('/user/playlist', queryParameters: {'uid': uid});
+    return response.data;
+  }
 }
