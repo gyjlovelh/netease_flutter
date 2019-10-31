@@ -29,7 +29,7 @@ class _NeteaseFindState extends State<NeteaseFind> {
           children: <Widget>[
             new NeteaseSwiper(),
             new NeteaseIconButtons(),
-            Divider(height: screenUtil.setHeight(66.0)),
+            Divider(height: screenUtil.setHeight(66.0), color: Theme.of(context).primaryColor,),
             new NeteaseRecommentPlaylist(),
           ],
         ),

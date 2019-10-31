@@ -58,10 +58,10 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
                 border: Border(
                   bottom: BorderSide(
                     width: sc.setHeight(1.0),
-                    color: Color.fromRGBO(42, 64, 79, 1)
+                    color: Theme.of(context).primaryColor
                   )
                 ),
-                color: Color.fromRGBO(42, 64, 79, 1)
+                color: Theme.of(context).primaryColor
               ),
               height: sc.setHeight(topActionHeight),
               child: Row(

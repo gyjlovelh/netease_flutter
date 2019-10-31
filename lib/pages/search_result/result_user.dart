@@ -4,6 +4,7 @@ import 'package:netease_flutter/models/profile.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/states/global.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
+import 'package:netease_flutter/shared/widgets/list_tile/list_tile.dart';
 
 class ResultUser extends StatefulWidget {
 
@@ -83,66 +84,68 @@ class _ResultUserState extends State<ResultUser> {
           children: _users.map((item) {
             ProfileModel profile = ProfileModel.fromJson(item);
 
-            return ListTile(
-              leading: Container(
-                height: screenUtil.setHeight(90.0),
-                width: screenUtil.setHeight(90.0),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      profile.avatarUrl
-                    ),
-                    fit: BoxFit.cover
-                  ),
-                  borderRadius: BorderRadius.circular(999.0)
-                ),
-              ),
-              title: Container(
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(
-                        right: 5.0,
+            return NeteaseListTile(
+              listTile: ListTile(
+                leading: Container(
+                  height: screenUtil.setHeight(90.0),
+                  width: screenUtil.setHeight(90.0),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        profile.avatarUrl
                       ),
-                      child: Text(profile.nickname, style: TextStyle(
-                        color: Colors.white,
-                        fontSize: screenUtil.setSp(28.0)
-                      )),
+                      fit: BoxFit.cover
                     ),
-                    genderIcon(profile)
-                  ],
+                    borderRadius: BorderRadius.circular(999.0)
+                  ),
                 ),
-              ),
-              subtitle: Text(profile.signature ?? "", 
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: screenUtil.setSp(20.0)
+                title: Container(
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(
+                          right: 5.0,
+                        ),
+                        child: Text(profile.nickname, style: TextStyle(
+                          color: Colors.white,
+                          fontSize: screenUtil.setSp(28.0)
+                        )),
+                      ),
+                      genderIcon(profile)
+                    ],
+                  ),
+                ),
+                subtitle: Text(profile.signature ?? "", 
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: screenUtil.setSp(20.0)
+                  )
+                ),
+                dense: true,
+                trailing: Container(
+                  width: screenUtil.setWidth(120.0),
+                  height: screenUtil.setHeight(42.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: screenUtil.setWidth(1.0),
+                      color: Colors.redAccent
+                    ),
+                    borderRadius: BorderRadius.circular(999.0)
+                  ),
+                  padding: EdgeInsets.zero,
+                  child: FlatButton(
+                    padding: EdgeInsets.zero,
+                    textColor: Colors.redAccent,
+                    child: Text('+ 关注', style: TextStyle(
+                      fontSize: screenUtil.setSp(22.0)
+                    )),
+                    shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                    onPressed: () {},
+                  ),
                 )
               ),
-              dense: true,
-              trailing: Container(
-                width: screenUtil.setWidth(120.0),
-                height: screenUtil.setHeight(42.0),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: screenUtil.setWidth(1.0),
-                    color: Colors.redAccent
-                  ),
-                  borderRadius: BorderRadius.circular(999.0)
-                ),
-                padding: EdgeInsets.zero,
-                child: FlatButton(
-                  padding: EdgeInsets.zero,
-                  textColor: Colors.redAccent,
-                  child: Text('+ 关注', style: TextStyle(
-                    fontSize: screenUtil.setSp(22.0)
-                  )),
-                  shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                  onPressed: () {},
-                ),
-              )
             );
           }).toList(),
         ),

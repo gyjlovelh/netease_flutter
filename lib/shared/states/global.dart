@@ -21,6 +21,8 @@ class Global {
 
     // 初始化http请求
     RequestService.init(baseUrl: 'http://106.14.154.205:3000');
+    // 同事滴服务器。要屌一点！
+    // RequestService.init(baseUrl: 'http://47.99.212.26:3000');
 
     //初始化SD卡根目录
     sDCardDir = (await getExternalStorageDirectory()).path;

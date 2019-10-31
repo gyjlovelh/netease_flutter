@@ -209,6 +209,13 @@ class RequestService {
     return response.data['data'];
   }
 
+  // 搜索建议。
+  Future getSearchSuggest(String keywords) async {
+    Response response = await _request('/search/suggest', queryParameters: {"keywords": keywords, "type": "mobile"});
+
+    return response.data['result'];
+  }
+
   // 按照类型搜索
   Future getSearchResult(
       {String keywords, int type, int limit, int offset}) async {

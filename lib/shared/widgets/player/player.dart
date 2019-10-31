@@ -30,7 +30,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
         return 0xe674;
       }
     } else {
-      return 0xe662;
+      return 0xe674;
     }
   }
 
@@ -58,7 +58,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
         width: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/player_bar.jpg'),
+            image: AssetImage('assets/images/player_bar_1.jpg'),
             fit: BoxFit.cover
           ),
           border: Border(
@@ -131,12 +131,16 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                       } else {
                         stateController.pause();
                       }
+                    } else {
+                      return null;
                     }
                   },
+                  color: Colors.white70,
+                  disabledColor: Colors.grey,
                   icon: NeteaseIconData(
                     iconPointer(musicUrl != null && musicUrl.isNotEmpty, stateController.playerState),
                     size: screenUtil.setSp(54.0),
-                    color: Colors.white70,
+                    // color: Colors.white70,
                   ),
                 )
               ),

@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/playlist.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/states/global.dart';
+import 'package:netease_flutter/shared/widgets/list_tile/list_tile.dart';
 
 class ResultPlaylist extends StatefulWidget {
 
@@ -87,33 +87,35 @@ class _ResultPlaylistState extends State<ResultPlaylist> {
           controller: _controller,
           children: _plist.map((item) {
             PlaylistModel model = PlaylistModel.fromJson(item);
-            return ListTile(
-              onTap: () {
-                Navigator.of(context).pushNamed('playlist', arguments: json.encode({
-                  "id": model.id, 
-                  "name": model.name,
-                  "coverImgUrl": model.coverImgUrl
-                }).toString());
-              },
-              leading: Container(
-                width: screenUtil.setHeight(90.0),
-                height: screenUtil.setHeight(90.0),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(model.coverImgUrl),
-                    fit: BoxFit.cover
+            return NeteaseListTile(
+              listTile: ListTile(
+                onTap: () {
+                  Navigator.of(context).pushNamed('playlist', arguments: json.encode({
+                    "id": model.id, 
+                    "name": model.name,
+                    "coverImgUrl": model.coverImgUrl
+                  }).toString());
+                },
+                leading: Container(
+                  width: screenUtil.setHeight(90.0),
+                  height: screenUtil.setHeight(90.0),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(model.coverImgUrl),
+                      fit: BoxFit.cover
+                    ),
+                    borderRadius: BorderRadius.circular(
+                      screenUtil.setWidth(8.0)
+                    )
                   ),
-                  borderRadius: BorderRadius.circular(
-                    screenUtil.setWidth(8.0)
-                  )
                 ),
+                title: Text(model.name, style: TextStyle(
+                  color: Colors.white,
+                  fontSize: screenUtil.setSp(28.0)
+                )),
+                subtitle: getSubtitle(model),
+                dense: true,
               ),
-              title: Text(model.name, style: TextStyle(
-                color: Colors.white,
-                fontSize: screenUtil.setSp(28.0)
-              )),
-              subtitle: getSubtitle(model),
-              dense: true,
             );
           }).toList(),
         ),

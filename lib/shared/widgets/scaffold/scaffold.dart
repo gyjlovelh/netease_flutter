@@ -51,7 +51,7 @@ class _NeteaseScaffoldState extends State<NeteaseScaffold> {
             Container(
               height: ScreenUtil.statusBarHeight + 50.0 + tabBarHeight,
               decoration: BoxDecoration(
-                color: Color.fromRGBO(75, 49, 49, 1)
+                color: Theme.of(context).primaryColor
               ),
             ),
             ///用户可视内容区域
@@ -123,6 +123,7 @@ class _NeteaseScaffoldState extends State<NeteaseScaffold> {
         constraints: BoxConstraints.expand(),
         child: Stack(
           alignment: Alignment.topCenter,
+          fit: StackFit.expand,
           children: contents
         ),
       ),

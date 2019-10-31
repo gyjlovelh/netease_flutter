@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/states/global.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
+import 'package:netease_flutter/shared/widgets/list_tile/list_tile.dart';
 
 class ResultSinger extends StatefulWidget {
   final String searchWord;
@@ -60,55 +61,57 @@ class _ResultSingerState extends State<ResultSinger> {
           controller: _controller,
           children: _singers.map((item) {
 
-            return ListTile(
-              onTap: () {
-                
-              },
-              leading: Container(
-                height: screenUtil.setHeight(90.0),
-                width: screenUtil.setHeight(90.0),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      item['img1v1Url']
+            return NeteaseListTile(
+              listTile: ListTile(
+                onTap: () {
+                  
+                },
+                leading: Container(
+                  height: screenUtil.setHeight(90.0),
+                  width: screenUtil.setHeight(90.0),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        item['img1v1Url']
+                      ),
+                      fit: BoxFit.cover
                     ),
-                    fit: BoxFit.cover
+                    borderRadius: BorderRadius.circular(999.0)
                   ),
-                  borderRadius: BorderRadius.circular(999.0)
                 ),
-              ),
-              title: Text(item['name'], style: TextStyle(
-                color: Colors.white,
-                fontSize: screenUtil.setSp(28.0)
-              )),
-              trailing: Container(
-                width: screenUtil.setWidth(180.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(
-                        right: screenUtil.setWidth(10.0)
+                title: Text(item['name'], style: TextStyle(
+                  color: Colors.white,
+                  fontSize: screenUtil.setSp(28.0)
+                )),
+                trailing: Container(
+                  width: screenUtil.setWidth(180.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(
+                          right: screenUtil.setWidth(10.0)
+                        ),
+                        padding: EdgeInsets.all(screenUtil.setWidth(8.0)),
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent,
+                          borderRadius: BorderRadius.circular(999.0)
+                        ),
+                        child: NeteaseIconData(
+                          0xe68e,
+                          color: Colors.white,
+                          size: screenUtil.setSp(18.0),
+                        ),
                       ),
-                      padding: EdgeInsets.all(screenUtil.setWidth(8.0)),
-                      decoration: BoxDecoration(
-                        color: Colors.redAccent,
-                        borderRadius: BorderRadius.circular(999.0)
-                      ),
-                      child: NeteaseIconData(
-                        0xe68e,
-                        color: Colors.white,
-                        size: screenUtil.setSp(18.0),
-                      ),
-                    ),
-                    Text('已入驻', style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: screenUtil.setSp(24.0)
-                    ))
-                  ],
+                      Text('已入驻', style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: screenUtil.setSp(24.0)
+                      ))
+                    ],
+                  ),
                 ),
+                dense: true,
               ),
-              dense: true,
             );
           }).toList(),
         ),

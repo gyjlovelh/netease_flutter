@@ -71,7 +71,7 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                           "name": model.name,
                           "coverImgUrl": model.picUrl,
                           "copywriter": model.copywriter
-                        }).toString());
+                        }));
                       },
                       onLongPress: () {
                         return showDialog(
