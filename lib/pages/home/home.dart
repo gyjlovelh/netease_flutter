@@ -34,8 +34,6 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
 
     ScreenUtil sc = ScreenUtil.getInstance();
 
-    final stateController = Provider.of<MusicPlayerStatus>(context);
-
     // 计算各区域高度
     double screentHeight = ScreenUtil.getInstance().height;
     double topActionHeight = screentHeight * 1.6 / 14;

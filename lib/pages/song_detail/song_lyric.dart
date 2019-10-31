@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:provider/provider.dart';
 
@@ -43,10 +42,9 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
-    final notifier = Provider.of<MusicChangeNotifier>(context);
-    final provider = Provider.of<MusicPlayerStatus>(context);
+    final provider = Provider.of<PlayerStatusNotifier>(context);
 
-    List seconds = notifier.lyric.map((item) => item['second']).toList();
+    List seconds = provider.lyric.map((item) => item['second']).toList();
 
     if (_lister == null) {
       _lister = provider.audioPlayer.onAudioPositionChanged.listen((Duration d) {
@@ -73,7 +71,7 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
         SliverFixedExtentList(
           itemExtent: 40.0,
           delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-            var item = notifier.lyric[index];
+            var item = provider.lyric[index];
 
             return Container(
               padding: EdgeInsets.only(bottom: 10.0),
@@ -92,7 +90,7 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
                 ),
               ),
             );
-          }, childCount: notifier.lyric.length),
+          }, childCount: provider.lyric.length),
         ),
         SliverFixedExtentList(
           itemExtent: screenUtil.setHeight(400.0),

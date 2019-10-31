@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/pages/song_detail/song_lyric.dart';
-import 'package:netease_flutter/shared/player/music_change.dart';
-import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
+import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:provider/provider.dart';
 
 import 'play_icon_action.dart';
@@ -30,7 +29,7 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
-    final provider = Provider.of<MusicChangeNotifier>(context);
+    final provider = Provider.of<PlayerStatusNotifier>(context);
     SongModel song =  provider.currentMusic;
 
     return Scaffold(
@@ -49,9 +48,6 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
         )
       ),
       body: Container(
-        // onPointerMove: (PointerMoveEvent event) => setState(() => print(event)),
-        // 进度条拖拽结束
-        // onPointerUp: (PointerUpEvent event) => setState(() => print(event)),
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(

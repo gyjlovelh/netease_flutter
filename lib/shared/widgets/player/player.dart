@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
-import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/widgets/music_list/music_list.dart';
 import 'package:provider/provider.dart';
@@ -39,10 +38,8 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
-    final provider = Provider.of<MusicChangeNotifier>(context);
-    final stateController = Provider.of<MusicPlayerStatus>(context);
+    final provider = Provider.of<PlayerStatusNotifier>(context);
     SongModel song =  provider.currentMusic;
-    String musicUrl = provider.musicUrl;
 
     // if (song == null) {
     //   return Text('no song');
@@ -107,7 +104,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                       maxLines: 1,
                     ),
                     Text(
-                      provider.musicUrl ?? '-',
+                      "${provider?.currentMusic?.al?.name}",
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(
@@ -125,20 +122,16 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                 width: screenUtil.setWidth(90.0),
                 child: IconButton(
                   onPressed: () {
-                    if (musicUrl != null && musicUrl.isNotEmpty) {
-                      if (stateController.playerState != AudioPlayerState.PLAYING) {
-                        stateController.play(musicUrl);
+                    if (provider.playerState != AudioPlayerState.PLAYING) {
+                        provider.play();
                       } else {
-                        stateController.pause();
+                        provider.pause();
                       }
-                    } else {
-                      return null;
-                    }
                   },
                   color: Colors.white70,
                   disabledColor: Colors.grey,
                   icon: NeteaseIconData(
-                    iconPointer(musicUrl != null && musicUrl.isNotEmpty, stateController.playerState),
+                    iconPointer(provider.currentMusic != null, provider.playerState),
                     size: screenUtil.setSp(54.0),
                     // color: Colors.white70,
                   ),

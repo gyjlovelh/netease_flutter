@@ -1,17 +1,14 @@
 
 
+import 'dart:math';
+
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
-import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
-import 'package:netease_flutter/shared/widgets/music_list/music_list.dart';
-import 'package:provider/provider.dart';
+import 'package:netease_flutter/shared/service/request_service.dart';
 
-import 'music_change.dart';
-
-class MusicPlayerStatus with ChangeNotifier {
+class PlayerStatusNotifier with ChangeNotifier {
 
   // 背景播放器
   AudioPlayer _player;
@@ -30,11 +27,32 @@ class MusicPlayerStatus with ChangeNotifier {
   RepeatMode _repeatMode = RepeatMode.LIST;
   RepeatMode get repeatMode => _repeatMode;
 
+  // 当前音乐
+  SongModel _song;
+  SongModel get currentMusic => _song;
+
+  // 歌词
+  List _lyric;
+  List get lyric => _lyric;
+
+  // 加载歌曲
+  void loadMusic(SongModel song) async {
+    if (_playStatus == AudioPlayerState.PLAYING) {
+      stop();
+    }
+    this._setCurrentMusic(song);
+
+    play();
+
+    final lyric = await RequestService.getInstance(context: null).getSongLyric(song.id);
+    this._setMusiclyric(lyric);
+  }
+
   // 播放列表
   List<SongModel> _musicList = [];
   List<SongModel> get musicList => _musicList;
 
-  MusicPlayerStatus() {
+  PlayerStatusNotifier() {
     this._player = new AudioPlayer();
 
     _player.onAudioPositionChanged.listen((Duration duration) {
@@ -44,14 +62,20 @@ class MusicPlayerStatus with ChangeNotifier {
 
     _player.onPlayerStateChanged.listen((AudioPlayerState state) {
       this._playStatus = state;
+      print('$state');
+      if (state == AudioPlayerState.COMPLETED) {
+        print('播放结束');
+        // 播放下一首
+        next();
+      }
       notifyListeners();
     });
   }
 
   AudioPlayerState get playerState => this._playStatus;
 
-  Future play(String url) async {
-    await this._player.play(url);
+  Future play() async {
+    await this._player.play("${_song.url}");
     this._playStatus = AudioPlayerState.PLAYING;
     // notifyListeners();
   }
@@ -75,6 +99,36 @@ class MusicPlayerStatus with ChangeNotifier {
     this._playStatus = AudioPlayerState.STOPPED;
     // notifyListeners();
   }
+  
+  // 上一首⏮
+  void prev() async {
+    int index = musicList.map((item) => item.id).toList().indexOf(currentMusic.id);
+    stop();
+    ///TODO,上一首定位到历史播放的前一位。
+    if (index == 0) {
+      loadMusic(musicList.last);
+    } else {
+      loadMusic(musicList[index - 1]);
+    }
+    play();
+  }
+  // 下一首⏭
+  void next() async {
+    int index = musicList.map((item) => item.id).toList().indexOf(currentMusic.id);
+    stop();
+    var target;
+    if (repeatMode == RepeatMode.RANDOM) {
+      target = musicList[Random().nextInt(musicList.length)];
+    } else {
+      if (index == musicList.length - 1) {
+        target = musicList.first;
+      } else {
+        target = musicList[index + 1];
+      }
+    }
+    loadMusic(target);
+    play();
+  }
 
   /*
    * 切换播放模式
@@ -88,18 +142,31 @@ class MusicPlayerStatus with ChangeNotifier {
   // 追加歌曲待播放
   void addMusicItem(SongModel song) {
     _musicList.add(song);
+    notifyListeners();
   }
 
   void removeMusicItem(SongModel song) {
     int index = _musicList.indexWhere((item) => item.id == song.id);
     if (index >= 0 && index < _musicList.length) {
       _musicList.removeAt(index);
+      notifyListeners();
     }
   }
 
   // 选择歌单播放
   void choosePlayList(List<SongModel> list) {
     _musicList = list;
+    notifyListeners();
+  }
+
+  void _setCurrentMusic(SongModel song) {
+    this._song = song;
+    notifyListeners();
+  }
+
+  void _setMusiclyric(List lyric) {
+    this._lyric = lyric;
+    notifyListeners();
   }
 }
 

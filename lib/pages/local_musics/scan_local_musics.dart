@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:toast/toast.dart';
 import '../../shared/states/global.dart';
 import 'package:provider/provider.dart';
-import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:audioplayer/audioplayer.dart';
 
@@ -188,8 +187,8 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
   }
 
   void playMusic(int index) async {
-    final provider = Provider.of<MusicChangeNotifier>(context);
-    final stateProvider = Provider.of<MusicPlayerStatus>(context);
+    // final provider = Provider.of<MusicChangeNotifier>(context);
+    final stateProvider = Provider.of<PlayerStatusNotifier>(context);
 
     if (stateProvider.playerState == AudioPlayerState.PLAYING) {
       await stateProvider.stop();

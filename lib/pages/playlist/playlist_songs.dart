@@ -1,14 +1,12 @@
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:netease_flutter/models/playlist.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
-import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
@@ -22,8 +20,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final stateProvider = Provider.of<MusicPlayerStatus>(context);
-    final provider = Provider.of<MusicChangeNotifier>(context);
+    final provider = Provider.of<PlayerStatusNotifier>(context);
     ScreenUtil screenUtil = ScreenUtil.getInstance();
     
 
@@ -59,13 +56,13 @@ class NeteasePlaylistSongs extends StatelessWidget {
             ),
             child: ListTile(
               onTap: () async {
-                if (stateProvider.playerState == AudioPlayerState.PLAYING) {
-                  await stateProvider.stop();
+                if (provider.playerState == AudioPlayerState.PLAYING) {
+                  await provider.stop();
                 }
-                stateProvider.choosePlayList(detail.tracks);
+                provider.choosePlayList(detail.tracks);
                 // 播放第一首歌
                 provider.loadMusic(detail.tracks.first);
-                stateProvider.play(provider.currentMusic.url);
+                provider.play();
               },
               onLongPress: () {},
               leading: NeteaseIconData(0xe674, color: Colors.white70),
@@ -100,8 +97,8 @@ class NeteasePlaylistSongs extends StatelessWidget {
 
   Widget drawSongs(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    final provider = Provider.of<MusicChangeNotifier>(context);
-    final stateProvider = Provider.of<MusicPlayerStatus>(context);
+    final provider = Provider.of<PlayerStatusNotifier >(context);
+    final stateProvider = Provider.of<PlayerStatusNotifier>(context);
 
     if (status == LoadingStatus.LOADED) {
       return Container(
@@ -124,7 +121,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
                     }
                     stateProvider.choosePlayList(detail.tracks);
                     provider.loadMusic(song);
-                    stateProvider.play(provider.currentMusic.url);
+                    stateProvider.play();
                   }
                 },
                 // 复制歌曲名

@@ -5,7 +5,6 @@ import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
-import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/widgets/music_list/music_list.dart';
@@ -63,8 +62,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    final stateController = Provider.of<MusicPlayerStatus>(context);
-    final musicProvider = Provider.of<MusicChangeNotifier>(context);
+    final provider = Provider.of<PlayerStatusNotifier>(context);
 
     return Expanded(
       flex: 0,
@@ -80,7 +78,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                 Container(
                   width: screenUtil.setWidth(125.0),
                   child: Text(
-                    formarSeconds(stateController.current), 
+                    formarSeconds(provider.current), 
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white70,
@@ -92,8 +90,8 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                   width: screenUtil.setWidth(500.0),
                   child: Slider(
                     min: 0,
-                    max: stateController.duration.toDouble() ?? 100,
-                    value: _isPointerDown ? _sliderValue : stateController.current.toDouble(),
+                    max: provider.duration.toDouble() ?? 100,
+                    value: _isPointerDown ? _sliderValue : provider.current.toDouble(),
                     onChanged: (double v) => setState(() => _sliderValue = v),
                     onChangeStart: (double v) => setState(() => _isPointerDown = true),
                     onChangeEnd: (double v) {      
@@ -103,7 +101,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                       });
                       setState(() {
                         _sliderValue = v;
-                        stateController.audioPlayer.seek(v);
+                        provider.audioPlayer.seek(v);
                       });
                     },
                   ),
@@ -111,7 +109,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                 Container(
                   width: screenUtil.setWidth(125.0),
                   child: Text(
-                    formarSeconds(stateController.duration), 
+                    formarSeconds(provider.duration), 
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white70,
@@ -125,34 +123,34 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 actionIconButton(
-                  stateController.repeatMode == RepeatMode.LIST ? 0xe63e : 
-                  stateController.repeatMode == RepeatMode.RANDOM ? 0xe61b : 0xe640, 
+                  provider.repeatMode == RepeatMode.LIST ? 0xe63e : 
+                  provider.repeatMode == RepeatMode.RANDOM ? 0xe61b : 0xe640, 
                   onPressed: () {
-                    stateController.changeRepeatMode();  
+                    provider.changeRepeatMode();  
                     String message = '';
-                    if (stateController.repeatMode == RepeatMode.SINGLE) {
+                    if (provider.repeatMode == RepeatMode.SINGLE) {
                       message = "单曲循环";
-                    } else if (stateController.repeatMode == RepeatMode.LIST) {
+                    } else if (provider.repeatMode == RepeatMode.LIST) {
                       message = "列表循环";
-                    } else if (stateController.repeatMode == RepeatMode.RANDOM) {
+                    } else if (provider.repeatMode == RepeatMode.RANDOM) {
                       message = "随机播放";
                     }
                     Toast.show('$message', context, duration: 2);
                   }
                 ),
-                actionIconButton(0xe605, onPressed: _prev),
+                actionIconButton(0xe605, onPressed: provider.prev),
                 actionIconButton(
-                  stateController.playerState == AudioPlayerState.PLAYING ? 0xe6cb : 0xe674, 
+                  provider.playerState == AudioPlayerState.PLAYING ? 0xe6cb : 0xe674, 
                   size: screenUtil.setSp(100.0), 
                   onPressed: () async {
-                    if (stateController.playerState == AudioPlayerState.PLAYING) {
-                      stateController.pause();
+                    if (provider.playerState == AudioPlayerState.PLAYING) {
+                      provider.pause();
                     } else {
-                      stateController.play(musicProvider.musicUrl);
+                      provider.play();
                     }
                   }
                 ),
-                actionIconButton(0xeaad, onPressed: _next),
+                actionIconButton(0xeaad, onPressed: provider.next),
                 actionIconButton(0xe604, onPressed: () {
                   showModalBottomSheet(
                     context: context,
@@ -167,52 +165,5 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
         ),
       ),
     );    
-  }
-
-  /*
-   * 上一首
-   */
-  void _prev() async {
-    final stateController = Provider.of<MusicPlayerStatus>(context);
-    final provider = Provider.of<MusicChangeNotifier>(context);
-
-    List<SongModel> list = stateController.musicList;
-
-    int index = list.map((item) => item.id).toList().indexOf(provider.currentMusic.id);
-    
-    stateController.stop();
-    ///TODO,上一首定位到历史播放的前一位。
-    if (index == 0) {
-      provider.loadMusic(list.last);
-    } else {
-      provider.loadMusic(list[index - 1]);
-    }
-    stateController.play(provider.currentMusic.url);
-  }
-
-  /*
-   * 单曲循环和列表循环模式下，下一首歌为列表中下一首
-   * 随机播放模式下，为随机数且不包含当前项
-   */
-  void _next() async {
-    final stateController = Provider.of<MusicPlayerStatus>(context);
-    final provider = Provider.of<MusicChangeNotifier>(context);
-
-    List<SongModel> list = stateController.musicList;
-
-    int index = list.map((item) => item.id).toList().indexOf(provider.currentMusic.id);
-    stateController.stop();
-    var target;
-    if (stateController.repeatMode == RepeatMode.RANDOM) {
-      target = list[Random().nextInt(list.length)];
-    } else {
-      if (index == list.length - 1) {
-        target = list.first;
-      } else {
-        target = list[index + 1];
-      }
-    }
-    provider.loadMusic(target);
-    stateController.play(provider.currentMusic.url);
   }
 }

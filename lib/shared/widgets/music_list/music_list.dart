@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
-import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +14,8 @@ class NeteaseMusicList extends StatefulWidget {
 class _NeteaseMusicListState extends State<NeteaseMusicList> {
 
   Widget repeatInfo() {
-    final statProvider = Provider.of<MusicPlayerStatus>(context);
-    var mode = statProvider.repeatMode;
+    final provider = Provider.of<PlayerStatusNotifier>(context);
+    var mode = provider.repeatMode;
 
     int pointer;
     String label;
@@ -33,9 +32,9 @@ class _NeteaseMusicListState extends State<NeteaseMusicList> {
 
     return flatIconButton(
       pointer, 
-      label: "$label(${statProvider.musicList.length})",
+      label: "$label(${provider.musicList.length})",
       onPressed: () {
-        statProvider.changeRepeatMode();
+        provider.changeRepeatMode();
 
         Toast.show('$label', context);
       }
@@ -65,8 +64,7 @@ class _NeteaseMusicListState extends State<NeteaseMusicList> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    final provider = Provider.of<MusicChangeNotifier>(context);
-    final statProvider = Provider.of<MusicPlayerStatus>(context);
+    final provider = Provider.of<PlayerStatusNotifier>(context);
 
     return Container(
       color: Color.fromRGBO(58, 99, 120, 1),
@@ -111,10 +109,10 @@ class _NeteaseMusicListState extends State<NeteaseMusicList> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: statProvider.musicList.length,
+              itemCount: provider.musicList.length,
               itemExtent: screenUtil.setHeight(100.0),
               itemBuilder: (BuildContext context, int index) {
-                SongModel song = statProvider.musicList[index];
+                SongModel song = provider.musicList[index];
                 bool isCur = song.id == provider.currentMusic.id;
 
                 return Material(
@@ -122,8 +120,8 @@ class _NeteaseMusicListState extends State<NeteaseMusicList> {
                   child: ListTile(
                     onTap: () async {
                       provider.loadMusic(song);
-                      statProvider.stop();
-                      statProvider.play(provider.currentMusic.url);
+                      provider.stop();
+                      provider.play();
                     },
                     dense: true,
                     title: Row(
@@ -157,18 +155,11 @@ class _NeteaseMusicListState extends State<NeteaseMusicList> {
                         size: screenUtil.setSp(32.0),
                       ),
                       onPressed: () {
-                        int index = statProvider.musicList.indexWhere((item) => item.id == song.id);
                         if (isCur) {
                           //如果正在播放要删除的这首歌，则先播放下一曲。然后在删除
-                          statProvider.stop();
-                          if (index == statProvider.musicList.length - 1) {
-                            provider.loadMusic(statProvider.musicList.first);
-                          } else {
-                            provider.loadMusic(statProvider.musicList[index + 1]);
-                          }
-                          statProvider.play(provider.currentMusic.url);
+                          provider.next();
                         }
-                        statProvider.removeMusicItem(song);
+                        provider.removeMusicItem(song);
                       },
                     ),
                   ),

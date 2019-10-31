@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
-import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:provider/provider.dart';
 
@@ -57,7 +56,7 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    final provider = Provider.of<MusicPlayerStatus>(context);
+    final provider = Provider.of<PlayerStatusNotifier>(context);
     AudioPlayer player = provider.audioPlayer;
 
     subscription = player.onPlayerStateChanged.listen((AudioPlayerState state) {

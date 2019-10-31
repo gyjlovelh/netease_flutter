@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
-import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/widgets/loading/loading.dart';
@@ -27,8 +26,7 @@ class _RecordListState extends State<RecordList> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    final stateController = Provider.of<MusicPlayerStatus>(context);
-    final musicProvider = Provider.of<MusicChangeNotifier>(context);
+    final provider = Provider.of<PlayerStatusNotifier>(context);
 
     if (status == LoadingStatus.UNINIT) {
       _loadPageData();

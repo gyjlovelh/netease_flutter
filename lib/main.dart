@@ -5,7 +5,6 @@ import 'package:netease_flutter/pages/playlist/playlist.dart';
 import 'package:netease_flutter/pages/rank_list/rank_list.dart';
 import 'package:netease_flutter/pages/search_result/search_result.dart';
 import 'package:netease_flutter/pages/song_detail/song_detail.dart';
-import 'package:netease_flutter/shared/player/music_change.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/states/global.dart';
 import 'package:provider/provider.dart';
@@ -40,10 +39,9 @@ class _NetState extends State<NeteaseApp> {
     return MultiProvider(
       providers: [
         // 
-        ChangeNotifierProvider(builder: (_) => MusicChangeNotifier()),
-        ChangeNotifierProvider(builder: (_) => MusicPlayerStatus()), 
+        ChangeNotifierProvider(builder: (_) => PlayerStatusNotifier()),
       ],
-      child: Consumer<MusicChangeNotifier>(
+      child: Consumer<PlayerStatusNotifier>(
         builder: (context, currentMusic, _) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
