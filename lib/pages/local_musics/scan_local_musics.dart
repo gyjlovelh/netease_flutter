@@ -98,7 +98,7 @@ class ScanLocalMusicsState extends State<ScanLocalMusics>
                     style: TextStyle(fontSize: ScreenUtil.instance.setSp(32.0)),
                   ),
                   onPressed: () {
-                    //todo 弹框未生效
+                    //todo 弹框、Toast未生效
                     // Navigator.push(context, DialogRouter(LoadingDialog()));
                     // Navigator.of(context).pushNamed('playlist_square');
                     showDialog(

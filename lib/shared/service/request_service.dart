@@ -278,8 +278,10 @@ class RequestService {
             queryParameters: {'name': _sp.getInt(Constant.userId)});
         break;
       case true:
-        response = await _request('/playlist/create',
-            queryParameters: {'name': _sp.getInt(Constant.userId), 'privacy': 10});
+        response = await _request('/playlist/create', queryParameters: {
+          'name': _sp.getInt(Constant.userId),
+          'privacy': 10
+        });
         break;
     }
 
@@ -312,20 +314,63 @@ class RequestService {
 
   // 查询用户信息，歌单，收藏，mv，dj数量
   Future getUserSubcount(int uid) async {
-    Response response = await _request('/user/subcount', queryParameters: {'uid': uid});
+    Response response =
+        await _request('/user/subcount', queryParameters: {'uid': uid});
 
     return response.data;
   }
 
-  // 获取用户歌单 
+  // 获取用户歌单
   Future getUserPlaylist(int uid) async {
-    Response response = await _request('/user/playlist', queryParameters: {'uid': uid});
+    Response response =
+        await _request('/user/playlist', queryParameters: {'uid': uid});
     return response.data;
   }
 
   Future getUserRecord({int uid, int type}) async {
-    Response response = await _request('/user/record', queryParameters: {'uid': uid, "type": type});
+    Response response = await _request('/user/record',
+        queryParameters: {'uid': uid, "type": type});
 
     return response.data;
   }
+
+  //获取视频标签列表
+  Future getVideoGroupList() async {
+    Response response = await _request('/video/group/list');
+
+    return response.data;
+  }
+
+  //获取视频标签下的视频  id:videoGroup的id
+  Future getVideoGroup(int id) async {
+    Response response =
+        await _request('/video/group', queryParameters: {'id': id});
+
+    return response.data;
+  }
+
+    //获取相关视频  id:视频的id
+  Future getRelatedAllVideo(int id) async {
+    Response response =
+        await _request('/related/allvideo', queryParameters: {'id': id});
+
+    return response.data;
+  }
+
+      //获取视频详情  id:视频的id
+  Future getVideoDetail(int id) async {
+    Response response =
+        await _request('/video/detail', queryParameters: {'id': id});
+
+    return response.data;
+  }
+
+      //获取视频播放地址  id:视频的id
+  Future getVideoUrl(int id) async {
+    Response response =
+        await _request('/video/url', queryParameters: {'id': id});
+
+    return response.data;
+  }
+
 }

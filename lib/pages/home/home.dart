@@ -6,6 +6,7 @@ import 'find/find.dart';
 import 'user_center/user_center.dart';
 import '../../shared/widgets/icon_data/icon_data.dart';
 import '../../shared/widgets/player/player.dart';
+import '../home/video/video.dart';
 
 import 'drawer/drawer.dart';
 
@@ -138,7 +139,7 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
                   new NeteaseUserCenter(),
                   new NeteaseFind(),
                   Text('data3'),
-                  Text('data4'),
+                  new Video(),
                 ],
               ),
             ),
