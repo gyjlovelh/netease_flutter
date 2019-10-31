@@ -51,6 +51,7 @@ flutter:
     - assets/images/avator_default.jpeg
     - assets/images/ad_cover.jpeg
     - assets/images/player_bar.jpg
+    - assets/images/player_bar_1.jpg
     - assets/images/lyric_bg.jpg
     
   fonts:

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/comment.dart';
 import 'package:netease_flutter/models/comment_arguments.dart';
+import 'package:netease_flutter/models/profile.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
@@ -17,6 +18,10 @@ class NeteaseComment extends StatefulWidget {
 }
 
 class _NeteaseCommentState extends State<NeteaseComment> {
+  TextEditingController _textController = new TextEditingController();
+  FocusNode _focusNode = new FocusNode();
+  ProfileModel _beReplier;
+
   CommentArguments arguments;
   Map<String, dynamic> detail;
   LoadingStatus status = LoadingStatus.UNINIT;
@@ -55,12 +60,88 @@ class _NeteaseCommentState extends State<NeteaseComment> {
     super.dispose();
   }
 
+  Widget targetDetail() {
+    ScreenUtil screenUtil = ScreenUtil.getInstance();
+
+    return SliverFixedExtentList(
+      itemExtent: screenUtil.setHeight(200.0),
+      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+        if (detail == null) {
+          return NeteaseLoading();
+        } else {
+          return GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Card(
+              color: Colors.transparent,
+              margin: EdgeInsets.all(0.0),
+              clipBehavior: Clip.antiAlias,
+              semanticContainer: true,
+              child: Flex(
+                direction: Axis.horizontal,
+                children: <Widget>[
+                  Expanded(
+                    flex: 0,
+                    child: Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.0),
+                        child: Image.network(
+                          detail['coverImgUrl'],
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: ListTile(
+                      contentPadding: EdgeInsets.all(0.0),
+                      title: Text(
+                        detail['name'],
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: screenUtil.setSp(30.0)
+                        ),
+                      ),
+                      subtitle: Text(
+                        "by ${detail['id']} ${detail['creator']['nickname']}",
+                        style: TextStyle(
+                          color: Colors.white70
+                        ),
+                      ),
+                      trailing: Padding(
+                        padding: EdgeInsets.only(
+                          right: screenUtil.setWidth(20.0)
+                        ),
+                        child: NeteaseIconData(
+                          0xe626,
+                          color: Colors.white70,
+                          size: screenUtil.setSp(42.0),
+                        ),
+                      )
+                    ),
+                  )
+                ],
+              )
+            ),
+          );
+        }
+      }, childCount: 1),
+    );
+  }
+
   Widget publishDate(CommentModel comment) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    DateTime time = DateTime(comment.time);
-    String timeStamp = "${time.month}月${time.day}日";
-    return 
-    Text(
+    String timeStamp;
+    try {
+      DateTime time = DateTime.fromMillisecondsSinceEpoch(comment.time);
+      timeStamp = "${time.month}月${time.day}日";
+    } catch (err) {
+      timeStamp = "未知";
+    }
+    return Text(
       "$timeStamp",
       style: TextStyle(
         color: Colors.white54,
@@ -115,11 +196,13 @@ class _NeteaseCommentState extends State<NeteaseComment> {
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         return Container(
           margin: EdgeInsets.only(
-            top: screenUtil.setHeight(30.0)
+            top: screenUtil.setHeight(15.0)
           ),
           padding: EdgeInsets.only(
+            top: screenUtil.setHeight(15.0),
             left: screenUtil.setWidth(30.0)
           ),
+          color: Colors.black12,
           child: Text(
             '$title',
             style: TextStyle(
@@ -139,8 +222,42 @@ class _NeteaseCommentState extends State<NeteaseComment> {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         CommentModel comment = CommentModel.fromJson(list[index]);
-        return GestureDetector(
-          child: Container(
+        return Material(
+          color: Colors.black12,
+          child: InkWell(
+            onTap: () async {
+              final scope = FocusScope.of(context);
+              // 打开评论出入框、、带入回复人信息
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => SimpleDialog(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  children: [
+                    {"label": "回复评论", "onPressed": () {
+                      Navigator.of(context).pop();
+                      _focusNode.unfocus();
+                      scope.requestFocus(_focusNode);
+                      setState(() {
+                        _beReplier = comment.user;
+                      });
+                    }},
+                    {"label": "复制评论", "onPressed": null},
+                  ].map((item) => InkWell(
+                    onTap: item['onPressed'],
+                    child: ListTile(
+                      title: Text(
+                        "${item['label']}",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: screenUtil.setSp(24.0)
+                        ),
+                      ),
+                      dense: true,
+                    ),
+                  )).toList()
+                )
+              );
+            },
             child: Flex(
               direction: Axis.horizontal,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -283,73 +400,7 @@ class _NeteaseCommentState extends State<NeteaseComment> {
         child: CustomScrollView(
           controller: _controller,
           slivers: <Widget>[
-            SliverFixedExtentList(
-              itemExtent: screenUtil.setHeight(200.0),
-              delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                if (detail == null) {
-                  return NeteaseLoading();
-                } else {
-                  return GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: Card(
-                      color: Colors.transparent,
-                      margin: EdgeInsets.all(0.0),
-                      clipBehavior: Clip.antiAlias,
-                      semanticContainer: true,
-                      child: Flex(
-                        direction: Axis.horizontal,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 0,
-                            child: Padding(
-                              padding: EdgeInsets.all(12.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12.0),
-                                child: Image.network(
-                                  detail['coverImgUrl'],
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: ListTile(
-                              contentPadding: EdgeInsets.all(0.0),
-                              title: Text(
-                                detail['name'],
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: screenUtil.setSp(30.0)
-                                ),
-                              ),
-                              subtitle: Text(
-                                "by ${detail['id']} ${detail['creator']['nickname']}",
-                                style: TextStyle(
-                                  color: Colors.white70
-                                ),
-                              ),
-                              trailing: Padding(
-                                padding: EdgeInsets.only(
-                                  right: screenUtil.setWidth(20.0)
-                                ),
-                                child: NeteaseIconData(
-                                  0xe626,
-                                  color: Colors.white70,
-                                  size: screenUtil.setSp(42.0),
-                                ),
-                              )
-                            ),
-                          )
-                        ],
-                      )
-                    ),
-                  );
-                }
-              }, childCount: 1),
-            ),
+            targetDetail(),
             listTitle("精彩评论"),
             commentList(_hotComments),
             listTitle("最新评论"),
@@ -359,7 +410,48 @@ class _NeteaseCommentState extends State<NeteaseComment> {
         ),
       ),
       customFooter: Container(
-        color: Colors.tealAccent,
+        padding: EdgeInsets.symmetric(
+          horizontal: screenUtil.setWidth(35.0)
+        ),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/player_bar_1.jpg'),
+            fit: BoxFit.cover
+          )
+        ),
+        child: Flex(
+          direction: Axis.horizontal,
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: TextField(
+                controller: _textController,
+                focusNode: _focusNode,
+                decoration: InputDecoration(
+                  hintText: _beReplier == null ? '这一次也许就是你上热评了' : '回复${_beReplier.nickname}：',
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).textSelectionColor.withOpacity(0.6),
+                    fontSize: screenUtil.setSp(30.0)
+                  ),
+                  border: InputBorder.none
+                ),
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: screenUtil.setSp(30.0)
+                ),
+              ),
+            ),
+            // todo表情
+            Expanded(
+              flex: 0,
+              child: FlatButton(
+                textColor: Colors.white70,
+                child: Text('发送'),
+                onPressed: () {},
+              ),
+            )
+          ],
+        )
       ),
     );
   }

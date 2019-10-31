@@ -117,57 +117,60 @@ class _NeteaseMusicListState extends State<NeteaseMusicList> {
                 SongModel song = statProvider.musicList[index];
                 bool isCur = song.id == provider.currentMusic.id;
 
-                return ListTile(
-                  onTap: () async {
-                    provider.loadMusic(song);
-                    statProvider.stop();
-                    statProvider.play(provider.currentMusic.url);
-                  },
-                  onLongPress: () {},
-                  title: Row(
-                    children: <Widget>[
-                      isCur ? Container(
-                        padding: EdgeInsets.only(right: screenUtil.setWidth(12.0)),
-                        child: NeteaseIconData(
-                          0xe666,
-                          color: Theme.of(context).textSelectionColor,
-                          size: screenUtil.setSp(32.0),
-                        ),
-                      ) : Text(''),
-                      Container(
-                        width: screenUtil.setWidth(500.0),
-                        child: Text(
-                          "${song.name} - ${song.ar.map((item) => item.name).join(',')}",
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: TextStyle(
-                            color: isCur ? Theme.of(context).textSelectionColor : Colors.white70,
-                            fontSize: screenUtil.setSp(28.0)
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  trailing: IconButton(
-                    icon: NeteaseIconData(
-                      0xe632,
-                      color: isCur ? Theme.of(context).textSelectionColor : Colors.white70,
-                      size: screenUtil.setSp(32.0),
-                    ),
-                    onPressed: () {
-                      int index = statProvider.musicList.indexWhere((item) => item.id == song.id);
-                      if (isCur) {
-                        //如果正在播放要删除的这首歌，则先播放下一曲。然后在删除
-                        statProvider.stop();
-                        if (index == statProvider.musicList.length - 1) {
-                          provider.loadMusic(statProvider.musicList.first);
-                        } else {
-                          provider.loadMusic(statProvider.musicList[index + 1]);
-                        }
-                        statProvider.play(provider.currentMusic.url);
-                      }
-                      statProvider.removeMusicItem(song);
+                return Material(
+                  color: Colors.transparent,
+                  child: ListTile(
+                    onTap: () async {
+                      provider.loadMusic(song);
+                      statProvider.stop();
+                      statProvider.play(provider.currentMusic.url);
                     },
+                    dense: true,
+                    title: Row(
+                      children: <Widget>[
+                        isCur ? Container(
+                          padding: EdgeInsets.only(right: screenUtil.setWidth(12.0)),
+                          child: NeteaseIconData(
+                            0xe666,
+                            color: Theme.of(context).textSelectionColor,
+                            size: screenUtil.setSp(32.0),
+                          ),
+                        ) : Text(''),
+                        Container(
+                          width: screenUtil.setWidth(500.0),
+                          child: Text(
+                            "${song.name} - ${song.ar.map((item) => item.name).join(',')}",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: isCur ? Theme.of(context).textSelectionColor : Colors.white70,
+                              fontSize: screenUtil.setSp(28.0)
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    trailing: IconButton(
+                      icon: NeteaseIconData(
+                        0xe632,
+                        color: isCur ? Theme.of(context).textSelectionColor : Colors.white70,
+                        size: screenUtil.setSp(32.0),
+                      ),
+                      onPressed: () {
+                        int index = statProvider.musicList.indexWhere((item) => item.id == song.id);
+                        if (isCur) {
+                          //如果正在播放要删除的这首歌，则先播放下一曲。然后在删除
+                          statProvider.stop();
+                          if (index == statProvider.musicList.length - 1) {
+                            provider.loadMusic(statProvider.musicList.first);
+                          } else {
+                            provider.loadMusic(statProvider.musicList[index + 1]);
+                          }
+                          statProvider.play(provider.currentMusic.url);
+                        }
+                        statProvider.removeMusicItem(song);
+                      },
+                    ),
                   ),
                 );
               },

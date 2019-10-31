@@ -23,6 +23,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stateProvider = Provider.of<MusicPlayerStatus>(context);
+    final provider = Provider.of<MusicChangeNotifier>(context);
     ScreenUtil screenUtil = ScreenUtil.getInstance();
     
 
@@ -49,32 +50,46 @@ class NeteasePlaylistSongs extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          ListTile(
-            onTap: () {
-              stateProvider.choosePlayList(detail.tracks);
-            },
-            onLongPress: () {},
-            leading: NeteaseIconData(0xe674, color: Colors.white70),
-            title: Text('播放全部', style: TextStyle(
-              color: Colors.white70,
-              fontSize: screenUtil.setSp(30.0)
-            )),
-            subtitle: status == LoadingStatus.LOADED ? Text('共${detail.trackCount.toString()}首', style: TextStyle(
-              fontSize: screenUtil.setSp(22.0),
-              color: Colors.white70,
-            )) : Text(''),
-            dense: true,
-            trailing: RaisedButton(
-              onPressed: () {},
-              color: Colors.red,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0)
-              ),
-              child: Text('+ 收藏 ($scStr)', style: TextStyle(
+          Material(
+            color: Colors.black12,
+            clipBehavior: Clip.antiAlias,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25.0),
+              topRight: Radius.circular(25.0),
+            ),
+            child: ListTile(
+              onTap: () async {
+                if (stateProvider.playerState == AudioPlayerState.PLAYING) {
+                  await stateProvider.stop();
+                }
+                stateProvider.choosePlayList(detail.tracks);
+                // 播放第一首歌
+                provider.loadMusic(detail.tracks.first);
+                stateProvider.play(provider.currentMusic.url);
+              },
+              onLongPress: () {},
+              leading: NeteaseIconData(0xe674, color: Colors.white70),
+              title: Text('播放全部', style: TextStyle(
                 color: Colors.white70,
-                fontSize: screenUtil.setSp(24.0)
-              ))
+                fontSize: screenUtil.setSp(30.0)
+              )),
+              subtitle: status == LoadingStatus.LOADED ? Text('共${detail.trackCount.toString()}首', style: TextStyle(
+                fontSize: screenUtil.setSp(22.0),
+                color: Colors.white70,
+              )) : Text(''),
+              dense: true,
+              trailing: RaisedButton(
+                onPressed: () {},
+                color: Theme.of(context).textSelectionColor,
+                textColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)
+                ),
+                child: Text('+ 收藏 ($scStr)', style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: screenUtil.setSp(24.0)
+                ))
+              ),
             ),
           ),
           drawSongs(context)
@@ -90,77 +105,80 @@ class NeteasePlaylistSongs extends StatelessWidget {
 
     if (status == LoadingStatus.LOADED) {
       return Container(
-        height: screenUtil.setHeight(950.0),
+        height: screenUtil.setHeight(950),
         child: ListView.builder(
           itemCount: detail.tracks.length,
           itemExtent: screenUtil.setHeight(120.0),
           itemBuilder: (BuildContext context, int index) {
             SongModel song = detail.tracks[index];
-            return ListTile(
-              // 点击播放
-              onTap: () async {
-                if (song.url.isEmpty) {
-                  Toast.show("亲爱的,暂无版权,么么哒~", context);
-                } else {
-                  if (stateProvider.playerState == AudioPlayerState.PLAYING) {
-                    await stateProvider.stop();
+            return Material(
+              color: Colors.transparent,
+              child: ListTile(
+                // 点击播放
+                onTap: () async {
+                  if (song.url.isEmpty) {
+                    Toast.show("亲爱的,暂无版权,么么哒~", context);
+                  } else {
+                    if (stateProvider.playerState == AudioPlayerState.PLAYING) {
+                      await stateProvider.stop();
+                    }
+                    stateProvider.choosePlayList(detail.tracks);
+                    provider.loadMusic(song);
+                    stateProvider.play(provider.currentMusic.url);
                   }
-                  stateProvider.choosePlayList(detail.tracks);
-                  provider.loadMusic(song);
-                  stateProvider.play(provider.currentMusic.url);
-                }
-              },
-              // 复制歌曲名
-              onLongPress: () {},
-              leading: Text(
-                (index + 1).toString(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: screenUtil.setSp(30.0)
+                },
+                // 复制歌曲名
+                // onLongPress: () {},
+                leading: Text(
+                  (index + 1).toString(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: screenUtil.setSp(30.0)
+                  ),
                 ),
-              ),
-              enabled: song != null && song.url != null && song.url.isNotEmpty,
-              title: Text(
-                song.name,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: screenUtil.setSp(30.0),
-                  fontWeight: FontWeight.w500
+                enabled: song != null && song.url != null && song.url.isNotEmpty,
+                title: Text(
+                  song.name,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: screenUtil.setSp(30.0),
+                    fontWeight: FontWeight.w500
+                  ),
                 ),
-              ),
-              // contentPadding: EdgeInsets.zero,
-              subtitle: Text(
-                song.ar.map((item) => item.name).join(',') + ' - ' + song.al.name,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(
-                  color: Colors.white54,
-                  fontSize: screenUtil.setSp(24.0)
+                // contentPadding: EdgeInsets.zero,
+                subtitle: Text(
+                  song.ar.map((item) => item.name).join(',') + ' - ' + song.al.name,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: Colors.white54,
+                    fontSize: screenUtil.setSp(24.0)
+                  ),
                 ),
-              ),
-              trailing: Container(
-                // color: Colors.tealAccent,
-                width: screenUtil.setWidth(50.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {},
-                      child: NeteaseIconData(
-                        0xe8f5,
-                        color: Colors.white70,
-                        size: screenUtil.setSp(42.0),
+                trailing: Container(
+                  // color: Colors.tealAccent,
+                  width: screenUtil.setWidth(50.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () {},
+                        child: NeteaseIconData(
+                          0xe8f5,
+                          color: Colors.white70,
+                          size: screenUtil.setSp(42.0),
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              ),
-              dense: true,
+                    ],
+                  )
+                ),
+                dense: true,
+              )
             );
-          },
+          }
         )
       );
     } else {

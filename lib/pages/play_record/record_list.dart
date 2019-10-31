@@ -83,8 +83,9 @@ class _RecordListState extends State<RecordList> {
 
   void _loadPageData() async {
     final result = await RequestService.getInstance(context: context).getUserRecord(uid: widget.userId, type: widget.type);
-    print(widget.userId);
-    print(result);
+    setState(() {
+      status = LoadingStatus.LOADING;
+    });
 
     setState(() {
      status = LoadingStatus.LOADED;

@@ -4,6 +4,7 @@ import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/states/global.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
+import 'package:netease_flutter/shared/widgets/list_tile/list_tile.dart';
 class ResultSong extends StatefulWidget {
 
   final String searchWord;
@@ -98,22 +99,24 @@ class _ResultSongState extends State<ResultSong> {
             children: _songs.map((item) {
               SongModel song = SongModel.fromJson(item);
 
-              return ListTile(
-                title: getSongTitle(song),
-                subtitle: getSubtitle(song),
-                trailing: GestureDetector(
-                  child: NeteaseIconData(
-                    0xe8f5,
-                    size: screenUtil.setSp(36.0),
-                    color: Colors.white70,
+              return NeteaseListTile(
+                listTile: ListTile(
+                  title: getSongTitle(song),
+                  subtitle: getSubtitle(song),
+                  trailing: GestureDetector(
+                    child: NeteaseIconData(
+                      0xe8f5,
+                      size: screenUtil.setSp(36.0),
+                      color: Colors.white70,
+                    ),
+                    onTap: () {},
                   ),
-                  onTap: () {},
-                ),
-                enabled: true,
-                dense: true,
-                onTap: () {
+                  enabled: true,
+                  dense: true,
+                  onTap: () {
 
-                },
+                  },
+                ),
               );
             }).toList(),
           ),

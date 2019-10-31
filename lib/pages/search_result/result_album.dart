@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/states/global.dart';
+import 'package:netease_flutter/shared/widgets/list_tile/list_tile.dart';
 
 class ResultAlbum extends StatefulWidget {
 
@@ -54,27 +55,29 @@ class _ResultAlbumState extends State<ResultAlbum> {
           itemExtent: screenUtil.setHeight(120.0),
           children: _albumList.map((item) {
 
-            return ListTile(
-              leading: Container(
-                height: screenUtil.setHeight(90.0),
-                width: screenUtil.setHeight(90.0),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(item['picUrl']),
-                    fit: BoxFit.cover
+            return NeteaseListTile(
+              listTile: ListTile(
+                leading: Container(
+                  height: screenUtil.setHeight(90.0),
+                  width: screenUtil.setHeight(90.0),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(item['picUrl']),
+                      fit: BoxFit.cover
+                    ),
+                    borderRadius: BorderRadius.circular(screenUtil.setWidth(8.0))
                   ),
-                  borderRadius: BorderRadius.circular(screenUtil.setWidth(8.0))
+                  // child: ,
                 ),
-                // child: ,
+                title: Text(item['name'], style: TextStyle(
+                  fontSize: screenUtil.setSp(28.0),
+                  color: Colors.white
+                )),
+                subtitle: Text(item['artist']['name'], style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: screenUtil.setSp(22.0)
+                )),
               ),
-              title: Text(item['name'], style: TextStyle(
-                fontSize: screenUtil.setSp(28.0),
-                color: Colors.white
-              )),
-              subtitle: Text(item['artist']['name'], style: TextStyle(
-                color: Colors.white70,
-                fontSize: screenUtil.setSp(22.0)
-              )),
             );
           }).toList(),
         ),
