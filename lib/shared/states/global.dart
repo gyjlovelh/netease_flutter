@@ -43,9 +43,9 @@ class Constant {
   static final String accountStatus = 'accountStatus';
   static final String gender = 'gender';
   static final String birthday = 'birthday';
-  static final String userId = 'userId';
+  static final String userId = 'userId';//用户id
   static final String userType = 'userType';
-  static final String nickname = 'nickname';
+  static final String nickname = 'nickname';//昵称
   static final String signature = 'signature';
   static final String description = 'description';
   static final String detailDescription = 'detailDescription';
