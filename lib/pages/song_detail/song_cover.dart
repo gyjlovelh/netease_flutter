@@ -5,7 +5,9 @@ import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
+import 'package:netease_flutter/shared/event/event.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
+import 'package:netease_flutter/shared/states/global.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +23,6 @@ class NeteaseSongCover extends StatefulWidget {
 
 class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerProviderStateMixin {
   AnimationController controller;
-  StreamSubscription subscription;
 
   Widget iconButton(int pointer, {VoidCallback onPressed}) => IconButton(
     icon: NeteaseIconData(
@@ -35,6 +36,8 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
   @override
   void initState() {
     super.initState();
+    NeteaseEvent event = NeteaseEvent.getInstance();
+    event.subscribe('netease.player.state.change', _whenPlayerStateChange);
     controller = AnimationController(duration: Duration(seconds: 25), vsync: this);
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -42,37 +45,23 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
         controller.forward();
       }
     });
+
+    if (Global.player.state == AudioPlayerState.PLAYING) {
+      controller.forward();
+    }
   }
 
   @override
   void dispose() {
-    subscription.cancel();
-    subscription = null;
+    NeteaseEvent event = NeteaseEvent.getInstance();
+    event.unsubscribe('netease.player.state.change', _whenPlayerStateChange);
     controller.dispose();
-    controller = null;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    final provider = Provider.of<PlayerStatusNotifier>(context);
-    AudioPlayer player = provider.audioPlayer;
-
-    subscription = player.onPlayerStateChanged.listen((AudioPlayerState state) {
-      if (controller == null) {
-        return;
-      }
-      if (state == AudioPlayerState.PLAYING) {
-        controller.forward();
-      } else {
-        controller.stop();
-      }
-    });
-    
-    if (provider.playerState == AudioPlayerState.PLAYING) {
-      controller.forward();
-    }
 
     return Column(
       children: <Widget>[
@@ -135,5 +124,17 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
         )
       ]
     );
+  }
+
+  // 当播放状态发生变化时
+  void _whenPlayerStateChange(var state) {
+    if (controller == null) {
+      return;
+    }
+    if (state == AudioPlayerState.PLAYING) {
+      controller.forward();
+    } else {
+      controller.stop();
+    }
   }
 }

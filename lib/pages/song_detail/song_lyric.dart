@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:netease_flutter/shared/player/music_player_status.dart';
+import 'package:netease_flutter/shared/event/event.dart';
+import 'package:netease_flutter/shared/player/player_song_demand.dart';
 import 'package:provider/provider.dart';
 
 class NeteaseSongLyric extends StatefulWidget {
@@ -10,9 +11,11 @@ class NeteaseSongLyric extends StatefulWidget {
 
 class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
 
-  var _lister;
   var _scrollListener;
-  int _focusIndex = 0;
+  // 歌词列表下标
+  int _focusIndex;
+  // 歌词高亮位置
+  int _activeMilliseconds;
 
   // 歌词滚动控制
   ScrollController scrollController;
@@ -20,8 +23,8 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
   @override
   void initState() {
     super.initState();
-  
     scrollController = new ScrollController(initialScrollOffset: 0);
+    NeteaseEvent.getInstance().subscribe('netease.player.position.change', _whenPositionChange);
 
     _scrollListener = () {};
     scrollController.addListener(_scrollListener);
@@ -29,11 +32,8 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
 
   @override
   void dispose() {
-    if (_lister != null) {
-      _lister.cancel();
-      _lister = null;
-    }
     scrollController.removeListener(_scrollListener);
+    NeteaseEvent.getInstance().unsubscribe('netease.player.position.change', _whenPositionChange);
     scrollController.dispose();
     super.dispose();
   }
@@ -42,22 +42,8 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
-    final provider = Provider.of<PlayerStatusNotifier>(context);
-
-    List seconds = provider.lyric.map((item) => item['second']).toList();
-
-    if (_lister == null) {
-      _lister = provider.audioPlayer.onAudioPositionChanged.listen((Duration d) {
-        int index = seconds.indexOf(d.inSeconds);
-        if (index != -1) {
-          double offset = 40.0 * index;
-          setState(() {
-            _focusIndex = d.inSeconds; 
-          });
-          scrollController.animateTo(offset, duration: Duration(milliseconds: 1000), curve: Curves.ease);
-        }
-      });
-    }
+    final demandProvider = Provider.of<PlayerSongDemand>(context);
+    List lyric = demandProvider.lyric;
 
     return CustomScrollView(
       controller: scrollController,
@@ -71,7 +57,7 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
         SliverFixedExtentList(
           itemExtent: 40.0,
           delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-            var item = provider.lyric[index];
+            var item = lyric[index];
 
             return Container(
               padding: EdgeInsets.only(bottom: 10.0),
@@ -79,7 +65,7 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
                 "${item['lyric']}",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: _focusIndex == item['second'] ? Colors.tealAccent : Colors.white,
+                  color: _activeMilliseconds == item['milliseconds'] ? Colors.tealAccent : Colors.white,
                   fontSize: screenUtil.setSp(28.0),
                   shadows: [
                     Shadow(
@@ -90,7 +76,7 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
                 ),
               ),
             );
-          }, childCount: provider.lyric.length),
+          }, childCount: lyric.length),
         ),
         SliverFixedExtentList(
           itemExtent: screenUtil.setHeight(400.0),
@@ -100,5 +86,25 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
         ),
       ]
     );
+  }
+
+  void _whenPositionChange(var d) {
+    final demandProvider = Provider.of<PlayerSongDemand>(context);
+    List lyric = demandProvider.lyric;
+    if (mounted) {
+      Duration duration = d;
+      List milliseconds = lyric.map((item) => item['milliseconds']).toList();
+      // int index = seconds.indexWhere((second) => second == duration.inSeconds);
+      int index = milliseconds.indexWhere((millisecond) => millisecond >= duration.inMilliseconds);
+      // todo 无法定位到最后一行歌词。
+      if (index != -1 && _focusIndex != index) {
+        double offset = 40.0 * index;
+        setState(() {
+          _focusIndex = index;
+          _activeMilliseconds = milliseconds[index > 0 ? index - 1 : 0];
+        });
+        scrollController.animateTo(offset, duration: Duration(milliseconds: 1000), curve: Curves.ease);
+      }
+    }
   }
 }

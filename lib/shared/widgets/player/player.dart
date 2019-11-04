@@ -2,6 +2,7 @@ import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
+import 'package:netease_flutter/shared/player/player_song_demand.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/widgets/music_list/music_list.dart';
@@ -39,7 +40,8 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
     final provider = Provider.of<PlayerStatusNotifier>(context);
-    SongModel song =  provider.currentMusic;
+    final demandProvider = Provider.of<PlayerSongDemand>(context);
+    SongModel song =  demandProvider.currentMusic;
 
     // if (song == null) {
     //   return Text('no song');
@@ -104,7 +106,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                       maxLines: 1,
                     ),
                     Text(
-                      "${provider?.currentMusic?.al?.name}",
+                      "${demandProvider?.currentMusic?.al?.name}",
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(
@@ -123,7 +125,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                 child: IconButton(
                   onPressed: () {
                     if (provider.playerState != AudioPlayerState.PLAYING) {
-                        provider.play();
+                        provider.play(context: context);
                       } else {
                         provider.pause();
                       }
@@ -131,7 +133,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                   color: Colors.white70,
                   disabledColor: Colors.grey,
                   icon: NeteaseIconData(
-                    iconPointer(provider.currentMusic != null, provider.playerState),
+                    iconPointer(demandProvider.currentMusic != null, provider.playerState),
                     size: screenUtil.setSp(54.0),
                     // color: Colors.white70,
                   ),

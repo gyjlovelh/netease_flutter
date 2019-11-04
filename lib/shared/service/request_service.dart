@@ -145,10 +145,15 @@ class RequestService {
         List<String> times = time.split('.')[0].split(':');
         int minute = int.parse(times[0]);
         int second = int.parse(times[1]);
+        int milliseconds = int.parse(time.split('.')[1]);
 
         String word = line.replaceAll(pattern, '');
-        result
-            .add({"time": time, "lyric": word, "second": minute * 60 + second});
+        result.add({
+          "time": time, 
+          "lyric": word, 
+          "second": minute * 60 + second, 
+          "milliseconds": milliseconds + (minute * 60 + second) * 1000
+        });
       });
       return result;
     }

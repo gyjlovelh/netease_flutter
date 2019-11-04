@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
+import 'package:netease_flutter/shared/event/event.dart';
+import 'package:netease_flutter/shared/player/player_position.dart';
+import 'package:netease_flutter/shared/player/player_repeat_mode.dart';
+import 'package:netease_flutter/shared/player/player_song_demand.dart';
+import 'package:netease_flutter/shared/states/global.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/widgets/music_list/music_list.dart';
@@ -31,24 +35,10 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
     super.initState();
   }
 
-  String formarSeconds(int seconds) {
-    if (seconds == null || seconds.isNaN) {
-      return '00:00';
-    }
-    int minute = seconds ~/ 60;
-    int second = seconds % 60;
-
-    return ((minute < 10) ? '0$minute' : '$minute') + ':' + ((second < 10) ? '0$second' : '$second');
+  @override
+  void dispose() {
+    super.dispose();
   }
-
-  double progress(int c, int t) {
-    if (c != null && t != null && t != 0) {
-      return c / t * 500.0;
-    } else {
-      return 0.0;
-    }
-  }
-
 
   Widget actionIconButton(int pointer, { 
     double size, 
@@ -62,7 +52,9 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    final provider = Provider.of<PlayerStatusNotifier>(context);
+    final statusProvider = Provider.of<PlayerStatusNotifier>(context);
+    final repeatModeProvider = Provider.of<PlayerRepeatMode>(context);
+    final positionProvider = Provider.of<PlayerPosition>(context);
 
     return Expanded(
       flex: 0,
@@ -78,7 +70,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                 Container(
                   width: screenUtil.setWidth(125.0),
                   child: Text(
-                    formarSeconds(provider.current), 
+                    "${positionProvider.currentTime}", 
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white70,
@@ -90,8 +82,8 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                   width: screenUtil.setWidth(500.0),
                   child: Slider(
                     min: 0,
-                    max: provider.duration.toDouble() ?? 100,
-                    value: _isPointerDown ? _sliderValue : provider.current.toDouble(),
+                    max: positionProvider.duration.inSeconds.toDouble(),
+                    value: _isPointerDown ? _sliderValue : min(positionProvider.current.inSeconds.toDouble(), positionProvider.duration.inSeconds.toDouble()),
                     onChanged: (double v) => setState(() => _sliderValue = v),
                     onChangeStart: (double v) => setState(() => _isPointerDown = true),
                     onChangeEnd: (double v) {      
@@ -101,7 +93,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                       });
                       setState(() {
                         _sliderValue = v;
-                        provider.audioPlayer.seek(v);
+                        Global.player.seek(v);
                       });
                     },
                   ),
@@ -109,7 +101,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                 Container(
                   width: screenUtil.setWidth(125.0),
                   child: Text(
-                    formarSeconds(provider.duration), 
+                    "${positionProvider.durationTime}",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white70,
@@ -123,34 +115,34 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 actionIconButton(
-                  provider.repeatMode == RepeatMode.LIST ? 0xe63e : 
-                  provider.repeatMode == RepeatMode.RANDOM ? 0xe61b : 0xe640, 
+                  repeatModeProvider.repeatMode == RepeatMode.LIST ? 0xe63e : 
+                  repeatModeProvider.repeatMode == RepeatMode.RANDOM ? 0xe61b : 0xe640, 
                   onPressed: () {
-                    provider.changeRepeatMode();  
+                    repeatModeProvider.changeRepeatMode();  
                     String message = '';
-                    if (provider.repeatMode == RepeatMode.SINGLE) {
+                    if (repeatModeProvider.repeatMode == RepeatMode.SINGLE) {
                       message = "单曲循环";
-                    } else if (provider.repeatMode == RepeatMode.LIST) {
+                    } else if (repeatModeProvider.repeatMode == RepeatMode.LIST) {
                       message = "列表循环";
-                    } else if (provider.repeatMode == RepeatMode.RANDOM) {
+                    } else if (repeatModeProvider.repeatMode == RepeatMode.RANDOM) {
                       message = "随机播放";
                     }
                     Toast.show('$message', context, duration: 2);
                   }
                 ),
-                actionIconButton(0xe605, onPressed: provider.prev),
+                actionIconButton(0xe605, onPressed: _prev),
                 actionIconButton(
-                  provider.playerState == AudioPlayerState.PLAYING ? 0xe6cb : 0xe674, 
+                  statusProvider.playerState == AudioPlayerState.PLAYING ? 0xe6cb : 0xe674, 
                   size: screenUtil.setSp(100.0), 
                   onPressed: () async {
-                    if (provider.playerState == AudioPlayerState.PLAYING) {
-                      provider.pause();
+                    if (statusProvider.playerState == AudioPlayerState.PLAYING) {
+                      statusProvider.pause();
                     } else {
-                      provider.play();
+                      statusProvider.play(context: context);
                     }
                   }
                 ),
-                actionIconButton(0xeaad, onPressed: provider.next),
+                actionIconButton(0xeaad, onPressed: _next),
                 actionIconButton(0xe604, onPressed: () {
                   showModalBottomSheet(
                     context: context,
@@ -165,5 +157,15 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
         ),
       ),
     );    
+  }
+
+  void _prev() {
+    final statusProvider = Provider.of<PlayerStatusNotifier>(context);
+    statusProvider.prev(context: context);
+  }
+
+  void _next() {
+    final statusProvider = Provider.of<PlayerStatusNotifier>(context);
+    statusProvider.next(context: context);
   }
 }

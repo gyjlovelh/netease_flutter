@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/pages/song_detail/song_lyric.dart';
-import 'package:netease_flutter/shared/player/music_player_status.dart';
+import 'package:netease_flutter/shared/player/player_song_demand.dart';
 import 'package:provider/provider.dart';
 
 import 'play_icon_action.dart';
@@ -29,8 +29,9 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
-    final provider = Provider.of<PlayerStatusNotifier>(context);
-    SongModel song =  provider.currentMusic;
+    final demandProvider = Provider.of<PlayerSongDemand>(context);
+    SongModel song =  demandProvider.currentMusic;
+    print('song_detail build..${song.id}');
 
     return Scaffold(
       appBar: AppBar(
@@ -66,10 +67,10 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
                       showLyric = !showLyric;
                     });
                   },
+                  // child: Text('data'),
                   child: showMain(song),
                 ),
               ),
-              // new NeteaseSongLyric(),
               new NeteasePlayIconAction(song: song)
             ],
           ),

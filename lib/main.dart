@@ -21,6 +21,9 @@ import 'pages/search/search.dart';
 
 import './shared/widgets/dialog/loading_dialog.dart';
 import 'pages/user/user.dart';
+import 'shared/player/player_position.dart';
+import 'shared/player/player_repeat_mode.dart';
+import 'shared/player/player_song_demand.dart';
 
 void main() async {
   await Global.init();
@@ -40,6 +43,12 @@ class _NetState extends State<NeteaseApp> {
       providers: [
         // 
         ChangeNotifierProvider(builder: (_) => PlayerStatusNotifier()),
+        //播放模式观察者
+        ChangeNotifierProvider(builder: (_) => PlayerRepeatMode()),
+        // 当前播放歌曲、点歌列表、歌词；
+        ChangeNotifierProvider(builder: (_) => PlayerSongDemand()),
+        // 播放位置。
+        ChangeNotifierProvider(builder: (_) => PlayerPosition())
       ],
       child: Consumer<PlayerStatusNotifier>(
         builder: (context, currentMusic, _) {

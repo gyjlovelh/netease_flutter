@@ -5,6 +5,7 @@ import 'package:netease_flutter/models/playlist.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
+import 'package:netease_flutter/shared/player/player_song_demand.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/widgets/loading/loading.dart';
@@ -21,6 +22,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<PlayerStatusNotifier>(context);
+    final demandProvider = Provider.of<PlayerSongDemand>(context);
     ScreenUtil screenUtil = ScreenUtil.getInstance();
     
 
@@ -59,9 +61,9 @@ class NeteasePlaylistSongs extends StatelessWidget {
                 if (provider.playerState == AudioPlayerState.PLAYING) {
                   await provider.stop();
                 }
-                provider.choosePlayList(detail.tracks);
+                demandProvider.choosePlayList(detail.tracks);
                 // 播放第一首歌
-                provider.loadMusic(detail.tracks.first);
+                demandProvider.loadMusic(detail.tracks.first);
                 provider.play();
               },
               onLongPress: () {},
@@ -98,6 +100,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
   Widget drawSongs(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
     final provider = Provider.of<PlayerStatusNotifier >(context);
+    final demandProvider = Provider.of<PlayerSongDemand>(context);
     final stateProvider = Provider.of<PlayerStatusNotifier>(context);
 
     if (status == LoadingStatus.LOADED) {
@@ -119,8 +122,8 @@ class NeteasePlaylistSongs extends StatelessWidget {
                     if (stateProvider.playerState == AudioPlayerState.PLAYING) {
                       await stateProvider.stop();
                     }
-                    stateProvider.choosePlayList(detail.tracks);
-                    provider.loadMusic(song);
+                    demandProvider.choosePlayList(detail.tracks);
+                    demandProvider.loadMusic(song);
                     stateProvider.play();
                   }
                 },
