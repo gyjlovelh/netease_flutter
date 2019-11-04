@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../shared/service/request_service.dart';
 import '../../../models/video_group_list.dart';
+import './video_detail.dart';
 
 class Video extends StatefulWidget {
   @override
@@ -23,13 +24,13 @@ class _VideoState extends State<Video> with SingleTickerProviderStateMixin {
   void setVideoGroupListData(BuildContext context) {
     RequestService request = RequestService.getInstance(context: context);
     request.getVideoGroupList().then((val) {
-      print('getVideoGroupList 返回的数据 : ' + val.toString());
+      // print('getVideoGroupList 返回的数据 : ' + val.toString());
       videoGroupList.clear();
       var list = val['data'] as List;
       videoGroupList = list.map((i) {
         return VideoGroupListModel.fromJson(i);
       }).toList();
-      print('videoGroupList.length = ' + videoGroupList.length.toString());
+      // print('videoGroupList.length = ' + videoGroupList.length.toString());
       if (mounted) {
         setState(() {});
       }
@@ -58,8 +59,7 @@ class _VideoState extends State<Video> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     setVideoGroupListData(context);
 
-    return 
-    DefaultTabController(
+    return DefaultTabController(
       length: 10,
       child: Scaffold(
         appBar: AppBar(
@@ -77,34 +77,50 @@ class _VideoState extends State<Video> with SingleTickerProviderStateMixin {
           controller: _tabController,
           children: <Widget>[
             Container(
-              child: Text('视频详情页'),
+              child: VideoDetail(id: videoGroupList[0].id),
             ),
             Container(
-              child: Text('视频详情页'),
+              child: VideoDetail(
+                id: videoGroupList[1].id,
+              ),
             ),
             Container(
-              child: Text('视频详情页'),
+              child: VideoDetail(
+                id: videoGroupList[2].id,
+              ),
             ),
             Container(
-              child: Text('视频详情页'),
+              child: VideoDetail(
+                id: videoGroupList[3].id,
+              ),
             ),
             Container(
-              child: Text('视频详情页'),
+              child: VideoDetail(
+                id: videoGroupList[4].id,
+              ),
             ),
             Container(
-              child: Text('视频详情页'),
+              child: VideoDetail(
+                id: videoGroupList[5].id,
+              ),
             ),
             Container(
-              child: Text('视频详情页'),
+              child: VideoDetail(
+                id: videoGroupList[6].id,
+              ),
             ),
             Container(
-              child: Text('视频详情页'),
+              child: VideoDetail(id: videoGroupList[7].id),
             ),
             Container(
-              child: Text('视频详情页'),
+              child: VideoDetail(
+                id: videoGroupList[8].id,
+              ),
             ),
             Container(
-              child: Text('视频详情页'),
+              child: VideoDetail(
+                id: videoGroupList[9].id,
+              ),
             ),
           ],
         ),
