@@ -13,7 +13,7 @@ class PlayerSongDemand extends ChangeNotifier {
   SongModel get currentMusic => _music;
   List<SongModel> get musicList => _list;
 
-  List _lyric = []; 
+  List _lyric = Global.getLyric(); 
   List get lyric => _lyric;
 
   // 加载歌曲
@@ -28,6 +28,7 @@ class PlayerSongDemand extends ChangeNotifier {
 
     // 发布歌词
     _lyric = await RequestService.getInstance(context: null).getSongLyric(song.id);
+    Global.updateLyric(_lyric);
     notifyListeners();
   }
 

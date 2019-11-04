@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:netease_flutter/shared/states/global.dart';
 
 class NeteaseAdvertising extends StatefulWidget {
   @override
@@ -25,7 +26,11 @@ class _NeteaseAdvertisingState extends State<NeteaseAdvertising> {
         _timer.cancel();
         _timer = null;
         // 跳转
-        Navigator.of(context).pushNamed('home');
+        if (Global.isLogin) {
+          Navigator.of(context).pushNamed('home'); 
+        } else {
+          Navigator.of(context).pushNamed('login');
+        }
       }
     });
   }
@@ -72,7 +77,11 @@ class _NeteaseAdvertisingState extends State<NeteaseAdvertising> {
                 ),
                 onPressed: () {
                   _timer.cancel();
-                  Navigator.of(context).pushNamed('home');
+                  if (Global.isLogin) {
+                    Navigator.of(context).pushNamed('home'); 
+                  } else {
+                    Navigator.of(context).pushNamed('login');
+                  }
                 },
                 child: Text('关闭 $time', style: TextStyle(
                   color: Colors.redAccent

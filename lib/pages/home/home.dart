@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:netease_flutter/shared/player/music_player_status.dart';
-import 'package:provider/provider.dart';
 import 'find/find.dart';
 import 'user_center/user_center.dart';
 import '../../shared/widgets/icon_data/icon_data.dart';
@@ -35,12 +33,6 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
 
     ScreenUtil sc = ScreenUtil.getInstance();
 
-    // 计算各区域高度
-    double screentHeight = ScreenUtil.getInstance().height;
-    double topActionHeight = screentHeight * 1.6 / 14;
-    double footerHeight = screentHeight * 1.2 / 14;
-    double mainAreaHeight = screentHeight * (14 - 1.6 - 1.2) / 14;
-
     return Scaffold(
       key: globalKey,
       drawer: new NeteaseDrawer(),
@@ -49,9 +41,12 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
+            Container(
+              color: Theme.of(context).primaryColor,
+              height: ScreenUtil.statusBarHeight,
+            ),
             // 顶部操作栏
             Container(
-              padding: EdgeInsets.only(top: sc.setHeight(50.0)),
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
@@ -61,15 +56,15 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
                 ),
                 color: Theme.of(context).primaryColor
               ),
-              height: sc.setHeight(topActionHeight),
+              height: 50.0,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
                     width: sc.setWidth(120.0),
+                    height: 50.0,
                     child: IconButton(
-                      // icon: Icon(Icons.list, size: ScreenUtil.getInstance().setSp(50.0)),
                       icon: NeteaseIconData(
                         0xe77c, 
                         size: ScreenUtil.getInstance().setSp(36.0),
@@ -81,18 +76,18 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
                     ),
                   ),
                   Container(
-                    height: topActionHeight - 50.0,
+                    height: 50,
                     width: sc.setWidth(500.0),
                     child: TabBar(
                       controller: _tabController,
                       labelStyle: TextStyle(
-                        fontSize: sc.setSp(36.0),
+                        fontSize: sc.setSp(34.0),
                         fontWeight: FontWeight.bold
                       ),
                       labelColor: Theme.of(context).textSelectionColor,
                       unselectedLabelColor: Colors.white70,
                       unselectedLabelStyle: TextStyle(
-                        fontSize: sc.setSp(34.0)
+                        // fontSize: sc.setSp(34.0)
                       ),
                       tabs: <Widget>[
                         Text('我的'),
@@ -103,7 +98,7 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
                     )
                   ),
                   Container(
-                    height: topActionHeight - 50.0,
+                    height: 50.0,
                     width: sc.setWidth(120.0),
                     child: IconButton(
                       icon: NeteaseIconData(
@@ -130,7 +125,7 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
                   fit: BoxFit.cover
                 )
               ),
-              height: sc.setHeight(mainAreaHeight),
+              height: ScreenUtil.screenHeightDp - ScreenUtil.statusBarHeight - ScreenUtil.bottomBarHeight - 100.0,
               child: TabBarView(
                 controller: _tabController,
                 children: <Widget>[
@@ -143,7 +138,7 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
             ),
             // 底部播放栏
             Container(
-              height: sc.setHeight(footerHeight),
+              height: 50.0,
               child: new NeteasePlayer(),
             ),
           ],

@@ -16,7 +16,7 @@ class _State extends State<NeteaseLogin> {
   TextEditingController phontController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  bool _rememberMe = false;
+  bool _rememberMe = true;
 
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 13.0),
@@ -84,9 +84,8 @@ class _State extends State<NeteaseLogin> {
                         children: <Widget>[
                           Checkbox(
                             value: _rememberMe,
-                            activeColor: Colors.redAccent,
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
+                            activeColor: Theme.of(context).textSelectionColor,
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             onChanged: (value) {
                               setState(() {
                                 _rememberMe = value;
@@ -128,7 +127,7 @@ class _State extends State<NeteaseLogin> {
                         '登 录',
                         style: TextStyle(color: Colors.white),
                       ),
-                      color: Colors.redAccent,
+                      color: Theme.of(context).textSelectionColor,
                       onPressed: _onLogin,
                     ),
                   ),
@@ -174,8 +173,9 @@ class _State extends State<NeteaseLogin> {
         passwordController.text.trim().isNotEmpty) {
       // 跳转到首页
       RequestService service = RequestService.getInstance(context: context);
-      ProfileModel profile = await service.login(
-          phone: phontController.text, password: passwordController.text);
+      ProfileModel profile = await service.login(phone: phontController.text, password: passwordController.text);
+      // 缓存用户信息
+      Global.updateProfile(profile);
 
       //缓存用户信息
       saveUserInfo(profile);
@@ -267,7 +267,7 @@ class CustomLoginTypeIcon extends StatelessWidget {
       child: Icon(
         IconData(pointer, fontFamily: 'iconfont'),
         size: ScreenUtil.getInstance().setSp(48.0),
-        color: Colors.redAccent.withOpacity(0.8),
+        color: Theme.of(context).textSelectionColor.withOpacity(0.8),
       ),
     );
   }

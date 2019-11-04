@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/services.dart';
+import 'package:netease_flutter/models/profile.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/event/event.dart';
 import 'package:netease_flutter/shared/player/player_repeat_mode.dart';
@@ -54,6 +55,23 @@ class Global {
     return RepeatMode.LIST;
   }
 
+  // 判断用户是否登录
+  static bool get isLogin => profile != null;
+
+  // 当前登录用户
+  static ProfileModel get profile {
+    String _profileString = mSp.getString('netease_cache_profile');
+    if (_profileString != null && _profileString.isNotEmpty) {
+      return ProfileModel.fromJson(json.decode(_profileString));
+    }
+    return null;
+  }
+
+  // 更新用户信息
+  static updateProfile(ProfileModel profile) async {
+    await mSp.setString('netease_cache_profile', json.encode(profile.toJson()));
+  }
+
   // 更新播放模式
   static updateRepeatMode(RepeatMode mode) async {
     await mSp.setInt('netease_cache_repeat_mode', mode.index);
@@ -71,6 +89,17 @@ class Global {
   // 更新当前播放音乐到缓存
   static updateCurrentMusic(SongModel song) async {
     await mSp.setString('netease_cache_current_song', json.encode(song.toJson()));
+  }
+
+  // 获取缓存歌词
+  static List getLyric() {
+    List<String> list = mSp.getStringList('netease_cache_lyric') ?? [];
+    return list.map((item) => json.decode(item)).toList();
+  }
+
+  // 缓存歌词
+  static updateLyric(List lyric) async {
+    await mSp.setStringList('netease_cache_lyric', lyric.map((item) => json.encode(item)).toList());
   }
 
   // 获取当前列表

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:netease_flutter/models/profile.dart';
+import 'package:netease_flutter/shared/states/global.dart';
 import 'custom_drawer.dart';
 import '../../../shared/widgets/icon_data/icon_data.dart';
 
@@ -39,12 +41,13 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
             padding: EdgeInsets.symmetric(vertical: 12.0),
             child: NeteaseIconData(
               pointer, 
-              color: Colors.redAccent,
+              color: Theme.of(context).textSelectionColor,
               size: ScreenUtil.getInstance().setSp(42.0)
             )
           ),
           Container(
             child: Text(label, style: TextStyle(
+              color: Colors.white70,
               fontSize: ScreenUtil.getInstance().setSp(24.0)
             )),
           )
@@ -80,28 +83,33 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
             child: Divider(height: ScreenUtil.getInstance().setHeight(28.0)),
           );
         } else {
-          return ListTile(
-            leading: Padding(
-              padding: EdgeInsets.only(left: horizontalWidth),
-              child: NeteaseIconData(
-                item["pointer"],
-                color: Colors.black87,
-                size: ScreenUtil.getInstance().setSp(36.0),
+          return Material(
+            color: Colors.transparent,
+            child: ListTile(
+              leading: Padding(
+                padding: EdgeInsets.only(left: horizontalWidth),
+                child: NeteaseIconData(
+                  item["pointer"],
+                  color: Colors.white70,
+                  size: ScreenUtil.getInstance().setSp(36.0),
+                ),
               ),
+              dense: true,
+              // selected: true,
+              onTap: () {},
+              contentPadding: EdgeInsets.all(0.0),
+              title: Text(item["title"], style: TextStyle(
+                color: Colors.white70,
+                fontSize: ScreenUtil.getInstance().setSp(28.0)
+              )),
+              trailing: Padding(
+                padding: EdgeInsets.only(right: horizontalWidth),
+                child: Text(item["trailing"] ?? "", style: TextStyle(
+                  color: Colors.white54,
+                  fontSize: ScreenUtil.getInstance().setSp(20.0)
+                ),),
+              )
             ),
-            dense: true,
-            // selected: true,
-            onTap: () {},
-            contentPadding: EdgeInsets.all(0.0),
-            title: Text(item["title"], style: TextStyle(
-              fontSize: ScreenUtil.getInstance().setSp(28.0)
-            )),
-            trailing: Padding(
-              padding: EdgeInsets.only(right: horizontalWidth),
-              child: Text(item["trailing"] ?? "", style: TextStyle(
-                fontSize: ScreenUtil.getInstance().setSp(20.0)
-              ),),
-            )
           );
         }
       }).toList(),
@@ -112,6 +120,7 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
   Widget build(BuildContext context) {
 
     ScreenUtil screenUtil = ScreenUtil.getInstance();
+    ProfileModel profile = Global.profile;
 
     return CustomDrawer(
       width: drawerWidth,
@@ -142,8 +151,8 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
                     Row(
                       children: <Widget>[
                         ClipOval(
-                          child: Image.asset(
-                            'assets/images/login_bg.jpg',
+                          child: Image.network(
+                            "${profile.avatarUrl}",
                             fit: BoxFit.cover,
                             height: screenUtil.setWidth(150.0),
                             width: screenUtil.setWidth(150.0),
@@ -157,11 +166,36 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
                       ),
                       child: Row(
                         children: <Widget>[
-                          Text('日月星辰', style: TextStyle(
-                            fontSize: screenUtil.setSp(32.0),
-                            fontWeight: FontWeight.bold
-                          ),),
-                          Icon(Icons.list)
+                          Text(
+                            "${profile.nickname}", 
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: screenUtil.setSp(36.0),
+                              fontWeight: FontWeight.bold
+                            )
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: screenUtil.setWidth(12.0)
+                            ),
+                            height: screenUtil.setHeight(36.0),
+                            width: screenUtil.setWidth(70.0),
+                            child: FlatButton(
+                              onPressed: () {},
+                              color: Theme.of(context).textSelectionColor,
+                              textColor: Colors.white70,
+                              padding: EdgeInsets.zero,
+                              shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(99.0)),
+                              child: Text(
+                                'Lv.${profile.vipType}',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: screenUtil.setSp(18.0),
+                                  fontStyle: FontStyle.italic
+                                ),
+                              ),
+                            ),
+                          )
                         ],
                       )
                     )
@@ -169,6 +203,7 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
                 ),
               ),
               Container(
+                color: Theme.of(context).primaryColor,
                 child: Column(
                   children: <Widget>[
                     Container(
@@ -217,7 +252,8 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
                     bottomAction(
                       pointer: 0xe74d,
                       label: '退出',
-                      onPressed: () {
+                      onPressed: () async {
+                        await Global.mSp.remove('netease_cache_profile');
                         Navigator.of(context).pushNamed('login');
                       }
                     )

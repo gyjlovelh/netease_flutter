@@ -64,7 +64,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
                 demandProvider.choosePlayList(detail.tracks);
                 // 播放第一首歌
                 demandProvider.loadMusic(detail.tracks.first);
-                provider.play();
+                provider.play(context: context);
               },
               onLongPress: () {},
               leading: NeteaseIconData(0xe674, color: Colors.white70),
@@ -124,7 +124,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
                     }
                     demandProvider.choosePlayList(detail.tracks);
                     demandProvider.loadMusic(song);
-                    stateProvider.play();
+                    stateProvider.play(context: context);
                   }
                 },
                 // 复制歌曲名

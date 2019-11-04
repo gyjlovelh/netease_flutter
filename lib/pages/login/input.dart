@@ -45,19 +45,19 @@ class _NeteaseInputState extends State<NeteaseInput> {
           prefixIcon: Icon(
             widget.prefixIcon, 
             size: ScreenUtil.getInstance().setSp(38.0),
-            color: Colors.redAccent
+            color: Theme.of(context).textSelectionColor
           )
         ),
         style: TextStyle(
-          color: Colors.black87.withOpacity(0.7),
-          fontSize: ScreenUtil.getInstance().setSp(38.0)
+          color: Colors.white70,
+          fontSize: ScreenUtil.getInstance().setSp(32.0)
         ),
         obscureText: widget.obscureText
       ),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Colors.redAccent[100],
+            color: Theme.of(context).textSelectionColor.withOpacity(0.3),
             width: 1.0
           )
         )

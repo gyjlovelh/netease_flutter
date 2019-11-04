@@ -6,7 +6,6 @@ import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 import 'package:netease_flutter/shared/widgets/playcount/playcount.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class PlaylistRecommend extends StatefulWidget {
   final String cat;
@@ -18,7 +17,7 @@ class PlaylistRecommend extends StatefulWidget {
 
 class _PlaylistRecommendState extends State<PlaylistRecommend> {
   ScrollController _controller;
-
+  // 每页30条
   int _limit = 30;
   int _lastPlaylistUpdateTime; // 记录上一页最后一条更新时间
 
@@ -38,9 +37,12 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
       if (_controller.position.pixels == _controller.position.maxScrollExtent) {
         // 已经下拉到最底部
         print('============================ 到底了。。。 ============================');
+        // 避免重复调用
+        if (_loading == LoadingStatus.LOADING) return;
         if (_plist.isNotEmpty) {
           _lastPlaylistUpdateTime = _plist.last['updateTime'];
         }
+
         _loadMore();        
       }
     });
@@ -156,6 +158,7 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
       setState(() {
         _loading = LoadingStatus.LOADING;
       });
+      print('$_lastPlaylistUpdateTime');
       var response;
       if (widget.cat == "精品") {
         response = await RequestService.getInstance(context: context).getPlaylistHighquality(
@@ -165,7 +168,7 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
       } else {
         response = await RequestService.getInstance(context: context).getPlaylist(
           limit: _limit,
-          before: _lastPlaylistUpdateTime,
+          offset: _plist.length,
           cat: widget.cat == "推荐" ? "" : widget.cat
         );
       }
@@ -175,8 +178,7 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
         }
         _hasMore = response['more'];
         _loading = LoadingStatus.LOADED;
-        List playlists = response['playlists'];
-        _plist.addAll(playlists);
+        _plist.addAll(response['playlists']);
       });
     } else {
 

@@ -184,10 +184,11 @@ class RequestService {
     return response.data['tags'];
   }
 
-  Future getPlaylist({int limit, int before, String cat}) async {
+  // 获取歌单
+  Future getPlaylist({int limit, int offset, String cat}) async {
     await Future.delayed(Duration(seconds: 1));
     Response response = await _request('/top/playlist',
-        queryParameters: {"cat": cat, "limit": limit, "before": before});
+        queryParameters: {"cat": cat, "limit": limit, "offset": offset});
 
     return response.data;
   }

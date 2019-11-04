@@ -73,7 +73,7 @@ class PlayerStatusNotifier with ChangeNotifier {
     } else {
       demandProvider.loadMusic(musicList[index - 1]);
     }
-    play();
+    play(context: context);
   }
   // 下一首⏭
   void next({BuildContext context}) async {
@@ -93,7 +93,7 @@ class PlayerStatusNotifier with ChangeNotifier {
       }
     }
     demandProvider.loadMusic(target);
-    play();
+    play(context: context);
   }
 
 }

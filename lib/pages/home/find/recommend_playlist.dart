@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/recomment_playlist.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 import 'package:netease_flutter/shared/widgets/playcount/playcount.dart';
 
 class NeteaseRecommentPlaylist extends StatelessWidget {
@@ -145,7 +146,9 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                   }).toList(),
                 );
               } else {
-                return Text('loading');
+                return Center(
+                  child: new NeteaseLoading(),
+                );
               }
             },
           )
