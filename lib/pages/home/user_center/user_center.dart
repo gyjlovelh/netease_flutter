@@ -36,7 +36,9 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
             title: playList[i].name,
             trackCount: playList[i].trackCount));
       }
-      setState(() {});
+      if(mounted) {
+        setState(() {});
+      }
     });
   }
 
@@ -139,7 +141,7 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
               ))
         : Container();
   }
-  
+
   Widget mDivider(double h) {
     return Divider(
       height: ScreenUtil.instance.setHeight(h),
@@ -163,7 +165,7 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
     setListData();
 
     return mContent();
-        /*MaterialApp(
+    /*MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: mContent(),
@@ -180,9 +182,9 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
           //   child: ,
           // ),
           Container(
-              height: ScreenUtil.instance.setHeight(150.0),
-              child: iconButtonsMine(getListData()),
-            ),
+            height: ScreenUtil.instance.setHeight(150.0),
+            child: iconButtonsMine(getListData()),
+          ),
           mDivider(0.5),
           userActionItem(0xe680, '本地音乐', () {
             Navigator.of(context).pushNamed('local_musics');
@@ -248,9 +250,19 @@ class _NeteaseUserCenterState extends State<NeteaseUserCenter> {
               ),
             ],
           ),
-          
+
           Expanded(
-            child: Global.mSp.getInt(Constant.userId) == null ? Center(child: Text('未登录账号',style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(35),color: Colors.white,decoration: TextDecoration.underline,),)) : showList(),
+            child: Global.mSp.getInt(Constant.userId) == null
+                ? Center(
+                    child: Text(
+                    '未登录账号',
+                    style: TextStyle(
+                      fontSize: ScreenUtil.getInstance().setSp(35),
+                      color: Colors.white,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ))
+                : showList(),
           ),
         ],
       ),
