@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../shared/service/request_service.dart';
-import '../../../models/video_group_list.dart';
 import './video_detail.dart';
 
 class Video extends StatefulWidget {
@@ -9,152 +7,63 @@ class Video extends StatefulWidget {
   _VideoState createState() => _VideoState();
 }
 
-class _VideoState extends State<Video> with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  List<VideoGroupListModel> videoGroupList = List<VideoGroupListModel>();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    _tabController = TabController(length: 10, vsync: this);
-  }
-
-  void setVideoGroupListData(BuildContext context) {
-    RequestService request = RequestService.getInstance(context: context);
-    request.getVideoGroupList().then((val) {
-      // print('getVideoGroupList 返回的数据 : ' + val.toString());
-      videoGroupList.clear();
-      var list = val['data'] as List;
-      videoGroupList = list.map((i) {
-        return VideoGroupListModel.fromJson(i);
-      }).toList();
-      // print('videoGroupList.length = ' + videoGroupList.length.toString());
-      if (mounted) {
-        setState(() {});
-      }
-    });
-  }
-
-  List<Widget> setTabs() {
-    List<Widget> tabs = List<Widget>();
-    for (int i = 0; i < 10; i++) {
-      tabs.add(
-        Container(
-            margin: EdgeInsets.all(20.0),
-            child: Text(
-              videoGroupList[i].name,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: ScreenUtil.getInstance().setSp(28.0),
-              ),
-            )),
-      );
-    }
-    return tabs;
-  }
+class _VideoState extends State<Video> with TickerProviderStateMixin {
+  int _videoTypeId = 60100;
 
   @override
   Widget build(BuildContext context) {
-    setVideoGroupListData(context);
-
-    return DefaultTabController(
-      length: 10,
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: null,
-          actions: null,
-          backgroundColor: Colors.transparent,
-          bottom: TabBar(
-            isScrollable: true,
-            indicator: BoxDecoration(color: Colors.red),
-            tabs: setTabs(),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          height: ScreenUtil.instance.setHeight(120.0),
+          child: barLists(),
+        ),
+        Container(
+          height: ScreenUtil.instance.setHeight(900.0),
+          child: VideoDetail(
+            id: _videoTypeId,
           ),
         ),
-        body: TabBarView(
-          controller: _tabController,
-          children: <Widget>[
-            Container(
-              child: VideoDetail(id: videoGroupList[0].id),
-            ),
-            Container(
-              child: VideoDetail(
-                id: videoGroupList[1].id,
-              ),
-            ),
-            Container(
-              child: VideoDetail(
-                id: videoGroupList[2].id,
-              ),
-            ),
-            Container(
-              child: VideoDetail(
-                id: videoGroupList[3].id,
-              ),
-            ),
-            Container(
-              child: VideoDetail(
-                id: videoGroupList[4].id,
-              ),
-            ),
-            Container(
-              child: VideoDetail(
-                id: videoGroupList[5].id,
-              ),
-            ),
-            Container(
-              child: VideoDetail(
-                id: videoGroupList[6].id,
-              ),
-            ),
-            Container(
-              child: VideoDetail(id: videoGroupList[7].id),
-            ),
-            Container(
-              child: VideoDetail(
-                id: videoGroupList[8].id,
-              ),
-            ),
-            Container(
-              child: VideoDetail(
-                id: videoGroupList[9].id,
-              ),
-            ),
-          ],
+      ],
+    );
+  }
+
+  //视频类型导航栏
+  Widget barLists() {
+    return ListView(
+      scrollDirection: Axis.horizontal,
+      children: <Widget>[
+        barListItem('翻唱', 60100),
+        barListItem('舞蹈', 1101),
+        barListItem('游戏', 2103),
+        barListItem('萌宠', 1103),
+        barListItem('现场', 58100),
+        barListItem('听BGM', 58101),
+        barListItem('生活', 2100),
+        barListItem('MV', 1000),
+        barListItem('影视', 3100),
+        barListItem('ACG音乐', 57104),
+      ],
+    );
+  }
+
+  Widget barListItem(String title, int i) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _videoTypeId = i;
+        });
+      },
+      child: Container(
+        margin: EdgeInsets.all(20.0),
+        child: Text(
+          title,
+          style: TextStyle(
+            color: i == _videoTypeId ? Colors.red : Colors.black,
+          ),
         ),
       ),
     );
-
-    // Container(
-    //   child: DefaultTabController(
-    //     length: 10,
-    //     child: Column(
-    //       children: <Widget>[
-    //         TabBar(
-    //           isScrollable: true,
-    //           labelColor: Colors.red,
-    //           tabs: setTabs(),
-    //         ),
-    //         TabBarView(
-    //           controller: _tabController,
-    //           children: <Widget>[
-    //             Container(child: Text('视频详情页'),),
-    //             Container(child: Text('视频详情页'),),
-    //             Container(child: Text('视频详情页'),),
-    //             Container(child: Text('视频详情页'),),
-    //             Container(child: Text('视频详情页'),),
-    //             Container(child: Text('视频详情页'),),
-    //             Container(child: Text('视频详情页'),),
-    //             Container(child: Text('视频详情页'),),
-    //             Container(child: Text('视频详情页'),),
-    //             Container(child: Text('视频详情页'),),
-    //           ],
-    //         )
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 }
