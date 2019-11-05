@@ -3,7 +3,7 @@ class VideoGroupModel {
 	bool displayed;
 	String alg;
 	String extAlg;
-	Data data;
+	VideoData data;
 
 	VideoGroupModel({this.type, this.displayed, this.alg, this.extAlg, this.data});
 
@@ -12,7 +12,7 @@ class VideoGroupModel {
 		displayed = json['displayed'];
 		alg = json['alg'];
 		extAlg = json['extAlg'];
-		data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+		data = json['data'] != null ? new VideoData.fromJson(json['data']) : null;
 	}
 
 	Map<String, dynamic> toJson() {
@@ -28,7 +28,7 @@ class VideoGroupModel {
 	}
 }
 
-class Data {
+class VideoData {
 	String alg;
 	String scm;
 	String threadId;
@@ -57,9 +57,9 @@ class Data {
 	bool praised;
 	bool subscribed;
 
-	Data({this.alg, this.scm, this.threadId, this.coverUrl, this.height, this.width, this.title, this.description, this.commentCount, this.shareCount, this.resolutions, this.creator, this.urlInfo, this.videoGroup, this.previewUrl, this.previewDurationms, this.hasRelatedGameAd, this.markTypes, this.relateSong, this.relatedInfo, this.videoUserLiveInfo, this.vid, this.durationms, this.playTime, this.praisedCount, this.praised, this.subscribed});
+	VideoData({this.alg, this.scm, this.threadId, this.coverUrl, this.height, this.width, this.title, this.description, this.commentCount, this.shareCount, this.resolutions, this.creator, this.urlInfo, this.videoGroup, this.previewUrl, this.previewDurationms, this.hasRelatedGameAd, this.markTypes, this.relateSong, this.relatedInfo, this.videoUserLiveInfo, this.vid, this.durationms, this.playTime, this.praisedCount, this.praised, this.subscribed});
 
-	Data.fromJson(Map<String, dynamic> json) {
+	VideoData.fromJson(Map<String, dynamic> json) {
 		alg = json['alg'];
 		scm = json['scm'];
 		threadId = json['threadId'];
