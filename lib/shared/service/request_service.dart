@@ -62,13 +62,24 @@ class RequestService {
     ProgressCallback onSendProgress,
     ProgressCallback onReceiveProgress,
   }) async {
-    return await _dio.post(_baseUrl + path,
+    try {
+      return await _dio.post(_baseUrl + path,
         data: data,
         queryParameters: queryParameters,
         options: options,
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress);
+    } on DioError catch (error) {
+      // 弹框
+      showDialog(
+        context: _context,
+        builder: (context) => AlertDialog(
+          content: Text("网络异常，请检查"),
+        ));
+      return error.response;
+    }
+    
   }
 
   /*

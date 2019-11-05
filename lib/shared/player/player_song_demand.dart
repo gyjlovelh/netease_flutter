@@ -34,7 +34,8 @@ class PlayerSongDemand extends ChangeNotifier {
 
   // 追加歌曲待播放
   void addMusicItem(SongModel song) {
-    _list.add(song);
+    if (_list.indexWhere((item) => item.id == song.id) != -1) return; 
+    _list.insert(0, song);
     Global.updateMusicList(_list);
     notifyListeners();
   }

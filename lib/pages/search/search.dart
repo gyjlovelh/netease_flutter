@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/states/global.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/widgets/loading/loading.dart';
+import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
 
 class NeteaseSearch extends StatefulWidget {
   @override
@@ -16,6 +18,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
 
   dynamic _searchDefault;
   List _matchs = [];
+  List<String> _history = [];
 
   bool _inputFocused = false;
 
@@ -44,6 +47,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
           _searchDefault = result;
         });
     });
+    _history = Global.mSp.getStringList('netease_chache_search_history');
   }
 
   Widget searchSuggestPanel() {
@@ -102,9 +106,9 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
 
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Container(
+    return NeteaseScaffold(
+      appBar: NeteaseAppBar(
+        customTitle: Container(
           child: TextField(
             controller: _searchController,
             onTap: () {
@@ -140,21 +144,22 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: NeteaseIconData(
-              0xe60c
-            ),
+            icon: NeteaseIconData(0xe60c, color: Colors.white70),
             onPressed: () {
+              String keyword;
               if (_searchController.text.isEmpty) {
-                Navigator.of(context).pushNamed('search_result', arguments: _searchDefault['realkeyword']);
+                keyword = _searchDefault['realkeyword'];
               } else {
-                Navigator.of(context).pushNamed('search_result', arguments: _searchController.text.trim());
+                keyword = _searchController.text.trim();
               }
+              viewSearchDetail(keyword);
             },
           )
         ],
       ),
       body: Stack(
-        fit: StackFit.expand,
+        fit: StackFit.loose,
+        overflow: Overflow.clip,
         children: <Widget>[
           Listener(
             onPointerDown: (PointerDownEvent event) {
@@ -169,6 +174,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                   fit: BoxFit.cover
                 )
               ),
+              height: ScreenUtil.screenHeightDp - ScreenUtil.statusBarHeight - ScreenUtil.bottomBarHeight - 100.0,
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
@@ -177,6 +183,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                         horizontal: screenUtil.setWidth(30.0)
                       ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -189,34 +196,83 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                               IconButton(
                                 icon: NeteaseIconData(
                                   0xe67f,
-                                  color: Colors.white70,
+                                  color: Colors.white54,
                                   size: screenUtil.setSp(36.0),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
+                                        title: Text(
+                                          '确定清空全部历史记录？',
+                                          style: TextStyle(
+                                            fontSize: screenUtil.setSp(30.0)
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text(
+                                              '取消',
+                                              style: TextStyle(
+                                                fontSize: screenUtil.setSp(28.0),
+                                                color: Theme.of(context).dialogTheme.titleTextStyle.color
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          FlatButton(
+                                            child: Text(
+                                              '清空',
+                                              style: TextStyle(
+                                                fontSize: screenUtil.setSp(28.0),
+                                                color: Theme.of(context).dialogTheme.titleTextStyle.color
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Global.mSp.setStringList('netease_chache_search_history', []);
+                                              setState(() {
+                                                _history = [];
+                                              });
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    }
+                                  );
+                                },
                               )
                             ],
                           ),
                           Container(
-                            height: screenUtil.setHeight(50.0),
+                            height: screenUtil.setHeight(55.0),
                             child: ListView(
                               scrollDirection: Axis.horizontal,
                               shrinkWrap: true,
-                              children: ["记录A", "刘德华", "赵雷", "烟火里的尘埃", "偏爱小龟", "失重",
-                              "记录A", "刘德华", "赵雷", "烟火里的尘埃", "偏爱小龟", "失重"].map((item) {
+                              children: _history.map((item) {
                                 return Container(
+                                  width: screenUtil.setWidth(44 + item.length * 24.0),
                                   margin: EdgeInsets.only(
                                     right: screenUtil.setWidth(18.0)
                                   ),
                                   padding: EdgeInsets.zero,
                                   child: FlatButton(
                                     child: Text(item, style: TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.white70,
                                       fontSize: screenUtil.setSp(24.0)
                                     )),
                                     padding: EdgeInsets.zero,
-                                    color: Theme.of(context).primaryColor,
+                                    color: Color.fromRGBO(45, 73, 91, 0.6),
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                                     onPressed: () {
+                                      // 将此项移动到第一位
+                                      _history..remove(item)..insert(0, item);
+                                      Global.mSp.setStringList('netease_chache_search_history', _history);
+                                      
                                       Navigator.of(context).pushNamed('search_result', arguments: item);
                                     },
                                   ),
@@ -257,7 +313,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                                 child: ListTile(
                                   dense: true,
                                   onTap: () {
-                                    Navigator.of(context).pushNamed('search_result', arguments: item["searchWord"]);
+                                    viewSearchDetail(item["searchWord"]);
                                   },
                                   leading: Text(
                                     (index + 1).toString(),
@@ -308,12 +364,21 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                   ],
                 ),
               ),
-            ),
+            )
           ),
           searchSuggestPanel()
         ],
-      )
+      ),
     );
+  }
+
+  void viewSearchDetail(String keyword) {
+    if (_history.contains(keyword)) {
+      _history.remove(keyword);
+    }
+    _history.insert(0, keyword);
+    Global.mSp.setStringList('netease_chache_search_history', _history);
+    Navigator.of(context).pushNamed('search_result', arguments: keyword);
   }
 
   void _loadSearchSuggest(String text) async {
