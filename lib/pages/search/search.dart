@@ -47,7 +47,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
           _searchDefault = result;
         });
     });
-    _history = Global.mSp.getStringList('netease_chache_search_history');
+    _history = Global.mSp.getStringList('netease_chache_search_history') ?? [];
   }
 
   Widget searchSuggestPanel() {
