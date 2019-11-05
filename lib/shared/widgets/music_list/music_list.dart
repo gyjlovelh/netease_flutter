@@ -139,7 +139,7 @@ class _NeteaseMusicListState extends State<NeteaseMusicList> {
                         Container(
                           width: screenUtil.setWidth(500.0),
                           child: Text(
-                            "${song.name} - ${song.ar.map((item) => item.name).join(',')}",
+                            "${song.name} - ${(song.ar ?? song.artists).map((item) => item.name).join(',')}",
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: TextStyle(

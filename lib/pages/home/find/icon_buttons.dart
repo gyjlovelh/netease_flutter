@@ -37,7 +37,9 @@ class NeteaseIconButtons extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          iconButtonItem(0xe652, label: '每日推荐'),
+          iconButtonItem(0xe652, label: '每日推荐', onPressed: () {
+            Navigator.of(context).pushNamed('commend_songs');
+          }),
           iconButtonItem(0xe60d, label: '歌单', onPressed: () {
             Navigator.of(context).pushNamed('playlist_square');
           }),

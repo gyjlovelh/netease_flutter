@@ -29,7 +29,7 @@ class  PlayerPosition extends ChangeNotifier {
 
     Global.player.onPlayerStateChanged.listen((AudioPlayerState state) {
       print("state:$state");
-      if (state == AudioPlayerState.COMPLETED) {
+      if (state == AudioPlayerState.COMPLETED || state == AudioPlayerState.STOPPED) {
         _current = new Duration(seconds: 0);
         _currentTime = '00:00';
 

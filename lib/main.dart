@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/pages/my_loved_musics_list/my_loved_musics_list.dart';
 import 'package:netease_flutter/pages/playlist/playlist.dart';
 import 'package:netease_flutter/pages/rank_list/rank_list.dart';
+import 'package:netease_flutter/pages/recommend_songs/recommend_songs.dart';
 import 'package:netease_flutter/pages/search_result/search_result.dart';
 import 'package:netease_flutter/pages/song_detail/song_detail.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
@@ -123,6 +124,8 @@ class _NetState extends State<NeteaseApp> {
               'song_detail': (BuildContext context) => new NeteaseSongDetail(),
               // 歌单界面
               'playlist': (BuildContext context) => new NeteasePlaylist(),
+              // 每日推荐歌曲
+              'commend_songs' : (BuildContext context) => new NeteaseRecommendSongs(),
               // 歌单广场
               'playlist_square': (BuildContext context) => new NeteasePlaylistSquare(),
               // 搜索界面

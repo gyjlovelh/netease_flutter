@@ -228,17 +228,13 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
               child: TabBarView(
                 controller: _tabController,
                 children: _tabs.map((item) {
-                  if (item.historyKeyword.isEmpty || item.historyKeyword != _searchWord) {
-                    item.historyKeyword = _searchWord;
-                    item.resultPage = new ResultList(
-                      keyword: item.historyKeyword,
-                      type: item.type,
-                      listKey: item.listKey,
-                      countKey: item.countKey,
-                      itemBuilder: item.itemBuilder,
-                    );
-                  }
-                  return item.resultPage;
+                  return new ResultList(
+                    keyword: _searchWord,
+                    type: item.type,
+                    listKey: item.listKey,
+                    countKey: item.countKey,
+                    itemBuilder: item.itemBuilder,
+                  );
                 }).toList(),
               ),
             )

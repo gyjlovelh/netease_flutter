@@ -41,7 +41,6 @@ class PlayerStatusNotifier with ChangeNotifier {
   Future play({BuildContext context}) async {
     _context = context;
     await this._player.play("${Global.getCurrentMusic().url}");
-    this._playStatus = AudioPlayerState.PLAYING;
   }
 
   //播放本地音乐
@@ -52,12 +51,10 @@ class PlayerStatusNotifier with ChangeNotifier {
 
   Future pause() async {
     await this._player.pause();
-    this._playStatus = AudioPlayerState.PAUSED;
   }
 
   Future stop() async {
     await this._player.stop();
-    this._playStatus = AudioPlayerState.STOPPED;
   }
   
   // 上一首⏮
@@ -66,14 +63,12 @@ class PlayerStatusNotifier with ChangeNotifier {
     final demandProvider = Provider.of<PlayerSongDemand>(context);
     final musicList = demandProvider.musicList;
     int index = musicList.map((item) => item.id).toList().indexOf(demandProvider.currentMusic.id);
-    stop();
     ///TODO,上一首定位到历史播放的前一位。
     if (index == 0) {
       demandProvider.loadMusic(musicList.last);
     } else {
       demandProvider.loadMusic(musicList[index - 1]);
     }
-    play(context: context);
   }
   // 下一首⏭
   void next({BuildContext context}) async {
@@ -81,7 +76,6 @@ class PlayerStatusNotifier with ChangeNotifier {
     final demandProvider = Provider.of<PlayerSongDemand>(context);
     final musicList = demandProvider.musicList;
     int index = musicList.map((item) => item.id).toList().indexOf(demandProvider.currentMusic.id);
-    stop();
     var target;
     if (Global.getRepeatMode() == RepeatMode.RANDOM) {
       target = musicList[Random().nextInt(musicList.length)];
@@ -93,7 +87,6 @@ class PlayerStatusNotifier with ChangeNotifier {
       }
     }
     demandProvider.loadMusic(target);
-    play(context: context);
   }
 
 }

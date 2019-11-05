@@ -42,7 +42,7 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
             Text(song.name, style: TextStyle(
               fontSize: screenUtil.setSp(30.0)
             )),
-            Text(song.ar.map((item) => item.name).join(','), style: TextStyle(
+            Text((song.ar ?? song.artists).map((item) => item.name).join(','), style: TextStyle(
               fontSize: screenUtil.setSp(24.0)
             ))
           ],

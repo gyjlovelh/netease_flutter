@@ -90,7 +90,7 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
                   alignment: Alignment.center,
                   child: ClipOval(
                     child: Image.network(
-                      widget.song.al.picUrl,
+                      (widget.song.al ?? widget.song.album).picUrl,
                       fit: BoxFit.cover,
                       width: screenUtil.setWidth(480.0),
                       height: screenUtil.setWidth(480.0),

@@ -115,7 +115,7 @@ class _ResultListState extends State<ResultList> {
     if (mounted) {
       setState(() {
         status = LoadingStatus.LOADED;
-        if (_resultList == null) return; 
+        if (_resultList == null || response == null) return; 
         _resultList.addAll(response["${widget.listKey}"]);
         _resultCount = response["${widget.countKey}"];
         if (_offset + _limit >= _resultCount) {

@@ -83,7 +83,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                   ),
                   borderRadius: BorderRadius.circular(99.0),
                   image: DecorationImage(
-                    image: song == null ? AssetImage('assets/images/song_cover_default.jpeg') : NetworkImage(song.al.picUrl),
+                    image: song == null ? AssetImage('assets/images/song_cover_default.jpeg') : NetworkImage((song.al ?? song.album).picUrl),
                     fit: BoxFit.cover
                   ),
                 ),

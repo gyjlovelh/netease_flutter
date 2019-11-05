@@ -1,4 +1,6 @@
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:netease_flutter/models/profile.dart';
 import 'package:netease_flutter/models/song.dart';
@@ -22,16 +24,12 @@ class RequestService {
     _dio = new Dio();
     _dio.options.receiveTimeout = 8000;
     _dio.options.connectTimeout = 5000;
+    _dio.interceptors.add(CookieManager(CookieJar()));
 
     _dio.interceptors.add(InterceptorsWrapper(onResponse: (Response response) {
       if (response.statusCode == 200) {
         return response;
       } else {
-        showDialog(
-            context: _context,
-            builder: (context) => AlertDialog(
-                  content: Text("$response"),
-                ));
         return response;
       }
     }, onError: (DioError e) {
@@ -72,11 +70,7 @@ class RequestService {
         onReceiveProgress: onReceiveProgress);
     } on DioError catch (error) {
       // 弹框
-      showDialog(
-        context: _context,
-        builder: (context) => AlertDialog(
-          content: Text("网络异常，请检查"),
-        ));
+      print("$error");
       return error.response;
     }
     
@@ -101,10 +95,25 @@ class RequestService {
     return response.data['banners'];
   }
 
+  // 获取每日推荐歌曲
+  Future getRecommendSongs() async {
+    Response response = await _request('/recommend/songs?timestamp=${DateTime.now().microsecondsSinceEpoch}');
+    List songs = response.data['recommend'] ?? [];
+    List songIds = songs.map((item) => item['id']).toList();
+    Response urlRes = await _request('/song/url', queryParameters: {"id": songIds.join(',')});
+    List urls = urlRes.data['data'];
+
+    // 歌曲url不是按顺序返回
+    songs.asMap().forEach((int index, var item) {
+      final target = urls.firstWhere((urlItem) => urlItem['id'] == item['id']);
+      item['url'] = target['url'];
+    });   
+    return songs;
+  }
+
   // 获取推荐歌单
   Future<List> getRecommendPlaylist() async {
-    Response response =
-        await _request('/personalized', queryParameters: {"limit": 6});
+    Response response = await _request('/personalized', queryParameters: {"limit": 6});
     return response.data['result'];
   }
 
@@ -135,7 +144,7 @@ class RequestService {
   // 获取歌曲歌词
   Future<List> getSongLyric(int id) async {
     Response response = await _request('/lyric', queryParameters: {"id": id});
-    if (response.data['lrc'] != null) {
+    if (response.data != null && response.data['lrc'] != null) {
       // 原有语言歌词
       String lyric = response.data['lrc']['lyric'];
       List<String> lines = lyric.split('\n');
