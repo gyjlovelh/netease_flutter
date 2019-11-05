@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/pages/my_loved_musics_list/my_loved_musics_list.dart';
 import 'package:netease_flutter/pages/playlist/playlist.dart';
 import 'package:netease_flutter/pages/rank_list/rank_list.dart';
@@ -62,8 +63,7 @@ class _NetState extends State<NeteaseApp> {
             ],
             theme: ThemeData(
               brightness: Brightness.light,
-              primaryColorLight: Colors.blueAccent,
-              primaryColor: Color.fromRGBO(44, 66, 82, 1),
+              primaryColor: Color.fromRGBO(40, 67, 84, 1),
               textSelectionColor: Color.fromRGBO(38, 150, 167, 1),
               scaffoldBackgroundColor: Color.fromRGBO(17, 60, 103, 1),
               
@@ -80,6 +80,18 @@ class _NetState extends State<NeteaseApp> {
                 activeTrackColor: Colors.tealAccent,
                 inactiveTrackColor: Colors.grey,
                 thumbColor: Colors.white
+              ),
+              dialogTheme: DialogTheme(
+                backgroundColor: Color.fromRGBO(54, 99, 122, 1),
+                titleTextStyle: TextStyle(
+                  color: Color.fromRGBO(137, 170, 187, 1),
+                ),
+                contentTextStyle: TextStyle(
+                  color: Color.fromRGBO(137, 170, 187, 1),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(9.0)
+                )
               ),
               // tabbar样式
               tabBarTheme: TabBarTheme(

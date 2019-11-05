@@ -457,8 +457,12 @@ class _NeteaseCommentState extends State<NeteaseComment> {
   }
 
   void _loadTargetDetail() async {
-    
-    final result = await RequestService.getInstance(context: context).getPlaylistDetail(arguments.id);
+    var result;
+    if (arguments.type == 'playlist') {
+      result = await RequestService.getInstance(context: context).getPlaylistDetail(arguments.id);
+    } else if (arguments.type == 'music') {
+      result = await RequestService.getInstance(context: context).getSongDetail(arguments.id);
+    }
 
     setState(() {
       status = LoadingStatus.LOADED;

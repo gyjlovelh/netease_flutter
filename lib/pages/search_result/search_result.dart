@@ -1,14 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:netease_flutter/pages/search_result/result_user.dart';
+import 'package:netease_flutter/models/playlist.dart';
+import 'package:netease_flutter/models/profile.dart';
+import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
+import 'package:netease_flutter/shared/player/player_song_demand.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
+import 'package:netease_flutter/shared/widgets/list_tile/list_tile.dart';
+import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
+import 'package:provider/provider.dart';
 
-import 'result_album.dart';
-import 'result_playlist.dart';
-import 'result_song.dart';
-import 'result_singer.dart';
+import 'result_list.dart';
 
 class NeteaseSearchResult extends StatefulWidget {
 
@@ -24,7 +29,7 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
 
   dynamic _searchDefault;
 
-  List _tabs = [ "单曲", "视频", "歌手", "专辑", "歌单", "用户"];
+  List<TabItemSetting> _tabs = [];
   List _matchs = [];
   String _searchWord = '';
   bool _inputFocused = false;
@@ -32,6 +37,38 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
   @override
   void initState() {
     super.initState();
+    _tabs..add(new TabItemSetting( ///单曲
+      type: 1,
+      label: '单曲',
+      listKey: "songs", 
+      countKey: "songCount",
+      itemBuilder: songBuilder
+    ))..add(new TabItemSetting( /// 歌手
+      type: 100,
+      label: '歌手',
+      listKey: 'artists',
+      countKey: 'artistCount',
+      itemBuilder: artistBuilder
+    ))..add(new TabItemSetting( ///专辑
+      type: 10,
+      label: '专辑',
+      listKey: 'albums',
+      countKey: 'albumCount',
+      itemBuilder: ablumBuilder
+    ))..add(new TabItemSetting(
+      type: 1000,
+      label: '歌单',
+      listKey: 'playlists',
+      countKey: 'playlistCount',
+      itemBuilder: playlistBuilder
+    ))..add(new TabItemSetting(
+      type: 1002,
+      label: '用户',
+      listKey: 'userprofiles',
+      countKey: 'userprofileCount',
+      itemBuilder: profileBuilder
+    ));
+    
     _tabController = TabController(length: _tabs.length, vsync: this);
 
     RequestService.getInstance(context: context).getSearchDefault().then((result) {
@@ -46,6 +83,7 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
     super.dispose();
   }
 
+  // 搜索建议面板
   Widget searchSuggestPanel() {
     ScreenUtil screenUtil = ScreenUtil.getInstance(); 
     if (_matchs.length == 0 || !_inputFocused) {
@@ -113,9 +151,9 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
       });
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: TextField(
+    return NeteaseScaffold(
+      appBar: NeteaseAppBar(
+        customTitle: TextField(
           controller: _searchController,
           onTap: () {
             setState(() {
@@ -147,29 +185,31 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
             border: InputBorder.none
           ),
         ),
-        bottom: TabBar(
-          isScrollable: true,
-          controller: _tabController,
 
-          tabs: _tabs.map((item) {
-            return Tab(
-              child: Container(
-                width: screenUtil.setWidth(150.0),
-                child: Text(
-                  item, 
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: screenUtil.setSp(30.0)
-                  )
-                ),
+      ),
+      tabbar: TabBar(
+        isScrollable: true,
+        controller: _tabController,
+        labelColor: Theme.of(context).textSelectionColor,
+        unselectedLabelColor: Colors.white70,
+        tabs: _tabs.map((item) {
+          return Tab(
+            child: Container(
+              width: screenUtil.setWidth(150.0),
+              child: Text(
+                item.label, 
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: screenUtil.setSp(30.0)
+                )
               ),
-            );
-          }).toList()
-        ),
+            ),
+          );
+        }).toList()
       ),
       body: Stack(
-        fit: StackFit.expand,
+        fit: StackFit.loose,
+        overflow: Overflow.clip,
         children: <Widget>[
           Listener(
             onPointerDown: (PointerDownEvent event) {
@@ -180,52 +220,32 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(
-                    'assets/images/theme_1.jpg'
-                  ),
+                  image: AssetImage('assets/images/theme_1.jpg'),
                   fit: BoxFit.cover
                 )
               ),
-              child: Flex(
-                direction: Axis.vertical,
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: _tabs.map((item) {
-                          if (item == "单曲") {
-                            return new ResultSong(searchWord: _searchWord);
-                          } else if (item == "歌单") {
-                            return new ResultPlaylist(searchWord: _searchWord);
-                          } else if (item == "歌手") {
-                            return new ResultSinger(searchWord: _searchWord);
-                          } else if (item == "用户") {
-                            return new ResultUser(searchWord: _searchWord);
-                          } else if (item == "专辑") {
-                            return new ResultAlbum(searchWord: _searchWord);
-                          } else {
-                            return Text('todo');
-                          }
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                  // Expanded(
-                  //   flex: 0,
-                  //   child: Container(
-                  //     height: screenUtil.setHeight(Global.PLAYER_SCALE * screenUtil.height),
-                  //     child: new NeteasePlayer(),
-                  //   ),
-                  // )
-                ],
+              height: ScreenUtil.screenHeightDp - ScreenUtil.statusBarHeight - ScreenUtil.bottomBarHeight - 130.0,
+              child: TabBarView(
+                controller: _tabController,
+                children: _tabs.map((item) {
+                  if (item.historyKeyword.isEmpty || item.historyKeyword != _searchWord) {
+                    item.historyKeyword = _searchWord;
+                    item.resultPage = new ResultList(
+                      keyword: item.historyKeyword,
+                      type: item.type,
+                      listKey: item.listKey,
+                      countKey: item.countKey,
+                      itemBuilder: item.itemBuilder,
+                    );
+                  }
+                  return item.resultPage;
+                }).toList(),
               ),
-            ),
+            )
           ),
           searchSuggestPanel()
         ],
-      )
+      ),
     );
   }
 
@@ -237,4 +257,335 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
       _matchs = result['allMatch'] ?? [];
     });
   }
+
+  //////////////////////////////////////////// result-song[单曲] ////////////////////////////////////////////////////
+  Widget songBuilder(item) {
+    SongModel song = SongModel.fromJson(item);
+    final demandProvider = Provider.of<PlayerSongDemand>(context);
+    ScreenUtil screenUtil = ScreenUtil.getInstance();
+    return NeteaseListTile(
+      listTile: ListTile(
+        title: songTitle(song),
+        subtitle: songSubtitle(song),
+        trailing: GestureDetector(
+          child: NeteaseIconData(
+            0xe8f5,
+            size: screenUtil.setSp(36.0),
+            color: Colors.white70,
+          ),
+          onTap: () {},
+        ),
+        enabled: true,
+        dense: true,
+        onTap: () async {
+          ///加载歌曲播放链接
+          ///更新播放列表。开始播放选中歌曲。
+          ///跳转到歌曲播放界面
+          SongModel model = await RequestService.getInstance(context: context).getSongDetail(song.id);
+          demandProvider.addMusicItem(model);
+          demandProvider.loadMusic(model);
+
+          Navigator.of(context).pushNamed('song_detail');
+        },
+      ),
+    );
+  }
+
+  Widget songTitle(SongModel song) {
+    ScreenUtil screenUtil = ScreenUtil.getInstance();
+
+    String extra = "";
+    if (song.transNames != null && song.transNames.length > 0) {
+      extra = '(' + song.transNames.join(',') + ')';
+    }
+
+    return Container(
+      child: Text(song.name + extra, 
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+        style: TextStyle(
+        color: Colors.white,
+        fontSize: screenUtil.setSp(28.0)
+      ))
+    );
+  }
+
+  Widget songSubtitle(SongModel song) {
+    ScreenUtil screenUtil = ScreenUtil.getInstance();
+    String extra = "";
+    if (song.album != null) {
+      extra = " - " + song.album.name;
+    }
+
+    return Container(
+      child: Text(
+        song.artists.map((item) => item.name).join(',') + extra, 
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+        style: TextStyle(
+          color: Colors.white70,
+          fontSize: screenUtil.setSp(24.0)
+        ),
+      ),
+    );
+  }
+
+  //////////////////////////////////////////// result-album[专辑] //////////////////////////////////////////////////// 
+  Widget ablumBuilder(item) {
+    ScreenUtil screenUtil = ScreenUtil.getInstance();
+
+    return NeteaseListTile(
+      listTile: ListTile(
+        leading: Container(
+          height: screenUtil.setHeight(90.0),
+          width: screenUtil.setHeight(90.0),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(item['picUrl']),
+              fit: BoxFit.cover
+            ),
+            borderRadius: BorderRadius.circular(screenUtil.setWidth(8.0))
+          ),
+          // child: ,
+        ),
+        title: Text(item['name'], style: TextStyle(
+          fontSize: screenUtil.setSp(28.0),
+          color: Colors.white
+        )),
+        subtitle: Text(item['artist']['name'], style: TextStyle(
+          color: Colors.white70,
+          fontSize: screenUtil.setSp(22.0)
+        )),
+      ),
+    );
+  }
+
+  //////////////////////////////////////////// result-artist [歌手] ////////////////////////////////////////////////////
+  Widget artistBuilder(item) {
+    ScreenUtil screenUtil = ScreenUtil.getInstance();
+    return NeteaseListTile(
+      listTile: ListTile(
+        onTap: () {
+          
+        },
+        leading: Container(
+          height: screenUtil.setHeight(90.0),
+          width: screenUtil.setHeight(90.0),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(
+                item['img1v1Url']
+              ),
+              fit: BoxFit.cover
+            ),
+            borderRadius: BorderRadius.circular(999.0)
+          ),
+        ),
+        title: Text(item['name'], style: TextStyle(
+          color: Colors.white,
+          fontSize: screenUtil.setSp(28.0)
+        )),
+        trailing: Container(
+          width: screenUtil.setWidth(180.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(
+                  right: screenUtil.setWidth(10.0)
+                ),
+                padding: EdgeInsets.all(screenUtil.setWidth(8.0)),
+                decoration: BoxDecoration(
+                  color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(999.0)
+                ),
+                child: NeteaseIconData(
+                  0xe68e,
+                  color: Colors.white,
+                  size: screenUtil.setSp(18.0),
+                ),
+              ),
+              Text('已入驻', style: TextStyle(
+                color: Colors.white70,
+                fontSize: screenUtil.setSp(24.0)
+              ))
+            ],
+          ),
+        ),
+        dense: true,
+      ),
+    );
+  }
+
+  //////////////////////////////////////////// result-playlist[歌单] ////////////////////////////////////////////////////
+  Widget playlistBuilder(item) {
+    ScreenUtil screenUtil = ScreenUtil.getInstance();
+
+    PlaylistModel model = PlaylistModel.fromJson(item);
+    return NeteaseListTile(
+      listTile: ListTile(
+        onTap: () {
+          Navigator.of(context).pushNamed('playlist', arguments: json.encode({
+            "id": model.id, 
+            "name": model.name,
+            "coverImgUrl": model.coverImgUrl
+          }).toString());
+        },
+        leading: Container(
+          width: screenUtil.setHeight(90.0),
+          height: screenUtil.setHeight(90.0),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(model.coverImgUrl),
+              fit: BoxFit.cover
+            ),
+            borderRadius: BorderRadius.circular(
+              screenUtil.setWidth(8.0)
+            )
+          ),
+        ),
+        title: Text(model.name, style: TextStyle(
+          color: Colors.white,
+          fontSize: screenUtil.setSp(28.0)
+        )),
+        subtitle: playlistSubtitle(model),
+        dense: true,
+      ),
+    );
+  }
+  
+  Widget playlistSubtitle(PlaylistModel model) {
+    String content = "";
+    String playCountStr = "";
+    content += model.trackCount.toString() + "首 ";
+    content += "by " + model.creator.nickname + ",";
+    if (model.playCount > 100000000) {
+      playCountStr = (model.playCount ~/ 100000000).toString() + "亿次";
+    } else if (model.playCount > 100000) {
+      playCountStr = (model.playCount ~/ 1000 / 10).toString() + "万次";
+    } else {
+      playCountStr = model.playCount.toString() + "次";
+    }
+    content += " 播放$playCountStr";
+    return Text(content, 
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
+      style: TextStyle(
+        color: Colors.white70,
+        fontSize: ScreenUtil.getInstance().setSp(22.0)
+      )
+    );
+  }
+
+  //////////////////////////////////////////// result-profile[用户] ////////////////////////////////////////////////////
+  Widget profileBuilder(item) {
+    ScreenUtil screenUtil = ScreenUtil.getInstance();
+    ProfileModel profile = ProfileModel.fromJson(item);
+    return NeteaseListTile(
+      listTile: ListTile(
+        onTap: () {
+          Navigator.of(context).pushNamed('user', arguments: profile.userId);
+        },
+        leading: Container(
+          height: screenUtil.setHeight(90.0),
+          width: screenUtil.setHeight(90.0),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(
+                profile.avatarUrl
+              ),
+              fit: BoxFit.cover
+            ),
+            borderRadius: BorderRadius.circular(999.0)
+          ),
+        ),
+        title: Container(
+          child: Row(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(
+                  right: 5.0,
+                ),
+                child: Text(profile.nickname, style: TextStyle(
+                  color: Colors.white,
+                  fontSize: screenUtil.setSp(28.0)
+                )),
+              ),
+              genderIcon(profile)
+            ],
+          ),
+        ),
+        subtitle: Text(profile.signature ?? "", 
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+          style: TextStyle(
+            color: Colors.white70,
+            fontSize: screenUtil.setSp(20.0)
+          )
+        ),
+        dense: true,
+        trailing: Container(
+          width: screenUtil.setWidth(120.0),
+          height: screenUtil.setHeight(42.0),
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: screenUtil.setWidth(1.0),
+              color: Colors.redAccent
+            ),
+            borderRadius: BorderRadius.circular(999.0)
+          ),
+          padding: EdgeInsets.zero,
+          child: FlatButton(
+            padding: EdgeInsets.zero,
+            textColor: Colors.redAccent,
+            child: Text('+ 关注', style: TextStyle(
+              fontSize: screenUtil.setSp(22.0)
+            )),
+            shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            onPressed: () {},
+          ),
+        )
+      ),
+    );
+  }
+  
+  Widget genderIcon(ProfileModel profile) {
+    ScreenUtil screenUtil = ScreenUtil.getInstance();
+
+    if (profile.gender == 1) {
+      return NeteaseIconData(
+        0xe62c,
+        color: Colors.blueAccent,
+        size: screenUtil.setSp(20.0),
+      );
+    } else if (profile.gender == 2) {
+      return NeteaseIconData(
+        0xe671,
+        color: Colors.redAccent,
+        size: screenUtil.setSp(20.0),
+      );
+    } else {
+      return Text('');
+    }
+  }
 }
+
+class TabItemSetting {
+  final String label;
+  final int type;
+  final String listKey;
+  final String countKey;
+  final ResultBuilder itemBuilder;
+  // 上一次关键字
+  String historyKeyword = "";
+  Widget resultPage;
+
+  TabItemSetting({
+    this.label,
+    this.countKey,
+    this.itemBuilder,
+    this.type,
+    this.listKey
+  });
+}
+

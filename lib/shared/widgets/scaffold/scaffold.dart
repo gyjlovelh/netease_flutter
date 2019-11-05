@@ -134,12 +134,14 @@ class _NeteaseScaffoldState extends State<NeteaseScaffold> {
 
 class NeteaseAppBar extends StatelessWidget {
   final String title;
+  final Widget customTitle;
   final String subtitle;
   final Color backgroundColor;
   final List<Widget> actions;
 
   NeteaseAppBar({
-    @required this.title,
+    this.title,
+    this.customTitle,
     this.subtitle,
     this.backgroundColor = const Color.fromRGBO(44, 66, 82, 1),
     this.actions
@@ -151,29 +153,34 @@ class NeteaseAppBar extends StatelessWidget {
     List<Widget> rowItems = [];
     List<Widget> contents = [];
 
-    ///解析title和subtitle
-    Widget titleW = Text(
-      title,
-      overflow: TextOverflow.ellipsis,
-      maxLines: 1,
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: screenUtil.setSp(32.0)
-      ),
-    );
-    contents.add(titleW);
-
-    if (subtitle != null && subtitle.isNotEmpty) {
-      contents.add(Text(
-        subtitle,
+    if (customTitle != null) {
+      contents.add(customTitle);
+    } else {
+      ///解析title和subtitle
+      Widget titleW = Text(
+        title,
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
         style: TextStyle(
-          color: Colors.white70,
-          fontSize: screenUtil.setSp(20.0)
+          color: Colors.white,
+          fontSize: screenUtil.setSp(32.0)
         ),
-      ));
+      );
+      contents.add(titleW);
+
+      if (subtitle != null && subtitle.isNotEmpty) {
+        contents.add(Text(
+          subtitle,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+          style: TextStyle(
+            color: Colors.white70,
+            fontSize: screenUtil.setSp(20.0)
+          ),
+        ));
+      }
     }
+    
     ///返回键
     rowItems.add(Expanded(
       flex: 0,

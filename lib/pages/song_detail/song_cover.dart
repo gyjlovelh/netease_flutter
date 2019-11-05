@@ -113,7 +113,7 @@ class _NeteaseSongCoverState extends State<NeteaseSongCover> with SingleTickerPr
                 iconButton(0xe612,),
                 iconButton(0xe618, onPressed: () {
                   Navigator.of(context).pushNamed('comment', arguments: json.encode({
-                    "id": 123,
+                    "id": widget.song.id,
                     "commentCount": 0
                   }));
                 }),

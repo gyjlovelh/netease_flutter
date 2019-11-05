@@ -16,7 +16,7 @@ class Global {
   static List<String> mMp3Files; //本地音乐列表(存的是sd卡路径))
   static SharedPreferences mSp; //sp 用来存储用户登录信息
 
-  // app栏、主体内容区域、播放器所占比例
+  ///app栏、主体内容区域、播放器所占比例
   static const double APPBAR_SCALE = 1.6 / 14;
   static const double PLAYER_SCALE = 1.2 / 14;
   static const double MAIN_SCALE = 11.2 / 14;
