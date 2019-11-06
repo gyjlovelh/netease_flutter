@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../../models/video_group.dart';
+import '../../../models/video_group_1.dart';
 import '../../../shared/service/request_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../shared/widgets/loading/loading.dart';
 
 //视频详情页
 class VideoDetail extends StatefulWidget {
-  int id;
+  final int id;
 
   VideoDetail({Key key, @required this.id}) : super(key: key);
 
@@ -19,41 +20,37 @@ class _VideoDetailState extends State<VideoDetail> {
 
   _VideoDetailState({@required this.id});
 
-  void setVideoGroupsData(BuildContext context) {
-    RequestService.getInstance(context: context).getVideoGroup(id).then((val) {
-      videoGroups.clear();
-      var list = val['datas'] as List;
-      print('视频 list.length = ' + list.length.toString());
-
-      for (int i = 0; i < list.length; i++) {
-        try {
-          videoGroups.add(VideoData.fromJson(list[i]['data']));
-        } catch (e) {
-          print(e);
-        }
-      }
-
-      // try {
-      //   videoGroups = list.map((i) {
-      //     print('视频 iii[data] = ' + i['data'].toString());
-      //     return VideoData.fromJson(i['data']);
-      //   }).toList();
-      // } catch (e) {
-      //   print(e);
-      // }
-
-      setState(() {
-        print('视频 videoGroups.length = ' + videoGroups.length.toString());
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    setVideoGroupsData(context);
-
-    return Container(
-      child: videoGroups.length == 0 ? Container() : videoDetail(),
+    return FutureBuilder(
+      future: RequestService.getInstance(context: context).getVideoGroup(id),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          videoGroups.clear();
+          List list = snapshot.data['datas'] as List;
+          for(int i = 0;i < list.length;i++) {
+            VideoGroupModel v = VideoGroupModel.fromJson(list[i]);
+            if (v.type == 1) {
+              videoGroups.add(v.data);
+            }
+          }
+          // videoGroups = list.map((i) {
+          //   // print('视频 iii[data] = ' + VideoData.fromJson(i['data']).coverUrl);
+          //   if (i['type'] == 1) {
+          //     return VideoData.fromJson(i['data']);
+          //   }
+          //   return null;
+          // }).toList();
+          print('视频 videoGroups.length = '+videoGroups.length.toString());
+          return Container(
+            child: videoGroups.length == 0 ? Container() : videoDetail(),
+          );
+        } else {
+          return Center(
+            child: NeteaseLoading(),
+          );
+        }
+      },
     );
   }
 
@@ -66,24 +63,26 @@ class _VideoDetailState extends State<VideoDetail> {
         top: 10.0,
       ),
       decoration: BoxDecoration(
-          image:
-              DecorationImage(image: NetworkImage(videoGroups[index].coverUrl)),
-          borderRadius: BorderRadius.all(
-            Radius.circular(20.0),
-          )),
-      child: Container(),
+        image: DecorationImage(
+            image: NetworkImage(videoGroups[index].coverUrl),
+            fit: BoxFit.cover),
+        borderRadius: BorderRadius.circular(ScreenUtil.instance.setWidth(20.0)),
+      ),
+      child: Container(
+        
+      ),
     );
   }
 
   Widget videoDetail() {
     return ListView.builder(
-      scrollDirection: Axis.vertical,
-      itemCount: videoGroups.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Container(
-          child: videoDetailItem(index),
-        );
-      },
-    );
+        scrollDirection: Axis.vertical,
+        itemCount: videoGroups.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            child: videoDetailItem(index),
+          );
+        },
+      );
   }
 }
