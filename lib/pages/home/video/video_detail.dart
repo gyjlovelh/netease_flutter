@@ -3,6 +3,7 @@ import '../../../models/video_group_1.dart';
 import '../../../shared/service/request_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../shared/widgets/loading/loading.dart';
+import '../../../shared/widgets/icon_data/icon_data.dart';
 
 //视频详情页
 class VideoDetail extends StatefulWidget {
@@ -28,7 +29,7 @@ class _VideoDetailState extends State<VideoDetail> {
         if (snapshot.hasData) {
           videoGroups.clear();
           List list = snapshot.data['datas'] as List;
-          for(int i = 0;i < list.length;i++) {
+          for (int i = 0; i < list.length; i++) {
             VideoGroupModel v = VideoGroupModel.fromJson(list[i]);
             if (v.type == 1) {
               videoGroups.add(v.data);
@@ -41,7 +42,7 @@ class _VideoDetailState extends State<VideoDetail> {
           //   }
           //   return null;
           // }).toList();
-          print('视频 videoGroups.length = '+videoGroups.length.toString());
+          // print('视频 videoGroups.length = '+videoGroups.length.toString());
           return Container(
             child: videoGroups.length == 0 ? Container() : videoDetail(),
           );
@@ -55,34 +56,100 @@ class _VideoDetailState extends State<VideoDetail> {
   }
 
   Widget videoDetailItem(int index) {
-    return Container(
-      height: ScreenUtil.getInstance().setHeight(300.0),
-      margin: EdgeInsets.only(
-        left: 20.0,
-        right: 20.0,
-        top: 10.0,
-      ),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-            image: NetworkImage(videoGroups[index].coverUrl),
-            fit: BoxFit.cover),
-        borderRadius: BorderRadius.circular(ScreenUtil.instance.setWidth(20.0)),
-      ),
-      child: Container(
-        
-      ),
+    return Column(
+      children: <Widget>[
+        Container(
+          height: ScreenUtil.getInstance().setHeight(300.0),
+          margin: EdgeInsets.only(
+            left: 20.0,
+            right: 20.0,
+            top: 10.0,
+          ),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: NetworkImage(videoGroups[index].coverUrl),
+                fit: BoxFit.cover),
+            borderRadius:
+                BorderRadius.circular(ScreenUtil.instance.setWidth(20.0)),
+          ),
+          child: Stack(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.topRight,
+                // decoration: BoxDecoration(
+                // border: Border.all(color: Colors.white, width: 0.5),//边框
+                // borderRadius: BorderRadius.circular(ScreenUtil.instance.setWidth(20.0)),
+                // ),
+                child: Text(
+                  videoGroups[index].title,
+                  style: TextStyle(
+                      fontSize: ScreenUtil.instance.setSp(18.0),
+                      color: Colors.white),
+                ),
+              ),
+              Center(
+                child: Icon(
+                  Icons.play_arrow,
+                  color: Colors.white,
+                  size: 40.0,
+                ),
+              ),
+              Container(
+                alignment: Alignment.bottomLeft,
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.play_arrow,
+                      color: Colors.white,
+                      size: 20.0,
+                    ),
+                    Text(
+                      videoGroups[index].playTime.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    NeteaseIconData(
+                      0xe634,
+                      color: Colors.white,
+                      size: 20.0,
+                    ),
+                    Text(
+                      videoGroups[index].durationms.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 20.0),
+          child: Text(videoGroups[index].description ??= '',style: TextStyle(color: Colors.white,fontSize: 14.0),),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 20.0),
+          child: Row(
+          children: <Widget>[
+            Text(videoGroups[index].creator.nickname,style: TextStyle(color: Colors.white),)
+        ],),
+        ),
+        Divider(
+          height: 10.0,
+          color: Colors.grey,
+        ),
+      ],
     );
   }
 
   Widget videoDetail() {
     return ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: videoGroups.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
-            child: videoDetailItem(index),
-          );
-        },
-      );
+      scrollDirection: Axis.vertical,
+      itemCount: videoGroups.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Container(
+          child: videoDetailItem(index),
+        );
+      },
+    );
   }
 }
