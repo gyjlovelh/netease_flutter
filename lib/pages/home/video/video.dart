@@ -8,7 +8,20 @@ class Video extends StatefulWidget {
 }
 
 class _VideoState extends State<Video> with TickerProviderStateMixin {
-  int _videoTypeId = 60100;
+  int _currentIndex = 0;
+  List<int> _videoTypeIds = [
+    60100,
+    1101,
+    2103,
+    1103,
+    58100,
+    58101,
+    2100,
+    1000,
+    3100,
+    57104
+  ];
+  // List<VideoDetail> _videoDetails = List<VideoDetail>();
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +29,16 @@ class _VideoState extends State<Video> with TickerProviderStateMixin {
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Container(
-          height: ScreenUtil.instance.setHeight(120.0),
+          margin: EdgeInsets.only(top: 10.0),
+          height: ScreenUtil.instance.setHeight(80.0),
           child: barLists(),
         ),
         Container(
-          height: ScreenUtil.instance.setHeight(900.0),
-          child: VideoDetail(
-            id: _videoTypeId,
+          height: ScreenUtil.instance.setHeight(960.0),
+          child: Container(
+            child: VideoDetail(
+              id: _videoTypeIds[_currentIndex],
+            ),
           ),
         ),
       ],
@@ -34,16 +50,16 @@ class _VideoState extends State<Video> with TickerProviderStateMixin {
     return ListView(
       scrollDirection: Axis.horizontal,
       children: <Widget>[
-        barListItem('翻唱', 60100),
-        barListItem('舞蹈', 1101),
-        barListItem('游戏', 2103),
-        barListItem('萌宠', 1103),
-        barListItem('现场', 58100),
-        barListItem('听BGM', 58101),
-        barListItem('生活', 2100),
-        barListItem('MV', 1000),
-        barListItem('影视', 3100),
-        barListItem('ACG音乐', 57104),
+        barListItem('翻唱', 0),
+        barListItem('舞蹈', 1),
+        barListItem('游戏', 2),
+        barListItem('萌宠', 3),
+        barListItem('现场', 4),
+        barListItem('听BGM', 5),
+        barListItem('生活', 6),
+        barListItem('MV', 7),
+        barListItem('影视', 8),
+        barListItem('ACG音乐', 9),
       ],
     );
   }
@@ -52,15 +68,15 @@ class _VideoState extends State<Video> with TickerProviderStateMixin {
     return GestureDetector(
       onTap: () {
         setState(() {
-          _videoTypeId = i;
+          _currentIndex = i;
         });
       },
       child: Container(
-        margin: EdgeInsets.all(20.0),
+        margin: EdgeInsets.only(left: 20.0, right: 20.0),
         child: Text(
           title,
           style: TextStyle(
-            color: i == _videoTypeId ? Colors.red : Colors.black,
+            color: i == _currentIndex ? Colors.red : Colors.white,
           ),
         ),
       ),
