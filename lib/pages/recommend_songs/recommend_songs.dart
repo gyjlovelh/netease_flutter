@@ -1,9 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
+import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/widgets/list_tile/list_tile.dart';
+import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +18,7 @@ class NeteaseRecommendSongs extends StatefulWidget {
 class _NeteaseCommendSongsState extends State<NeteaseRecommendSongs> {
 
   List list = [];
+  LoadingStatus status = LoadingStatus.UNINIT;
 
   @override
   void initState() {
@@ -27,11 +31,15 @@ class _NeteaseCommendSongsState extends State<NeteaseRecommendSongs> {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
     final demandProvider = Provider.of<PlayerSongDemand>(context);
 
+    if (status == LoadingStatus.LOADING) {
+      
+    }
+
     return NeteaseScaffold(
       appBar: NeteaseAppBar(
         title: '每日推荐',
       ),
-      body: Container(
+      body: status == LoadingStatus.LOADED ? Container(
         height: ScreenUtil.screenHeightDp - ScreenUtil.statusBarHeight - ScreenUtil.bottomBarHeight - 100.0,
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -78,7 +86,7 @@ class _NeteaseCommendSongsState extends State<NeteaseRecommendSongs> {
             );
           },
         ),
-      ),
+      ) : NeteaseLoading(),
     );
   }
 
@@ -86,6 +94,7 @@ class _NeteaseCommendSongsState extends State<NeteaseRecommendSongs> {
     final result = await RequestService.getInstance(context: context).getRecommendSongs();
     setState(() {
       list = result;
+      status = LoadingStatus.LOADED;
     });
   }
 }

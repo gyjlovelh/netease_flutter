@@ -48,7 +48,10 @@ class _FmCoverState extends State<FmCover> {
           ),
         ),
         GestureDetector(
-          onTap: () {},
+          onTap: () {
+            // 区分普通用户/歌手
+            // Navigator.of(context).pushNamed('user', arguments: widget.song?.id);
+          },
           child: Container(
             padding: EdgeInsets.symmetric(
               horizontal: screenUtil.setWidth(50.0),

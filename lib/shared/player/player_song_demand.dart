@@ -17,21 +17,25 @@ class PlayerSongDemand extends ChangeNotifier {
   SongModel get currentMusic => _music;
   List<SongModel> get musicList => _list;
 
+  int _playMode = Global.playMode;
+  int get playMode => _playMode;
+
   List _lyric = Global.getLyric(); 
   List get lyric => _lyric;
 
   PlayerSongDemand() {
     Global.player.onPlayerStateChanged.listen((AudioPlayerState state) {
       if (state == AudioPlayerState.COMPLETED) {
-        next();
+        next(playMode: playMode);
       }
       notifyListeners();
     });
   }
 
   // 加载歌曲
-  loadMusic(SongModel song) async {
-    Global.setPlayMode(1);
+  loadMusic(SongModel song, {int playMode = 1}) async {
+    _playMode = playMode;
+    Global.setPlayMode(playMode);
     if (Global.player.state == AudioPlayerState.PLAYING) {
       Global.player.stop();
     }
@@ -82,19 +86,40 @@ class PlayerSongDemand extends ChangeNotifier {
     }
   }
   // 下一首⏭
-  void next() async {
-    int index = musicList.map((item) => item.id).toList().indexOf(currentMusic.id);
+  void next({int playMode}) async {
     var target;
-    if (Global.getRepeatMode() == RepeatMode.RANDOM) {
-      target = musicList[Random().nextInt(musicList.length)];
-    } else {
-      if (index == musicList.length - 1) {
-        target = musicList.first;
+    if (playMode == 1) { ///单曲模式
+      int index = musicList.map((item) => item.id).toList().indexOf(currentMusic.id);
+      if (Global.getRepeatMode() == RepeatMode.RANDOM) {
+        target = musicList[Random().nextInt(musicList.length)];
       } else {
-        target = musicList[index + 1];
+        if (index == musicList.length - 1) {
+          target = musicList.first;
+        } else {
+          target = musicList[index + 1];
+        }
+      }
+    } else if (playMode == 2) { ///FM模式
+      int index = Global.getFmList().indexWhere((item) => currentMusic.id == item.id);
+      if (index == -1) {
+        print('FM列表没有这首歌????');
+      } else {
+        target = Global.getFmList()[index + 1];
+      }
+      ///当播放至倒数第二首时，往后加载FM列表
+      if (index >= Global.getFmList().length - 2) {
+        RequestService.getInstance(context: null).getPersonalFm().then((result) {
+          List<SongModel> list = [];
+          list..add(Global.getFmList().last)
+            ..addAll(result.map<SongModel>((item) => SongModel.fromJson(item)).toList());
+
+          Global.updateFmList(list);
+          print("更新FM列表【${list.map((item) => item.name).join('】【')}】");
+        });
       }
     }
-    loadMusic(target);
+    
+    loadMusic(target, playMode: playMode);
   }
 
 }

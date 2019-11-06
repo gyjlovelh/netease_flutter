@@ -9,6 +9,8 @@ import 'package:netease_flutter/shared/widgets/music_list/music_list.dart';
 import 'package:netease_flutter/shared/widgets/player/player_control_btn.dart';
 import 'package:provider/provider.dart';
 
+import 'player_func_btn.dart';
+
 class NeteasePlayer extends StatefulWidget {
   @override
   _NeteasePlayerState createState() => _NeteasePlayerState();
@@ -28,14 +30,17 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
 
-    final provider = Provider.of<PlayerStatusNotifier>(context);
     final demandProvider = Provider.of<PlayerSongDemand>(context);
     SongModel song =  demandProvider.currentMusic;
     
     return GestureDetector(
       onTap: () {
         if (song != null) {
-          Navigator.of(context).pushNamed('song_detail', arguments: {"id": song.id});
+          if (demandProvider.playMode == 1) {
+            Navigator.of(context).pushNamed('song_detail');
+          } else if (demandProvider.playMode == 2) {
+            Navigator.of(context).pushNamed('personal_fm');
+          }
         }
       },
       child: Container(
@@ -109,24 +114,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
             ),
             Expanded(
               flex: 0,
-              child: Container(
-                width: screenUtil.setWidth(90.0),
-                child: IconButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return new NeteaseMusicList();
-                      }
-                    );   
-                  },
-                  icon: NeteaseIconData(
-                    0xe604,
-                    size: screenUtil.setSp(50.0),
-                    color: Colors.white70,
-                  ),
-                )
-              ),
+              child: new PlayerFuncBtn()
             )
           ],
         ),

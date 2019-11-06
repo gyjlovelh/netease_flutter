@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:netease_flutter/models/song.dart';
+import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/states/global.dart';
 import 'find/find.dart';
 import 'user_center/user_center.dart';
 import '../../shared/widgets/icon_data/icon_data.dart';
@@ -24,6 +27,8 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
   void initState() {
     _tabController = TabController(length: 4, vsync: this);
     super.initState();
+    // 缓存FM播放列表
+    _cachePmList();
   }
 
   Future<bool> _requestPop() {
@@ -180,5 +185,12 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
         ),
       )
     );
+  }
+
+  void _cachePmList() async {
+    if (Global.getFmList().length == 0) {
+      List songs = await RequestService.getInstance(context: context).getPersonalFm();
+      Global.updateFmList(songs.map((item) => SongModel.fromJson(item)).toList());
+    }
   }
 }

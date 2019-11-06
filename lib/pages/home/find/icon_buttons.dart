@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:netease_flutter/shared/player/player_song_demand.dart';
+import 'package:netease_flutter/shared/states/global.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
+import 'package:provider/provider.dart';
 
 class NeteaseIconButtons extends StatelessWidget {
 
@@ -48,7 +51,11 @@ class NeteaseIconButtons extends StatelessWidget {
           }),
           iconButtonItem(0xe608, label: '私人FM', onPressed: () {
             // todo 暂时还有bug。
-            // Navigator.of(context).pushNamed('personal_fm');
+            // 若当前不是正在播放FM，则重新加载数据。
+            if (Global.playMode == 1) {
+              Provider.of<PlayerSongDemand>(context).loadMusic(Global.getFmList().first, playMode: 2);
+            }
+            Navigator.of(context).pushNamed('personal_fm');
           }),
           iconButtonItem(0xe61d, label: '直播')
         ],

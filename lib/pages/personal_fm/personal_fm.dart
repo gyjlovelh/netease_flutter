@@ -11,6 +11,7 @@ import 'package:netease_flutter/shared/states/global.dart';
 import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
 import 'package:provider/provider.dart';
 
+import 'fm_actions.dart';
 import 'fm_cover.dart';
 
 class NeteasePersonalFm extends StatefulWidget {
@@ -82,13 +83,14 @@ class _NeteasePersonalFmState extends State<NeteasePersonalFm> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final demandProvider = Provider.of<PlayerSongDemand>(context);
-    // 若当前不是正在播放FM，则重新加载数据。
-    if (Global.playMode == 1) {
-      _getPageData();
-    }
-
+    
     SongModel song = demandProvider.currentMusic;
 
     return Scaffold(
@@ -125,27 +127,12 @@ class _NeteasePersonalFmState extends State<NeteasePersonalFm> {
               flex: 0,
               child: Container(
                 height: 70.0,
-                color: Colors.tealAccent,
+                child: new FmActions(),
               ),
             )
           ],
         ),
       ),
     );
-  }
-
-  void _getPageData() async {
-    Global.setPlayMode(2);
-
-    List result = await RequestService.getInstance(context: context).getPersonalFm();
-    final demandProvider = Provider.of<PlayerSongDemand>(context);
-    setState(() {
-      current = 0;
-      _hasMore = true;
-      list = result.map((item) => SongModel.fromJson(item)).toList();
-      Global.updateFmList(list);
-      demandProvider.loadMusic(list[0]);
-      // 缓存至本地
-    });
   }
 }

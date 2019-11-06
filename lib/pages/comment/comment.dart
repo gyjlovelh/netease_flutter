@@ -66,7 +66,10 @@ class _NeteaseCommentState extends State<NeteaseComment> {
     return SliverFixedExtentList(
       itemExtent: screenUtil.setHeight(200.0),
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-        if (detail == null) {
+        if (arguments.type == 'music') {
+          return Text('todo');
+        }
+        if (detail == null && detail.isEmpty) {
           return NeteaseLoading();
         } else {
           return GestureDetector(
@@ -86,7 +89,7 @@ class _NeteaseCommentState extends State<NeteaseComment> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12.0),
                         child: Image.network(
-                          detail['coverImgUrl'],
+                          "${detail['coverImgUrl']}",
                           fit: BoxFit.cover,
                         ),
                       )

@@ -118,7 +118,7 @@ class RequestService {
   }
 
   // 私人FM
-  Future getPersonalFm() async {
+  Future<List> getPersonalFm() async {
     Response response = await _request('/personal_fm?timestamp=${DateTime.now().microsecondsSinceEpoch}');
     List songs = response.data['data'] ?? [];
     List songIds = songs.map((item) => item['id']).toList();
