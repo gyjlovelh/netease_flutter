@@ -4,7 +4,6 @@ import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
-import 'package:netease_flutter/shared/event/event.dart';
 import 'package:netease_flutter/shared/player/player_position.dart';
 import 'package:netease_flutter/shared/player/player_repeat_mode.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
@@ -42,7 +41,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
 
   Widget actionIconButton(int pointer, { 
     double size, 
-    Color color = Colors.white, 
+    Color color = Colors.white70, 
     @required VoidCallback onPressed
   }) => GestureDetector(
     child: NeteaseIconData(pointer, size: size ?? ScreenUtil.getInstance().setSp(48.0), color: color),
@@ -138,7 +137,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                     if (statusProvider.playerState == AudioPlayerState.PLAYING) {
                       statusProvider.pause();
                     } else {
-                      statusProvider.play(context: context);
+                      statusProvider.play();
                     }
                   }
                 ),
@@ -160,12 +159,12 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
   }
 
   void _prev() {
-    final statusProvider = Provider.of<PlayerStatusNotifier>(context);
-    statusProvider.prev(context: context);
+    final demandProvider = Provider.of<PlayerSongDemand>(context);
+    demandProvider.prev();
   }
 
   void _next() {
-    final statusProvider = Provider.of<PlayerStatusNotifier>(context);
-    statusProvider.next(context: context);
+    final demandProvider = Provider.of<PlayerSongDemand>(context);
+    demandProvider.next();
   }
 }

@@ -16,6 +16,7 @@ import 'pages/comment/comment.dart';
 import 'pages/home/home.dart';
 import 'pages/login/login.dart';
 import 'pages/local_musics/local_musics.dart';
+import 'pages/personal_fm/personal_fm.dart';
 import 'pages/play_record/play_record.dart';
 import 'pages/playlist_of_user/playlist_of_user.dart';
 import 'pages/playlist_square/playlist_square.dart';
@@ -50,7 +51,7 @@ class _NetState extends State<NeteaseApp> {
         // 当前播放歌曲、点歌列表、歌词；
         ChangeNotifierProvider(builder: (_) => PlayerSongDemand()),
         // 播放位置。
-        ChangeNotifierProvider(builder: (_) => PlayerPosition())
+        ChangeNotifierProvider(builder: (_) => PlayerPosition()),        
       ],
       child: Consumer<PlayerStatusNotifier>(
         builder: (context, currentMusic, _) {
@@ -62,25 +63,34 @@ class _NetState extends State<NeteaseApp> {
               DefaultWidgetsLocalizations.delegate,
 
             ],
-            theme: ThemeData(
+            theme: Theme.of(context).copyWith(
               brightness: Brightness.light,
               primaryColor: Color.fromRGBO(40, 67, 84, 1),
               textSelectionColor: Color.fromRGBO(38, 150, 167, 1),
               scaffoldBackgroundColor: Color.fromRGBO(17, 60, 103, 1),
-              
               disabledColor: Colors.white24,
-              
               accentColor: Colors.teal,
-              fontFamily: 'iconfont',
               iconTheme: IconThemeData(
                 color: Colors.red
               ),
+              highlightColor: Colors.black12,
+              // 水波纹样式
+              splashColor: Colors.black.withOpacity(0.2),
               // 播放条滑块样式
               sliderTheme: SliderThemeData(
                 trackHeight: 1.5,
                 activeTrackColor: Colors.tealAccent,
                 inactiveTrackColor: Colors.grey,
                 thumbColor: Colors.white
+              ),
+              // hintColor: Colors.redAccent,
+              inputDecorationTheme: InputDecorationTheme(
+                // border: InputBorder.none,
+                
+                hintStyle: TextStyle(
+                  color: Color.fromRGBO(103, 128, 141, 1),
+                  
+                )
               ),
               dialogTheme: DialogTheme(
                 backgroundColor: Color.fromRGBO(54, 99, 122, 1),
@@ -125,7 +135,9 @@ class _NetState extends State<NeteaseApp> {
               // 歌单界面
               'playlist': (BuildContext context) => new NeteasePlaylist(),
               // 每日推荐歌曲
-              'commend_songs' : (BuildContext context) => new NeteaseRecommendSongs(),
+              'commend_songs': (BuildContext context) => new NeteaseRecommendSongs(),
+              // 私人FM
+              'personal_fm': (BuildContext context) => new NeteasePersonalFm(),
               // 歌单广场
               'playlist_square': (BuildContext context) => new NeteasePlaylistSquare(),
               // 搜索界面

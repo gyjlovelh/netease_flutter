@@ -55,8 +55,8 @@ class _NeteaseCommendSongsState extends State<NeteaseRecommendSongs> {
                   child: Image.network(
                     "${song.album.picUrl}",
                     fit: BoxFit.cover,
-                    // width: screenUtil.setHeight(100.0),
-                    // height: screenUtil.setHeight(100),
+                    width: screenUtil.setHeight(100.0),
+                    height: screenUtil.setHeight(100),
                   ),
                 ),
                 title: Text(

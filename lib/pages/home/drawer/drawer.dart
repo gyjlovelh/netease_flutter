@@ -152,7 +152,7 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
                       children: <Widget>[
                         ClipOval(
                           child: Image.network(
-                            "${profile.avatarUrl}",
+                            "${profile?.avatarUrl}",
                             fit: BoxFit.cover,
                             height: screenUtil.setWidth(150.0),
                             width: screenUtil.setWidth(150.0),
@@ -167,7 +167,7 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
                       child: Row(
                         children: <Widget>[
                           Text(
-                            "${profile.nickname}", 
+                            "${profile?.nickname}", 
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: screenUtil.setSp(36.0),
@@ -187,7 +187,8 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
                               padding: EdgeInsets.zero,
                               shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(99.0)),
                               child: Text(
-                                'Lv.${profile.vipType}',
+                                // todo 暂时还没取值等级。先用其他代替
+                                'Lv.${profile?.vipType}',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: screenUtil.setSp(18.0),

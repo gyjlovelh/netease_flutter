@@ -11,12 +11,13 @@ class SongModel {
 
   List<String> transNames;
 
-  SongModel({this.name, this.id, this.url, this.ar, this.al, this.album, this.artists, this.transNames});
+  SongModel({this.name, this.id, this.url, this.pic, this.ar, this.al, this.album, this.artists, this.transNames});
 
   SongModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     id = json['id'];
     url = json['url'];
+    pic = json['pic'];
     if (json['ar'] != null) {
       ar = new List<ArtistModel>();
       json['ar'].forEach((v) {
@@ -45,6 +46,7 @@ class SongModel {
     data['name'] = this.name;
     data['id'] = this.id;
     data['url'] = this.url;
+    data['pic'] = this.pic;
     if (this.ar != null) {
       data['ar'] = this.ar.map((v) => v.toJson()).toList();
     }

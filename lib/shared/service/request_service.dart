@@ -22,8 +22,8 @@ class RequestService {
   static init({String baseUrl}) {
     _baseUrl = baseUrl;
     _dio = new Dio();
-    _dio.options.receiveTimeout = 8000;
-    _dio.options.connectTimeout = 5000;
+    _dio.options.receiveTimeout = 10000;
+    _dio.options.connectTimeout = 10000;
     _dio.interceptors.add(CookieManager(CookieJar()));
 
     _dio.interceptors.add(InterceptorsWrapper(onResponse: (Response response) {
@@ -115,6 +115,22 @@ class RequestService {
   Future<List> getRecommendPlaylist() async {
     Response response = await _request('/personalized', queryParameters: {"limit": 6});
     return response.data['result'];
+  }
+
+  // 私人FM
+  Future getPersonalFm() async {
+    Response response = await _request('/personal_fm?timestamp=${DateTime.now().microsecondsSinceEpoch}');
+    List songs = response.data['data'] ?? [];
+    List songIds = songs.map((item) => item['id']).toList();
+    Response urlRes = await _request('/song/url', queryParameters: {"id": songIds.join(',')});
+    List urls = urlRes.data['data'];
+
+    // 歌曲url不是按顺序返回
+    songs.asMap().forEach((int index, var item) {
+      final target = urls.firstWhere((urlItem) => urlItem['id'] == item['id']);
+      item['url'] = target['url'];
+    });   
+    return songs;
   }
 
   // 获取歌曲详情

@@ -74,7 +74,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
               final item = _matchs[index];
               return ListTile(
                 onTap: () {
-                  Navigator.of(context).pushNamed('search_result', arguments: item['keyword']);
+                  viewSearchDetail(item['keyword']);
                 },
                 leading: Container(
                   width: screenUtil.setWidth(50.0),
@@ -109,14 +109,27 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
     return NeteaseScaffold(
       appBar: NeteaseAppBar(
         customTitle: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Color.fromRGBO(101, 129, 140, 0.7),
+                width: screenUtil.setHeight(1.0)
+              )
+            ),
+            // color: Colors.tealAccent
+          ),
+          height: 35.0,
+          margin: EdgeInsets.only(
+            bottom: 5.0,
+            top: 10.0
+          ),
           child: TextField(
             controller: _searchController,
             onTap: () {
               setState(() {
                 _inputFocused = true;
               });
-            },
-            
+            },  
             onChanged: (String text) {
               print("listen${_searchController.text.trim()}");
               if (text.trim().isNotEmpty) {
@@ -129,13 +142,13 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
               }
             },
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.white70,
               fontSize: screenUtil.setSp(28.0)
             ),
             decoration: InputDecoration(
               hintText: _searchDefault == null ? "" : _searchDefault['showKeyword'],
               hintStyle: TextStyle(
-                color: Colors.white54,
+                color: Theme.of(context).inputDecorationTheme.hintStyle.color,
                 fontSize: screenUtil.setSp(28.0)
               ),
               border: InputBorder.none
@@ -378,13 +391,12 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
     }
     _history.insert(0, keyword);
     Global.mSp.setStringList('netease_chache_search_history', _history);
+    _inputFocused = false;
     Navigator.of(context).pushNamed('search_result', arguments: keyword);
   }
 
   void _loadSearchSuggest(String text) async {
     final result = await RequestService.getInstance(context: context).getSearchSuggest(text);
-
-    print(result['allMatch']);
     setState(() {
       _matchs = result['allMatch'] ?? [];
     });

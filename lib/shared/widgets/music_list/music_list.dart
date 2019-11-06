@@ -159,7 +159,7 @@ class _NeteaseMusicListState extends State<NeteaseMusicList> {
                       onPressed: () {
                         if (isCur) {
                           //如果正在播放要删除的这首歌，则先播放下一曲。然后在删除
-                          provider.next();
+                          demandProvider.next();
                         }
                         demandProvider.removeMusicItem(song);
                       },

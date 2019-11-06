@@ -1,10 +1,14 @@
 
 
+import 'dart:math';
+
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/states/global.dart';
+
+import 'player_repeat_mode.dart';
 
 class PlayerSongDemand extends ChangeNotifier {
   SongModel _music = Global.getCurrentMusic();
@@ -16,8 +20,18 @@ class PlayerSongDemand extends ChangeNotifier {
   List _lyric = Global.getLyric(); 
   List get lyric => _lyric;
 
+  PlayerSongDemand() {
+    Global.player.onPlayerStateChanged.listen((AudioPlayerState state) {
+      if (state == AudioPlayerState.COMPLETED) {
+        next();
+      }
+      notifyListeners();
+    });
+  }
+
   // 加载歌曲
   loadMusic(SongModel song) async {
+    Global.setPlayMode(1);
     if (Global.player.state == AudioPlayerState.PLAYING) {
       Global.player.stop();
     }
@@ -56,4 +70,31 @@ class PlayerSongDemand extends ChangeNotifier {
     Global.updateMusicList(_list);
     notifyListeners();
   }
+
+  // 上一首⏮
+  void prev({BuildContext context}) async {
+    int index = musicList.map((item) => item.id).toList().indexOf(currentMusic.id);
+    ///TODO,上一首定位到历史播放的前一位。
+    if (index == 0) {
+      loadMusic(musicList.last);
+    } else {
+      loadMusic(musicList[index - 1]);
+    }
+  }
+  // 下一首⏭
+  void next() async {
+    int index = musicList.map((item) => item.id).toList().indexOf(currentMusic.id);
+    var target;
+    if (Global.getRepeatMode() == RepeatMode.RANDOM) {
+      target = musicList[Random().nextInt(musicList.length)];
+    } else {
+      if (index == musicList.length - 1) {
+        target = musicList.first;
+      } else {
+        target = musicList[index + 1];
+      }
+    }
+    loadMusic(target);
+  }
+
 }

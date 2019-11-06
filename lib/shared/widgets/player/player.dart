@@ -6,6 +6,7 @@ import 'package:netease_flutter/shared/player/player_song_demand.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/widgets/music_list/music_list.dart';
+import 'package:netease_flutter/shared/widgets/player/player_control_btn.dart';
 import 'package:provider/provider.dart';
 
 class NeteasePlayer extends StatefulWidget {
@@ -22,18 +23,6 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
     super.initState();
   }
 
-  int iconPointer(bool completed, AudioPlayerState state) {
-    if (completed) {
-      if (state == AudioPlayerState.PLAYING) {
-        return 0xe6cb;
-      } else {
-        return 0xe674;
-      }
-    } else {
-      return 0xe674;
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +31,6 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
     final provider = Provider.of<PlayerStatusNotifier>(context);
     final demandProvider = Provider.of<PlayerSongDemand>(context);
     SongModel song =  demandProvider.currentMusic;
-
-    // if (song == null) {
-    //   return Text('no song');
-    // }
     
     return GestureDetector(
       onTap: () {
@@ -120,25 +105,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
             ),
             Expanded(
               flex: 0,
-              child: Container(
-                width: screenUtil.setWidth(90.0),
-                child: IconButton(
-                  onPressed: () {
-                    if (provider.playerState != AudioPlayerState.PLAYING) {
-                        provider.play(context: context);
-                      } else {
-                        provider.pause();
-                      }
-                  },
-                  color: Colors.white70,
-                  disabledColor: Colors.grey,
-                  icon: NeteaseIconData(
-                    iconPointer(demandProvider.currentMusic != null, provider.playerState),
-                    size: screenUtil.setSp(54.0),
-                    // color: Colors.white70,
-                  ),
-                )
-              ),
+              child: new PlayerControlBtn()
             ),
             Expanded(
               flex: 0,
@@ -155,7 +122,7 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                   },
                   icon: NeteaseIconData(
                     0xe604,
-                    size: screenUtil.setSp(54.0),
+                    size: screenUtil.setSp(50.0),
                     color: Colors.white70,
                   ),
                 )

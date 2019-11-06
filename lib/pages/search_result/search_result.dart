@@ -153,38 +153,55 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
 
     return NeteaseScaffold(
       appBar: NeteaseAppBar(
-        customTitle: TextField(
-          controller: _searchController,
-          onTap: () {
-            setState(() {
-              _inputFocused = true;
-              if (_searchController.text.trim().isNotEmpty) {
-                _loadSearchSuggest(_searchController.text.trim());
-              }
-            });
-          },
-          onChanged: (String text) {
-            if (text.trim().isNotEmpty) {
-              _loadSearchSuggest(text.trim());
-            } else {
-              setState(() {
-                _matchs = [];
-              });
-            }
-          },
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: screenUtil.setSp(28.0)
+        customTitle: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Color.fromRGBO(101, 129, 140, 0.7),
+                width: screenUtil.setHeight(1.0)
+              )
+            ),
+            // color: Colors.tealAccent
           ),
-          decoration: InputDecoration(
-            hintText: _searchDefault == null ? "" : _searchDefault['showKeyword'],
-            hintStyle: TextStyle(
-              color: Colors.white60,
+          height: 35,
+          margin: EdgeInsets.only(
+            bottom: 5.0,
+            top: 10.0,
+            right: screenUtil.setWidth(35.0)
+          ),
+          child: TextField(
+            controller: _searchController,
+            onTap: () {
+              setState(() {
+                _inputFocused = true;
+                if (_searchController.text.trim().isNotEmpty) {
+                  _loadSearchSuggest(_searchController.text.trim());
+                }
+              });
+            },
+            onChanged: (String text) {
+              if (text.trim().isNotEmpty) {
+                _loadSearchSuggest(text.trim());
+              } else {
+                setState(() {
+                  _matchs = [];
+                });
+              }
+            },
+            style: TextStyle(
+              color: Colors.white70,
               fontSize: screenUtil.setSp(28.0)
             ),
-            border: InputBorder.none
+            decoration: InputDecoration(
+              hintText: _searchDefault == null ? "" : _searchDefault['showKeyword'],
+              hintStyle: TextStyle(
+                color: Theme.of(context).inputDecorationTheme.hintStyle.color,
+                fontSize: screenUtil.setSp(28.0)
+              ),
+              border: InputBorder.none
+            ),
           ),
-        ),
+        )
 
       ),
       tabbar: TabBar(

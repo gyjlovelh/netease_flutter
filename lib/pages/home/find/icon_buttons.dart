@@ -46,7 +46,10 @@ class NeteaseIconButtons extends StatelessWidget {
           iconButtonItem(0xe6ab, label: '排行榜', onPressed: () {
             Navigator.of(context).pushNamed('rank_list');
           }),
-          iconButtonItem(0xe608, label: '电台'),
+          iconButtonItem(0xe608, label: '私人FM', onPressed: () {
+            // todo 暂时还有bug。
+            // Navigator.of(context).pushNamed('personal_fm');
+          }),
           iconButtonItem(0xe61d, label: '直播')
         ],
       ),

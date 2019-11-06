@@ -58,6 +58,9 @@ class Global {
   // 判断用户是否登录
   static bool get isLogin => profile != null;
 
+  // 获取当前播放对象类型，默认为播放音乐
+  static int get playMode => mSp.getInt('netease_cache_play_mode') ?? 1;
+
   // 当前登录用户
   static ProfileModel get profile {
     String _profileString = mSp.getString('netease_cache_profile');
@@ -113,6 +116,21 @@ class Global {
     await mSp.setStringList('netease_cache_music_list', list.map((item) => json.encode(item.toJson())).toList());
   }
 
+  // 获取当前FM列表
+  static List<SongModel> getFmList() {
+    List<String> list = mSp.getStringList('netease_cache_fm_list') ?? [];
+    return list.map((item) => SongModel.fromJson(json.decode(item))).toList();
+  }
+
+  // 更新当前FM列表
+  static updateFmList(List<SongModel> list) async {
+    await mSp.setStringList('netease_cache_fm_list', list.map((item) => json.encode(item.toJson())).toList());
+  }
+  /// 切换播放对象 [ 1:播放音乐; 2:播放FM; ]
+  static setPlayMode(int mode) async {
+    await mSp.setInt('netease_cache_play_mode', mode);
+  }
+
   static void _initAudioPlayer() {
     final event = NeteaseEvent.getInstance();
     player = new AudioPlayer();
@@ -123,9 +141,6 @@ class Global {
     // 监听播放状态变更事件
     player.onPlayerStateChanged.listen((AudioPlayerState state) {
       event.publish('netease.player.state.change', state);
-      if (state == AudioPlayerState.COMPLETED) {
-        // 播放完成
-      }
     });
   }
 }
