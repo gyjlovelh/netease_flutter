@@ -163,7 +163,7 @@ class NeteaseAppBar extends StatelessWidget {
         maxLines: 1,
         style: TextStyle(
           color: Colors.white,
-          fontSize: screenUtil.setSp(32.0)
+          fontSize: 18.0
         ),
       );
       contents.add(titleW);
@@ -174,8 +174,8 @@ class NeteaseAppBar extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
           style: TextStyle(
-            color: Colors.white70,
-            fontSize: screenUtil.setSp(20.0)
+            color: Colors.white54,
+            fontSize: 10.0
           ),
         ));
       }
@@ -190,7 +190,7 @@ class NeteaseAppBar extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white, size: 24.0),
         ),
       ),
     ));

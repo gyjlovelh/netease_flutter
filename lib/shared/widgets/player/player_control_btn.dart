@@ -36,15 +36,15 @@ class _PlayerControlBtnState extends State<PlayerControlBtn> {
         }
       },
       child: Container(
-        height: screenUtil.setHeight(90.0),
-        width: screenUtil.setHeight(90.0),
+        width: 50.0,
+        height: 50.0,
         child: Stack(
           fit: StackFit.expand,
           alignment: Alignment.center,
           children: <Widget>[
             Positioned(
-              height: screenUtil.setHeight(50.0),
-              width: screenUtil.setHeight(50.0),
+              height: 30.0,
+              width: 30.0,
               child: CircularProgressIndicator(
                 value: positionProvider.progress ?? 0.0,
                 backgroundColor: Colors.white70,
@@ -58,7 +58,7 @@ class _PlayerControlBtnState extends State<PlayerControlBtn> {
               bottom: 0,
               child: NeteaseIconData(
                 iconPointer(provider.playerState),
-                size: screenUtil.setSp(30.0),
+                size: 18.0,
                 color: Colors.white70,
               ),
             )

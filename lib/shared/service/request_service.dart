@@ -144,6 +144,13 @@ class RequestService {
     return song;
   }
 
+  // 喜欢音乐
+  Future addSongToFavourite(int id, {bool like = true}) async {
+    Response response = await _request('/like', queryParameters: {"id": id, "like": like});
+
+    return response.data;
+  }
+
   // 音乐是否可用【全部都没版权？？？】
   Future checkMusic(int id) async {
     try {

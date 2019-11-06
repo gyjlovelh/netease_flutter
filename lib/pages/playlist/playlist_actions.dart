@@ -22,13 +22,14 @@ class NeteasePlaylistActions extends StatelessWidget {
     ),
     child: Column(
       children: <Widget>[
-        NeteaseIconData(pointer, size: ScreenUtil.getInstance().setSp(42.0)),
+        NeteaseIconData(pointer, size: 20.0),
         Padding(
           padding: EdgeInsets.only(top: ScreenUtil.getInstance().setHeight(8.0)),
           child: Text(
-            label,
+            "$label",
             style: TextStyle(
-              fontSize: ScreenUtil.getInstance().setSp(24.0)
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400
             ),
           ),
         )

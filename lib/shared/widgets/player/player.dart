@@ -10,6 +10,7 @@ import 'package:netease_flutter/shared/widgets/player/player_control_btn.dart';
 import 'package:provider/provider.dart';
 
 import 'player_func_btn.dart';
+import 'player_subtile.dart';
 
 class NeteasePlayer extends StatefulWidget {
   @override
@@ -64,8 +65,8 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
               flex: 0,
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 10.0),
-                width: screenUtil.setWidth(80.0),
-                height: screenUtil.setWidth(80.0),
+                width: 42.0,
+                height: 42.0,
                 decoration: BoxDecoration(
                   border: Border.all(
                     width: screenUtil.setWidth(1.0),
@@ -89,21 +90,13 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                     Text(
                       song == null ? '-' : song.name, 
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: screenUtil.setSp(28.0)
+                        color: Colors.white.withOpacity(0.8),
+                        fontSize: 16.0
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
-                    Text(
-                      "${demandProvider?.currentMusic?.al?.name}",
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: screenUtil.setSp(20.0)
-                      ),
-                    )
+                    new PlayerSubtitle()
                   ],
                 ),
               ),

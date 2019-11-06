@@ -4,12 +4,12 @@ import 'package:netease_flutter/shared/event/event.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
 import 'package:provider/provider.dart';
 
-class NeteaseSongLyric extends StatefulWidget {
+class NeteaseLyric extends StatefulWidget {
   @override
-  _NeteaseSongLyricState createState() => _NeteaseSongLyricState();
+  _NeteaseLyricState createState() => _NeteaseLyricState();
 }
 
-class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
+class _NeteaseLyricState extends State<NeteaseLyric> {
 
   var _scrollListener;
   // 歌词列表下标
@@ -65,8 +65,8 @@ class _NeteaseSongLyricState extends State<NeteaseSongLyric> {
                 "${item['lyric']}",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: _activeMilliseconds == item['milliseconds'] ? Colors.tealAccent : Colors.white,
-                  fontSize: screenUtil.setSp(28.0),
+                  color: _activeMilliseconds == item['milliseconds'] ? Colors.tealAccent : Colors.white70,
+                  fontSize: 16.0,
                   shadows: [
                     Shadow(
                       color: Theme.of(context).primaryColor,

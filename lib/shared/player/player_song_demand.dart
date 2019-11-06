@@ -40,6 +40,7 @@ class PlayerSongDemand extends ChangeNotifier {
       Global.player.stop();
     }
     this._music = song;
+    print("${song.toJson()}");
     await Global.player.play(song.url);
     Global.updateCurrentMusic(song);
     notifyListeners();

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/playlist.dart';
 import 'package:netease_flutter/models/playlist_arguments.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
+import 'package:netease_flutter/shared/widgets/playcount/playcount.dart';
 
 class NeteasePlaylistPanel extends StatefulWidget {
 
@@ -60,30 +61,14 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
             height: screenUtil.setWidth(280.0),
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(widget.arguments.coverImgUrl),
+                image: NetworkImage("${widget.arguments.coverImgUrl}"),
                 fit: BoxFit.cover
               ),
-              borderRadius: BorderRadius.circular(screenUtil.setWidth(12.0))
+              borderRadius: BorderRadius.circular(screenUtil.setWidth(8.0))
             ),
             child: Align(
               alignment: Alignment.topRight,
-              child: Padding(
-                padding: EdgeInsets.only(
-                  right: screenUtil.setWidth(12.0),
-                  top: screenUtil.setHeight(5.0)
-                ),
-                child: Text(getPlayCount(detail.playCount ?? 0), 
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: screenUtil.setSp(24.0),
-                  shadows: [
-                    Shadow(
-                      color: Colors.black38, 
-                      blurRadius: 2.0
-                    )
-                  ]
-                )),
-              )
+              child: NeteasePlaycount(playCount: detail.playCount)
             ),
           ),
           Container(

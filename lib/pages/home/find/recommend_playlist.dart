@@ -123,8 +123,8 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                                 alignment: Alignment.topRight,
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(
-                                    vertical: screenUtil.setHeight(4.0),
-                                    horizontal: screenUtil.setWidth(8.0)
+                                    vertical: 2,
+                                    horizontal: 2
                                   ),
                                   child: NeteasePlaycount(playCount: model.playCount)
                                 )

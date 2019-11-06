@@ -22,9 +22,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<PlayerStatusNotifier>(context);
-    final demandProvider = Provider.of<PlayerSongDemand>(context);
-    ScreenUtil screenUtil = ScreenUtil.getInstance();
-    
+    final demandProvider = Provider.of<PlayerSongDemand>(context);    
 
     String scStr = "0";
     if (status == LoadingStatus.LOADED) {
@@ -66,13 +64,13 @@ class NeteasePlaylistSongs extends StatelessWidget {
                 demandProvider.loadMusic(detail.tracks.first);
               },
               onLongPress: () {},
-              leading: NeteaseIconData(0xe674, color: Colors.white70),
+              leading: NeteaseIconData(0xe674, color: Colors.white70, size: 28.0,),
               title: Text('播放全部', style: TextStyle(
                 color: Colors.white70,
-                fontSize: screenUtil.setSp(30.0)
+                fontSize: 18.0
               )),
               subtitle: status == LoadingStatus.LOADED ? Text('共${detail.trackCount.toString()}首', style: TextStyle(
-                fontSize: screenUtil.setSp(22.0),
+                fontSize: 14.0,
                 color: Colors.white70,
               )) : Text(''),
               dense: true,
@@ -85,7 +83,8 @@ class NeteasePlaylistSongs extends StatelessWidget {
                 ),
                 child: Text('+ 收藏 ($scStr)', style: TextStyle(
                   color: Colors.white70,
-                  fontSize: screenUtil.setSp(24.0)
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w400
                 ))
               ),
             ),
@@ -98,7 +97,6 @@ class NeteasePlaylistSongs extends StatelessWidget {
 
   Widget drawSongs(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    final provider = Provider.of<PlayerStatusNotifier >(context);
     final demandProvider = Provider.of<PlayerSongDemand>(context);
     final stateProvider = Provider.of<PlayerStatusNotifier>(context);
 
@@ -107,7 +105,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
         height: screenUtil.setHeight(950),
         child: ListView.builder(
           itemCount: detail.tracks.length,
-          itemExtent: screenUtil.setHeight(120.0),
+          // itemExtent: 50.0,
           itemBuilder: (BuildContext context, int index) {
             SongModel song = detail.tracks[index];
             return Material(
@@ -127,12 +125,17 @@ class NeteasePlaylistSongs extends StatelessWidget {
                 },
                 // 复制歌曲名
                 // onLongPress: () {},
-                leading: Text(
-                  (index + 1).toString(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: screenUtil.setSp(30.0)
+                leading: Container(
+                  width: 35.0,
+                  child: Center(
+                    child: Text(
+                      (index + 1).toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16.0
+                      ),
+                    ),
                   ),
                 ),
                 enabled: song != null && song.url != null && song.url.isNotEmpty,
@@ -141,33 +144,31 @@ class NeteasePlaylistSongs extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: screenUtil.setSp(30.0),
-                    fontWeight: FontWeight.w500
+                    color: Colors.white,
+                    fontSize: 16.0,
                   ),
                 ),
-                // contentPadding: EdgeInsets.zero,
                 subtitle: Text(
                   song.ar.map((item) => item.name).join(',') + ' - ' + song.al.name,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   style: TextStyle(
-                    color: Colors.white54,
-                    fontSize: screenUtil.setSp(24.0)
+                    color: Colors.white60,
+                    fontSize: 12.0
                   ),
                 ),
                 trailing: Container(
                   // color: Colors.tealAccent,
-                  width: screenUtil.setWidth(50.0),
+                  width: 50.0,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {},
                         child: NeteaseIconData(
                           0xe8f5,
                           color: Colors.white70,
-                          size: screenUtil.setSp(42.0),
+                          size: 16.0,
                         ),
                       ),
                     ],

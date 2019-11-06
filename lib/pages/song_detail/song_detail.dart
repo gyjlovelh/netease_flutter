@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
-import 'package:netease_flutter/pages/song_detail/song_lyric.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
+import 'package:netease_flutter/shared/widgets/lyric/lyric.dart';
 import 'package:provider/provider.dart';
 
 import 'play_icon_action.dart';
@@ -19,7 +19,7 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
 
   Widget showMain(SongModel song) {
     if (showLyric) {
-      return new NeteaseSongLyric();
+      return new NeteaseLyric();
     } else {
       return new NeteaseSongCover(song: song);
     }

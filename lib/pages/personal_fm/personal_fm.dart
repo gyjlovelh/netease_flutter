@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/player/player_position.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
-import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/states/global.dart';
+import 'package:netease_flutter/shared/widgets/lyric/lyric.dart';
 import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
 import 'package:provider/provider.dart';
 
@@ -22,17 +22,24 @@ class NeteasePersonalFm extends StatefulWidget {
 class _NeteasePersonalFmState extends State<NeteasePersonalFm> {
 
   List<SongModel> list = Global.getFmList() ?? [];
-  
-  int current = 0;
-  // 当前是否有待播放歌曲
-  bool _hasMore = false; 
-
   bool _isPointerDown = false;
   double _sliderValue = 0;
+  bool showLyric = false;
 
+  //歌词/封面切换
+  Widget showMain(SongModel song) {
+    if (showLyric) {
+      return new NeteaseLyric();
+    } else {
+      return new FmCover(song: song);
+    }
+  }
+
+  //播放进度条
   Widget progress() {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
     final positionProvider = Provider.of<PlayerPosition>(context);
+    double duration = max<int>(positionProvider.duration.inSeconds, 0).toDouble();
 
     return Row(
       children: <Widget>[
@@ -51,8 +58,8 @@ class _NeteasePersonalFmState extends State<NeteasePersonalFm> {
           width: screenUtil.setWidth(500.0),
           child: Slider(
             min: 0,
-            max: positionProvider.duration.inSeconds.toDouble(),
-            value: _isPointerDown ? _sliderValue : min(positionProvider.current.inSeconds.toDouble(), positionProvider.duration.inSeconds.toDouble()),
+            max: duration,
+            value: _isPointerDown ? _sliderValue : min(positionProvider.current.inSeconds.toDouble(), duration),
             onChanged: (double v) => setState(() => _sliderValue = v),
             onChangeStart: (double v) => setState(() => _isPointerDown = true),
             onChangeEnd: (double v) {      
@@ -116,7 +123,12 @@ class _NeteasePersonalFmState extends State<NeteasePersonalFm> {
             ),
             Expanded(
               flex: 1,
-              child: new FmCover(song: song),
+              child: GestureDetector(
+                onTap: () {
+                  showLyric = !showLyric;
+                },
+                child: showMain(song),
+              ),
             ),
             // 进度条
             Container(
@@ -126,7 +138,7 @@ class _NeteasePersonalFmState extends State<NeteasePersonalFm> {
             Expanded(
               flex: 0,
               child: Container(
-                height: 70.0,
+                height: 100.0,
                 child: new FmActions(),
               ),
             )

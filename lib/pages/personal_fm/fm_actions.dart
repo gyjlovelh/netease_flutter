@@ -23,7 +23,7 @@ class _FmActionsState extends State<FmActions> {
       child: NeteaseIconData(
         pointer,
         color: Colors.white70,
-        size: screenUtil.setSp(48.0),
+        size: 32.0,
       ),
     );
   }
@@ -36,18 +36,18 @@ class _FmActionsState extends State<FmActions> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        actionItem(0xe616),
+        actionItem(0xe6c1),
         actionItem(0xe616),
         Container(
-          width: screenUtil.setWidth(100.0),
-          height: screenUtil.setWidth(100.0),
+          width: 64.0,
+          height: 100.0,
           child: Stack(
             fit: StackFit.expand,
             alignment: Alignment.center,
             children: <Widget>[
               Positioned(
-                height: screenUtil.setHeight(100.0),
-                width: screenUtil.setHeight(100.0),
+                height: 64.0,
+                width: 64.0,
                 child: CircularProgressIndicator(
                   value: 0.0,
                   backgroundColor: Colors.white70,
