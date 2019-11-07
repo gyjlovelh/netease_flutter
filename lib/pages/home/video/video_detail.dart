@@ -88,10 +88,13 @@ class _VideoDetailState extends State<VideoDetail> {
                 ),
               ),
               Center(
-                child: Icon(
-                  Icons.play_arrow,
+                child: IconButton(
+                  icon:Icon(Icons.play_arrow,),
                   color: Colors.white,
-                  size: 40.0,
+                  iconSize: 40.0,
+                  onPressed: (){
+                    print('视频播放地址：'+videoGroups[index].urlInfo.url);
+                  },
                 ),
               ),
               Container(
@@ -123,15 +126,38 @@ class _VideoDetailState extends State<VideoDetail> {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(left: 20.0),
-          child: Text(videoGroups[index].description ??= '',style: TextStyle(color: Colors.white,fontSize: 14.0),),
+          margin: EdgeInsets.only(left: 20.0,top: 5.0,right: 20.0),
+          child: Text(
+            videoGroups[index].description ??= '',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14.0,
+            ),
+            maxLines: 2,
+          ),
         ),
         Container(
-          margin: EdgeInsets.only(left: 20.0),
+          margin: EdgeInsets.only(left: 20.0, top: 5.0,right: 20.0),
           child: Row(
-          children: <Widget>[
-            Text(videoGroups[index].creator.nickname,style: TextStyle(color: Colors.white),)
-        ],),
+            children: <Widget>[
+               ClipOval(
+                  child: Image.network(
+                    videoGroups[index].creator.avatarUrl,
+                    width: ScreenUtil.instance.setWidth(50.0),
+                    height: ScreenUtil.instance.setHeight(50.0),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 5.0),
+                  child: Text(
+                videoGroups[index].creator.nickname,
+                style: TextStyle(color: Colors.white),
+              ),
+                ),
+              
+            ],
+          ),
         ),
         Divider(
           height: 10.0,
