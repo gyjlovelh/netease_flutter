@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/player/player.dart';
 
 
@@ -163,7 +164,7 @@ class NeteaseAppBar extends StatelessWidget {
         maxLines: 1,
         style: TextStyle(
           color: Colors.white,
-          fontSize: 18.0
+          fontSize: SizeSetting.size_16
         ),
       );
       contents.add(titleW);
@@ -175,7 +176,7 @@ class NeteaseAppBar extends StatelessWidget {
           maxLines: 1,
           style: TextStyle(
             color: Colors.white54,
-            fontSize: 10.0
+            fontSize: SizeSetting.size_10
           ),
         ));
       }

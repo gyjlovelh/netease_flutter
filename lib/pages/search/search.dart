@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/states/global.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
@@ -143,13 +144,13 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
             },
             style: TextStyle(
               color: Colors.white70,
-              fontSize: screenUtil.setSp(28.0)
+              fontSize: SizeSetting.size_14
             ),
             decoration: InputDecoration(
               hintText: _searchDefault == null ? "" : _searchDefault['showKeyword'],
               hintStyle: TextStyle(
                 color: Theme.of(context).inputDecorationTheme.hintStyle.color,
-                fontSize: screenUtil.setSp(28.0)
+                fontSize: SizeSetting.size_14
               ),
               border: InputBorder.none
             ),
@@ -203,7 +204,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                             children: <Widget>[
                               Text('历史记录', style: TextStyle(
                                 color: Colors.white,
-                                fontSize: screenUtil.setSp(28.0),
+                                fontSize: SizeSetting.size_14,
                                 fontWeight: FontWeight.bold
                               )),
                               IconButton(
@@ -221,7 +222,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                                         title: Text(
                                           '确定清空全部历史记录？',
                                           style: TextStyle(
-                                            fontSize: screenUtil.setSp(30.0)
+                                            fontSize: SizeSetting.size_16
                                           ),
                                         ),
                                         actions: <Widget>[
@@ -229,7 +230,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                                             child: Text(
                                               '取消',
                                               style: TextStyle(
-                                                fontSize: screenUtil.setSp(28.0),
+                                                fontSize: SizeSetting.size_14,
                                                 color: Theme.of(context).dialogTheme.titleTextStyle.color
                                               ),
                                             ),
@@ -241,7 +242,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                                             child: Text(
                                               '清空',
                                               style: TextStyle(
-                                                fontSize: screenUtil.setSp(28.0),
+                                                fontSize: SizeSetting.size_14,
                                                 color: Theme.of(context).dialogTheme.titleTextStyle.color
                                               ),
                                             ),
@@ -276,7 +277,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                                   child: FlatButton(
                                     child: Text(item, style: TextStyle(
                                       color: Colors.white70,
-                                      fontSize: screenUtil.setSp(24.0)
+                                      fontSize: SizeSetting.size_12
                                     )),
                                     padding: EdgeInsets.zero,
                                     color: Color.fromRGBO(45, 73, 91, 0.6),
@@ -308,7 +309,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: screenUtil.setSp(28.0)
+                          fontSize: SizeSetting.size_14
                         ),
                       ),
                     ),
@@ -332,7 +333,7 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                                     (index + 1).toString(),
                                     style: TextStyle(
                                       color: index < 3 ? Theme.of(context).textSelectionColor : Colors.white70,
-                                      fontSize: screenUtil.setSp(30.0),
+                                      fontSize: SizeSetting.size_14,
                                       fontWeight: FontWeight.bold
                                     ),
                                   ),
@@ -342,8 +343,8 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                                         item['searchWord'],
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: screenUtil.setSp(30.0)
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: SizeSetting.size_14
                                         ),
                                       ),
                                       drawIcon(item['iconUrl'])
@@ -353,14 +354,14 @@ class _NeteaseSearchState extends State<NeteaseSearch> {
                                     item['content'],
                                     style: TextStyle(
                                       color: Colors.white70,
-                                      fontSize: screenUtil.setSp(24.0)
+                                      fontSize: SizeSetting.size_10
                                     )
                                   ),
                                   trailing: Text(
                                     item['score'].toString(),
                                     style: TextStyle(
                                       color: Colors.white70,
-                                      fontSize: screenUtil.setSp(24.0)
+                                      fontSize: SizeSetting.size_10
                                     ),
                                   ),
                                 ),

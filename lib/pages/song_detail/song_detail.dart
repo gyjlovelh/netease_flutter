@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/lyric/lyric.dart';
 import 'package:provider/provider.dart';
 
@@ -40,10 +41,10 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(song.name, style: TextStyle(
-              fontSize: screenUtil.setSp(30.0)
+              fontSize: SizeSetting.size_16
             )),
             Text((song.ar ?? song.artists).map((item) => item.name).join(','), style: TextStyle(
-              fontSize: screenUtil.setSp(24.0)
+              fontSize: SizeSetting.size_12
             ))
           ],
         )

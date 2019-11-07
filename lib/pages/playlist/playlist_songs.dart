@@ -7,6 +7,7 @@ import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 import 'package:provider/provider.dart';
@@ -67,10 +68,10 @@ class NeteasePlaylistSongs extends StatelessWidget {
               leading: NeteaseIconData(0xe674, color: Colors.white70, size: 28.0,),
               title: Text('播放全部', style: TextStyle(
                 color: Colors.white70,
-                fontSize: 18.0
+                fontSize: SizeSetting.size_16
               )),
               subtitle: status == LoadingStatus.LOADED ? Text('共${detail.trackCount.toString()}首', style: TextStyle(
-                fontSize: 14.0,
+                fontSize: SizeSetting.size_12,
                 color: Colors.white70,
               )) : Text(''),
               dense: true,
@@ -83,7 +84,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
                 ),
                 child: Text('+ 收藏 ($scStr)', style: TextStyle(
                   color: Colors.white70,
-                  fontSize: 14.0,
+                  fontSize: SizeSetting.size_12,
                   fontWeight: FontWeight.w400
                 ))
               ),
@@ -133,7 +134,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white70,
-                        fontSize: 16.0
+                        fontSize: SizeSetting.size_14
                       ),
                     ),
                   ),
@@ -145,7 +146,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
                   maxLines: 1,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16.0,
+                    fontSize: SizeSetting.size_14,
                   ),
                 ),
                 subtitle: Text(
@@ -154,11 +155,10 @@ class NeteasePlaylistSongs extends StatelessWidget {
                   maxLines: 1,
                   style: TextStyle(
                     color: Colors.white60,
-                    fontSize: 12.0
+                    fontSize: SizeSetting.size_10
                   ),
                 ),
                 trailing: Container(
-                  // color: Colors.tealAccent,
                   width: 50.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -168,7 +168,7 @@ class NeteasePlaylistSongs extends StatelessWidget {
                         child: NeteaseIconData(
                           0xe8f5,
                           color: Colors.white70,
-                          size: 16.0,
+                          size: SizeSetting.size_14,
                         ),
                       ),
                     ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 import 'package:netease_flutter/shared/widgets/playcount/playcount.dart';
 
@@ -126,17 +127,20 @@ class _PlaylistRecommendState extends State<PlaylistRecommend> {
                             fit: BoxFit.cover
                           ),
                           borderRadius: BorderRadius.circular(
-                            screenUtil.setWidth(10.0)
+                            screenUtil.setWidth(8.0)
                           )
                         ),
                         child: new NeteasePlaycount(playCount: item['playCount']),
                       ),
-                      Text(item['name'], 
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: screenUtil.setSp(22.0)
+                      Padding(
+                        padding: EdgeInsets.only(top: 4.0),
+                        child: Text(item['name'], 
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: SizeSetting.size_10
+                          ),
                         ),
                       )
                     ],

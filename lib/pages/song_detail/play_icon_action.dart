@@ -8,6 +8,7 @@ import 'package:netease_flutter/shared/player/player_position.dart';
 import 'package:netease_flutter/shared/player/player_repeat_mode.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
 import 'package:netease_flutter/shared/states/global.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/widgets/music_list/music_list.dart';
@@ -44,7 +45,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
     Color color = Colors.white70, 
     @required VoidCallback onPressed
   }) => GestureDetector(
-    child: NeteaseIconData(pointer, size: size ?? ScreenUtil.getInstance().setSp(48.0), color: color),
+    child: NeteaseIconData(pointer, size: size ?? 24, color: color),
     onTap: onPressed,
   );
 
@@ -73,7 +74,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white70,
-                      fontSize: screenUtil.setSp(24.0)
+                      fontSize: SizeSetting.size_10
                     ),
                   ),
                 ),
@@ -104,7 +105,7 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white70,
-                      fontSize: screenUtil.setSp(24.0)
+                      fontSize: SizeSetting.size_10
                     ),
                   ),
                 ),
@@ -130,16 +131,31 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                   }
                 ),
                 actionIconButton(0xe605, onPressed: _prev),
-                actionIconButton(
-                  statusProvider.playerState == AudioPlayerState.PLAYING ? 0xe6cb : 0xe674, 
-                  size: screenUtil.setSp(100.0), 
-                  onPressed: () async {
-                    if (statusProvider.playerState == AudioPlayerState.PLAYING) {
-                      statusProvider.pause();
-                    } else {
-                      statusProvider.play();
-                    }
-                  }
+                Container(
+                  width: 50.0,
+                  height: 50.0,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      Positioned(
+                        height: 50.0,
+                        width: 50.0,
+                        child: CircularProgressIndicator(
+                          value: 0.0,
+                          backgroundColor: Colors.white70,
+                          strokeWidth: 1.5,
+                        ),
+                      ),
+                      actionIconButton(statusProvider.playerState == AudioPlayerState.PLAYING ? 0xe636 : 0xe65e, onPressed: () {
+                        if (statusProvider.playerState == AudioPlayerState.PLAYING) {
+                          statusProvider.pause();
+                        } else {
+                          statusProvider.play();
+                        }
+                      }),
+                    ],
+                  ),
                 ),
                 actionIconButton(0xeaad, onPressed: _next),
                 actionIconButton(0xe604, onPressed: () {

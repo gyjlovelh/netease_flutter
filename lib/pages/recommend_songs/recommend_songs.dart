@@ -5,6 +5,7 @@ import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/list_tile/list_tile.dart';
 import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
@@ -49,7 +50,7 @@ class _NeteaseCommendSongsState extends State<NeteaseRecommendSongs> {
         ),
         child: ListView.builder(
           itemCount: list.length,
-          // itemExtent: screenUtil.setHeight(120.0),
+          itemExtent: screenUtil.setHeight(120.0),
           itemBuilder: (BuildContext context, int index) {
             SongModel song = SongModel.fromJson(list[index]);
             return NeteaseListTile(
@@ -70,14 +71,14 @@ class _NeteaseCommendSongsState extends State<NeteaseRecommendSongs> {
                 title: Text(
                   "${song.name}",
                   style: TextStyle(
-                    fontSize: screenUtil.setSp(28.0),
+                    fontSize: SizeSetting.size_14,
                     color: Colors.white70
                   ),
                 ),
                 subtitle: Text(
                   "${song.artists.map((item) => item.name).join(',')} - ${song.album.name}",
                   style: TextStyle(
-                    fontSize: screenUtil.setSp(20.0),
+                    fontSize: SizeSetting.size_10,
                     color: Colors.white54
                   ),
                 ),

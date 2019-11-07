@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/widgets/music_list/music_list.dart';
@@ -88,10 +89,10 @@ class _NeteasePlayerState extends State<NeteasePlayer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      song == null ? '-' : song.name, 
+                      song == null ? '' : song.name, 
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.8),
-                        fontSize: 16.0
+                        fontSize: SizeSetting.size_14
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,

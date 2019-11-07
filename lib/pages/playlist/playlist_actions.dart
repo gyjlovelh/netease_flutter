@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/playlist.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 
 class NeteasePlaylistActions extends StatelessWidget {
@@ -28,7 +29,7 @@ class NeteasePlaylistActions extends StatelessWidget {
           child: Text(
             "$label",
             style: TextStyle(
-              fontSize: 14.0,
+              fontSize: SizeSetting.size_12,
               fontWeight: FontWeight.w400
             ),
           ),

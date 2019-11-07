@@ -26,7 +26,7 @@ class PlayerSongDemand extends ChangeNotifier {
   PlayerSongDemand() {
     Global.player.onPlayerStateChanged.listen((AudioPlayerState state) {
       if (state == AudioPlayerState.COMPLETED) {
-        next(playMode: playMode);
+        next();
       }
       notifyListeners();
     });
@@ -87,7 +87,7 @@ class PlayerSongDemand extends ChangeNotifier {
     }
   }
   // 下一首⏭
-  void next({int playMode}) async {
+  void next() async {
     var target;
     if (playMode == 1) { ///单曲模式
       int index = musicList.map((item) => item.id).toList().indexOf(currentMusic.id);

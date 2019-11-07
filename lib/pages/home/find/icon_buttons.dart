@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
 import 'package:netease_flutter/shared/states/global.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +25,7 @@ class NeteaseIconButtons extends StatelessWidget {
           ),
           Text(label, style: TextStyle(
             color: Colors.white,
-            fontSize: ScreenUtil.getInstance().setSp(24.0)
+            fontSize: SizeSetting.size_12
           ))
         ],
       ),

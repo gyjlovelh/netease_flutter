@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/states/global.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/player/player.dart';
 import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
 
@@ -45,12 +46,12 @@ class _NeteasePlaylistSquareState extends State<NeteasePlaylistSquare> with Sing
         ),
         labelColor: Theme.of(context).textSelectionColor,
         labelStyle: TextStyle(
-          fontSize: screenUtil.setSp(28.0),
+          fontSize: SizeSetting.size_14,
           fontWeight: FontWeight.bold
         ),
         unselectedLabelColor: Colors.white,
         unselectedLabelStyle: TextStyle(
-          fontSize: screenUtil.setSp(28.0)
+          fontSize: SizeSetting.size_14
         ),
         tabs: _tabs.map((item) {
           return Tab(
