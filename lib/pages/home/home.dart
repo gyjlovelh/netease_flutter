@@ -26,7 +26,7 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
 
   @override
   void initState() {
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     super.initState();
     // 缓存FM播放列表
     _cachePmList();
@@ -154,7 +154,7 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
                         tabs: <Widget>[
                           Text('我的'),
                           Text('发现'),
-                          Text('云村'),
+                          // Text('云村'),
                           Text('视频')
                         ],
                       )
@@ -193,7 +193,7 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
                   children: <Widget>[
                     new NeteaseUserCenter(),
                     new NeteaseFind(),
-                    Text('data3'),
+                    // Text('data3'),
                     new Video(),
                   ],
                 ),

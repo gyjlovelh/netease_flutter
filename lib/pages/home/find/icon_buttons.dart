@@ -44,12 +44,6 @@ class NeteaseIconButtons extends StatelessWidget {
           iconButtonItem(0xe652, label: '每日推荐', onPressed: () {
             Navigator.of(context).pushNamed('commend_songs');
           }),
-          iconButtonItem(0xe60d, label: '歌单', onPressed: () {
-            Navigator.of(context).pushNamed('playlist_square');
-          }),
-          iconButtonItem(0xe6ab, label: '排行榜', onPressed: () {
-            Navigator.of(context).pushNamed('rank_list');
-          }),
           iconButtonItem(0xe608, label: '私人FM', onPressed: () {
             // todo 暂时还有bug。
             // 若当前不是正在播放FM，则重新加载数据。
@@ -58,7 +52,15 @@ class NeteaseIconButtons extends StatelessWidget {
             }
             Navigator.of(context).pushNamed('personal_fm');
           }),
-          iconButtonItem(0xe61d, label: '直播')
+          iconButtonItem(0xe60d, label: '歌单', onPressed: () {
+            Navigator.of(context).pushNamed('playlist_square');
+          }),
+          iconButtonItem(0xe61d, label: '音乐', onPressed: () {
+            Navigator.of(context).pushNamed('latest_song');
+          }),
+          iconButtonItem(0xe6ab, label: '排行榜', onPressed: () {
+            Navigator.of(context).pushNamed('rank_list');
+          })
         ],
       ),
     );

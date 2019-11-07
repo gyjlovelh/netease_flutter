@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
-import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/player/player_repeat_mode.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
 import 'package:netease_flutter/shared/states/size_setting.dart';

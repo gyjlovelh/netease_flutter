@@ -117,9 +117,6 @@ class NeteasePlaylistSongs extends StatelessWidget {
                   if (song.url.isEmpty) {
                     Toast.show("亲爱的,暂无版权,么么哒~", context);
                   } else {
-                    if (stateProvider.playerState == AudioPlayerState.PLAYING) {
-                      await stateProvider.stop();
-                    }
                     demandProvider.choosePlayList(detail.tracks);
                     demandProvider.loadMusic(song);
                   }

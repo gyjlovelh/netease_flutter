@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'pages/advertising/advertising.dart';
 import 'pages/comment/comment.dart';
 import 'pages/home/home.dart';
+import 'pages/latest_song/latest_song.dart';
 import 'pages/login/login.dart';
 import 'pages/local_musics/local_musics.dart';
 import 'pages/personal_fm/personal_fm.dart';
@@ -136,6 +137,8 @@ class _NetState extends State<NeteaseApp> {
               'playlist': (BuildContext context) => new NeteasePlaylist(),
               // 每日推荐歌曲
               'commend_songs': (BuildContext context) => new NeteaseRecommendSongs(),
+              // 最新音乐
+              'latest_song': (BuildContext context) => new NeteaseLatestSong(),
               // 私人FM
               'personal_fm': (BuildContext context) => new NeteasePersonalFm(),
               // 歌单广场

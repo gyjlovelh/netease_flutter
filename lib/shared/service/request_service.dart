@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -60,20 +62,14 @@ class RequestService {
     ProgressCallback onSendProgress,
     ProgressCallback onReceiveProgress,
   }) async {
-    try {
-      return await _dio.post(_baseUrl + path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-        cancelToken: cancelToken,
-        onSendProgress: onSendProgress,
-        onReceiveProgress: onReceiveProgress);
-    } on DioError catch (error) {
-      // 弹框
-      print("$error");
-      return error.response;
-    }
-    
+    return await _dio.post(_baseUrl + path,
+      data: data,
+      queryParameters: queryParameters,
+      options: options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress
+    );
   }
 
   /*
@@ -113,8 +109,20 @@ class RequestService {
 
   // 获取推荐歌单
   Future<List> getRecommendPlaylist() async {
-    Response response = await _request('/personalized', queryParameters: {"limit": 6});
+    Response response = await _request('/personalized', queryParameters: {"limit": 6, "timestamp": DateTime.now().microsecondsSinceEpoch});
     return response.data['result'];
+  }
+
+  // 获取推荐音乐
+  Future<List> getPersonalizedSongs() async {
+    Response response = await _request('/personalized/newsong');
+    List list = response.data['result'];
+    List urls = await getSongUrl(list.map<int>((item) => item['id']).toList());
+    list.forEach((item) {
+      var target = urls.firstWhere((uItem) => uItem['id'] == item['id']);
+      item['song']['url'] = target['url'];
+    });
+    return list;
   }
 
   // 私人FM
@@ -144,11 +152,33 @@ class RequestService {
     return song;
   }
 
+  // 获取播放链接
+  Future<List> getSongUrl(List<int> ids) async {
+    Response response = await _request('/song/url', queryParameters: {"id": ids.join(',')});
+    return response.data['data'];
+  }
+
   // 喜欢音乐
   Future addSongToFavourite(int id, {bool like = true}) async {
     Response response = await _request('/like', queryParameters: {"id": id, "like": like});
 
     return response.data;
+  }
+
+  // 获取新歌速递
+  Future<List> getTopSong(int type) async {
+    Response response = await _request('/top/song', queryParameters: {"type": type});
+    List songs = response.data['data'];
+    songs.forEach((song) {
+      song['url'] = song['mp3Url'];
+    });
+    // List urls = await getSongUrl(songs.map<int>((item) => item['id']).toList());
+
+    // songs.forEach((song) {
+    //   var target = urls.firstWhere((item) => item['id'] == song['id']);
+    //   song['url'] = target['url'];
+    // });
+    return songs;
   }
 
   // 音乐是否可用【全部都没版权？？？】
@@ -157,7 +187,6 @@ class RequestService {
       print("$id");
       Response response = await _request('/check/music',
           queryParameters: {"id": id, "br": 320000});
-
       return response.data;
     } on DioError catch (error) {
       return error.response;

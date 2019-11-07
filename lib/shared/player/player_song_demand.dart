@@ -34,15 +34,15 @@ class PlayerSongDemand extends ChangeNotifier {
 
   // 加载歌曲
   loadMusic(SongModel song, {int playMode = 1}) async {
-    _playMode = playMode;
     Global.setPlayMode(playMode);
-    if (Global.player.state == AudioPlayerState.PLAYING) {
-      Global.player.stop();
+    if (Global.player.state == AudioPlayerState.PLAYING || Global.player.state == AudioPlayerState.PAUSED) {
+      await Global.player.stop();
     }
     this._music = song;
+    Global.updateCurrentMusic(song);
+    this._playMode = playMode;
     print("${song.toJson()}");
     await Global.player.play(song.url);
-    Global.updateCurrentMusic(song);
     notifyListeners();
 
     // 发布歌词

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:netease_flutter/pages/home/find/swiper.dart';
 
 import 'icon_buttons.dart';
 import 'recommend_playlist.dart';
+import 'recommend_song.dart';
+import 'swiper.dart';
 
 class NeteaseFind extends StatefulWidget {
   @override
@@ -31,6 +32,7 @@ class _NeteaseFindState extends State<NeteaseFind> {
             new NeteaseIconButtons(),
             Divider(height: screenUtil.setHeight(66.0), color: Theme.of(context).primaryColor,),
             new NeteaseRecommentPlaylist(),
+            new RecommendSong()
           ],
         ),
       )
