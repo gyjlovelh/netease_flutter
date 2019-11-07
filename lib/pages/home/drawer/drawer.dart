@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/profile.dart';
 import 'package:netease_flutter/shared/states/global.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'custom_drawer.dart';
 import '../../../shared/widgets/icon_data/icon_data.dart';
 
@@ -20,9 +21,10 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
   Widget bottomAction({int pointer, String label, onPressed}) => Container(
     height: ScreenUtil.getInstance().setHeight(100.0),
     child: FlatButton.icon(
-      icon: NeteaseIconData(pointer, size: ScreenUtil.getInstance().setSp(36.0),),
+      icon: NeteaseIconData(pointer, color: Colors.white70, size: ScreenUtil.getInstance().setSp(36.0),),
       label: Text(label, style: TextStyle(
-        fontSize: ScreenUtil.getInstance().setSp(28.0)
+        color: Colors.white70,
+        fontSize: SizeSetting.size_14
       )),
       onPressed: onPressed
     ),
@@ -48,7 +50,7 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
           Container(
             child: Text(label, style: TextStyle(
               color: Colors.white70,
-              fontSize: ScreenUtil.getInstance().setSp(24.0)
+              fontSize: SizeSetting.size_12
             )),
           )
         ],
@@ -91,7 +93,7 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
                 child: NeteaseIconData(
                   item["pointer"],
                   color: Colors.white70,
-                  size: ScreenUtil.getInstance().setSp(36.0),
+                  size: ScreenUtil.getInstance().setSp(32.0),
                 ),
               ),
               dense: true,
@@ -100,13 +102,13 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
               contentPadding: EdgeInsets.all(0.0),
               title: Text(item["title"], style: TextStyle(
                 color: Colors.white70,
-                fontSize: ScreenUtil.getInstance().setSp(28.0)
+                fontSize: SizeSetting.size_12
               )),
               trailing: Padding(
                 padding: EdgeInsets.only(right: horizontalWidth),
                 child: Text(item["trailing"] ?? "", style: TextStyle(
                   color: Colors.white54,
-                  fontSize: ScreenUtil.getInstance().setSp(20.0)
+                  fontSize: SizeSetting.size_8
                 ),),
               )
             ),
@@ -170,7 +172,7 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
                             "${profile?.nickname}", 
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: screenUtil.setSp(36.0),
+                              fontSize: SizeSetting.size_16,
                               fontWeight: FontWeight.bold
                             )
                           ),
@@ -191,7 +193,7 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
                                 'Lv.${profile?.vipType}',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: screenUtil.setSp(18.0),
+                                  fontSize: SizeSetting.size_8,
                                   fontStyle: FontStyle.italic
                                 ),
                               ),
@@ -233,9 +235,10 @@ class _NeteaseDrawerState extends State<NeteaseDrawer> {
                   border: Border(
                     top: BorderSide(
                       width: screenUtil.setHeight(1.0),
-                      color: Colors.grey[300]
+                      color: Theme.of(context).primaryColor
                     )
-                  )
+                  ),
+                  color: Theme.of(context).primaryColor
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

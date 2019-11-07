@@ -8,6 +8,7 @@ import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/widgets/list_tile/list_tile.dart';
 import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
@@ -190,13 +191,13 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
             },
             style: TextStyle(
               color: Colors.white70,
-              fontSize: screenUtil.setSp(28.0)
+              fontSize: SizeSetting.size_14
             ),
             decoration: InputDecoration(
               hintText: _searchDefault == null ? "" : _searchDefault['showKeyword'],
               hintStyle: TextStyle(
                 color: Theme.of(context).inputDecorationTheme.hintStyle.color,
-                fontSize: screenUtil.setSp(28.0)
+                fontSize: SizeSetting.size_14
               ),
               border: InputBorder.none
             ),
@@ -217,7 +218,7 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
                 item.label, 
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: screenUtil.setSp(30.0)
+                  fontSize: SizeSetting.size_14
                 )
               ),
             ),
@@ -275,7 +276,6 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
   Widget songBuilder(item) {
     SongModel song = SongModel.fromJson(item);
     final demandProvider = Provider.of<PlayerSongDemand>(context);
-    ScreenUtil screenUtil = ScreenUtil.getInstance();
     return NeteaseListTile(
       listTile: ListTile(
         title: songTitle(song),
@@ -283,7 +283,7 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
         trailing: GestureDetector(
           child: NeteaseIconData(
             0xe8f5,
-            size: screenUtil.setSp(36.0),
+            size: SizeSetting.size_14,
             color: Colors.white70,
           ),
           onTap: () {},
@@ -318,7 +318,7 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
         maxLines: 1,
         style: TextStyle(
         color: Colors.white,
-        fontSize: screenUtil.setSp(28.0)
+        fontSize: SizeSetting.size_14
       ))
     );
   }
@@ -337,7 +337,7 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
         maxLines: 1,
         style: TextStyle(
           color: Colors.white70,
-          fontSize: screenUtil.setSp(24.0)
+          fontSize: SizeSetting.size_10
         ),
       ),
     );
@@ -362,12 +362,12 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
           // child: ,
         ),
         title: Text(item['name'], style: TextStyle(
-          fontSize: screenUtil.setSp(28.0),
+          fontSize: SizeSetting.size_14,
           color: Colors.white
         )),
         subtitle: Text(item['artist']['name'], style: TextStyle(
           color: Colors.white70,
-          fontSize: screenUtil.setSp(22.0)
+          fontSize: SizeSetting.size_10
         )),
       ),
     );
@@ -396,7 +396,7 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
         ),
         title: Text(item['name'], style: TextStyle(
           color: Colors.white,
-          fontSize: screenUtil.setSp(28.0)
+          fontSize: SizeSetting.size_14
         )),
         trailing: Container(
           width: screenUtil.setWidth(180.0),
@@ -409,7 +409,7 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
                 ),
                 padding: EdgeInsets.all(screenUtil.setWidth(8.0)),
                 decoration: BoxDecoration(
-                  color: Colors.redAccent,
+                  color: Theme.of(context).textSelectionColor,
                   borderRadius: BorderRadius.circular(999.0)
                 ),
                 child: NeteaseIconData(
@@ -420,7 +420,7 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
               ),
               Text('已入驻', style: TextStyle(
                 color: Colors.white70,
-                fontSize: screenUtil.setSp(24.0)
+                fontSize: SizeSetting.size_12
               ))
             ],
           ),
@@ -457,10 +457,14 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
             )
           ),
         ),
-        title: Text(model.name, style: TextStyle(
-          color: Colors.white,
-          fontSize: screenUtil.setSp(28.0)
-        )),
+        title: Text(
+          model.name, 
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: SizeSetting.size_14
+          )),
         subtitle: playlistSubtitle(model),
         dense: true,
       ),
@@ -485,7 +489,7 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
       maxLines: 1,
       style: TextStyle(
         color: Colors.white70,
-        fontSize: ScreenUtil.getInstance().setSp(22.0)
+        fontSize: SizeSetting.size_10
       )
     );
   }
@@ -521,7 +525,7 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
                 ),
                 child: Text(profile.nickname, style: TextStyle(
                   color: Colors.white,
-                  fontSize: screenUtil.setSp(28.0)
+                  fontSize: SizeSetting.size_14
                 )),
               ),
               genderIcon(profile)
@@ -533,7 +537,7 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
           maxLines: 1,
           style: TextStyle(
             color: Colors.white70,
-            fontSize: screenUtil.setSp(20.0)
+            fontSize: SizeSetting.size_10
           )
         ),
         dense: true,
@@ -543,16 +547,16 @@ class _NeteaseSearchResultState extends State<NeteaseSearchResult> with SingleTi
           decoration: BoxDecoration(
             border: Border.all(
               width: screenUtil.setWidth(1.0),
-              color: Colors.redAccent
+              color: Theme.of(context).textSelectionColor,
             ),
             borderRadius: BorderRadius.circular(999.0)
           ),
           padding: EdgeInsets.zero,
           child: FlatButton(
             padding: EdgeInsets.zero,
-            textColor: Colors.redAccent,
+            textColor: Theme.of(context).textSelectionColor,
             child: Text('+ 关注', style: TextStyle(
-              fontSize: screenUtil.setSp(22.0)
+              fontSize: SizeSetting.size_10
             )),
             shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
             onPressed: () {},

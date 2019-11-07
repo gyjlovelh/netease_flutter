@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
 
 class NeteaseRankList extends StatefulWidget {
@@ -48,8 +49,9 @@ class _NeteaseRankListState extends State<NeteaseRankList> {
                   return new Container(
                     alignment: Alignment.bottomLeft,
                     child: new Text('官方榜', style: TextStyle(
-                      fontSize: screenUtil.setSp(32.0),
-                      fontWeight: FontWeight.bold
+                      color: Colors.white70,
+                      fontSize: SizeSetting.size_16,
+                      fontWeight: FontWeight.w500
                     )),
                   );
                 }, childCount: 1),
@@ -76,13 +78,13 @@ class _NeteaseRankListState extends State<NeteaseRankList> {
                             String fName = track['first'];
                             String sName = track['second'];
                             return Container(
-                              width: screenUtil.setWidth(450.0),
+                              width: screenUtil.setWidth(400.0),
                               child: Text("$index.$fName - $sName", 
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: screenUtil.setSp(28.0)
+                                  color: Colors.white70,
+                                  fontSize: SizeSetting.size_14
                                 )
                               ),
                             );

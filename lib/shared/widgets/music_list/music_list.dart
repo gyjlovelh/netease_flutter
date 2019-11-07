@@ -4,6 +4,7 @@ import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
 import 'package:netease_flutter/shared/player/player_repeat_mode.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
@@ -57,7 +58,7 @@ class _NeteaseMusicListState extends State<NeteaseMusicList> {
         "$label",
         style: TextStyle(
           color: Colors.white,
-          fontSize: screenUtil.setSp(30.0)
+          fontSize: SizeSetting.size_14
         ),
       ),
       onPressed: onPressed,
@@ -67,7 +68,6 @@ class _NeteaseMusicListState extends State<NeteaseMusicList> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    final provider = Provider.of<PlayerStatusNotifier>(context);
     final demandProvider = Provider.of<PlayerSongDemand>(context);
 
     return Container(
@@ -144,7 +144,7 @@ class _NeteaseMusicListState extends State<NeteaseMusicList> {
                             maxLines: 1,
                             style: TextStyle(
                               color: isCur ? Theme.of(context).textSelectionColor : Colors.white70,
-                              fontSize: screenUtil.setSp(28.0)
+                              fontSize: SizeSetting.size_14
                             ),
                           ),
                         )

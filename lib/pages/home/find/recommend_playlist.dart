@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/recomment_playlist.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 import 'package:netease_flutter/shared/widgets/playcount/playcount.dart';
 
@@ -24,7 +25,7 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
             children: <Widget>[
               Text('推荐歌单', style: TextStyle(
                 color: Colors.white,
-                fontSize: screenUtil.setSp(36.0),
+                fontSize: SizeSetting.size_16,
                 fontWeight: FontWeight.w500
               )),
               Container(
@@ -41,8 +42,8 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                   ),
                   padding: EdgeInsets.zero,
                   child: Text('歌单广场', style: TextStyle(
-                    color: Colors.white,
-                    fontSize: screenUtil.setSp(22.0),
+                    color: Colors.white70,
+                    fontSize: SizeSetting.size_10,
                     fontWeight: FontWeight.w400
                   )),
                   onPressed: () {
@@ -81,8 +82,8 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                             content: Text(
                               model.copywriter,
                               style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: screenUtil.setSp(30.0)
+                                color: Theme.of(context).dialogTheme.titleTextStyle.color,
+                                fontSize: SizeSetting.size_14
                               ),
                             ),
                             actions: <Widget>[
@@ -90,12 +91,20 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                                 child: Text(
                                   '查看详情',
                                   style: TextStyle(
-                                    color: Colors.redAccent,
-                                    fontSize: screenUtil.setSp(30.0),
+                                    color: Theme.of(context).textSelectionColor,
+                                    fontSize: SizeSetting.size_14,
                                     fontWeight: FontWeight.bold
                                   ),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pushNamed('playlist', arguments: json.encode({
+                                    "id": model.id, 
+                                    "name": model.name,
+                                    "coverImgUrl": model.picUrl,
+                                    "copywriter": model.copywriter
+                                  }));
+                                },
                               )
                             ],
                           )
@@ -136,7 +145,7 @@ class NeteaseRecommentPlaylist extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: screenUtil.setSp(24.0)
+                                fontSize: SizeSetting.size_12
                               ),
                             )
                           ],

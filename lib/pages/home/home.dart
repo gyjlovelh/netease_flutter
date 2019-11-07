@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/states/global.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'find/find.dart';
 import 'user_center/user_center.dart';
 import '../../shared/widgets/icon_data/icon_data.dart';
@@ -67,6 +68,28 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
 
     // 初始化屏幕逻辑宽高
     ScreenUtil.instance = ScreenUtil(width: 750, height: 1340, allowFontScaling: true)..init(context);
+    print("当前设备尺寸:${ScreenUtil.screenWidthDp}x${ScreenUtil.screenHeightDp}");
+    if (ScreenUtil.screenWidthDp > 450.0) {
+      SizeSetting.init(
+      size20: 22.0,
+      size18: 20.0,
+      size16: 18.0,
+      size14: 16.0,
+      size12: 14.0,
+      size10: 12.0,
+      size8: 10.0,
+    );
+    } else {
+      SizeSetting.init(
+        size20: 20.0,
+        size18: 18.0,
+        size16: 16.0,
+        size14: 14.0,
+        size12: 12.0,
+        size10: 10.0,
+        size8: 8.0,
+      );
+    }
 
     ScreenUtil sc = ScreenUtil.getInstance();
 
@@ -120,8 +143,8 @@ class _NeteaseHomeState extends State<NeteaseHome> with SingleTickerProviderStat
                       child: TabBar(
                         controller: _tabController,
                         labelStyle: TextStyle(
-                          fontSize: sc.setSp(34.0),
-                          fontWeight: FontWeight.bold
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w600
                         ),
                         labelColor: Theme.of(context).textSelectionColor,
                         unselectedLabelColor: Colors.white70,

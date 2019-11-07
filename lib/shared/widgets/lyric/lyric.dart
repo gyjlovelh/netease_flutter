@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/event/event.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:provider/provider.dart';
 
 class NeteaseLyric extends StatefulWidget {
@@ -55,7 +56,7 @@ class _NeteaseLyricState extends State<NeteaseLyric> {
           }, childCount: 1)
         ),
         SliverFixedExtentList(
-          itemExtent: 40.0,
+          itemExtent: 35.0,
           delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
             var item = lyric[index];
 
@@ -66,7 +67,7 @@ class _NeteaseLyricState extends State<NeteaseLyric> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: _activeMilliseconds == item['milliseconds'] ? Colors.tealAccent : Colors.white70,
-                  fontSize: 16.0,
+                  fontSize: SizeSetting.size_14,
                   shadows: [
                     Shadow(
                       color: Theme.of(context).primaryColor,

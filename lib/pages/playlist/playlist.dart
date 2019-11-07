@@ -31,7 +31,6 @@ class _NeteasePlaylistState extends State<NeteasePlaylist> {
   @override
   Widget build(BuildContext context) {
     // 跳转需要参数 {id, 歌单名, 封面, 推荐语}
-    ScreenUtil screenUtil = ScreenUtil.getInstance();
     arguments = PlaylistArguments.fromJson(json.decode(ModalRoute.of(context).settings.arguments));
     if (status == LoadingStatus.UNINIT) {
       _getPageData();

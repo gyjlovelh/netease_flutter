@@ -51,7 +51,7 @@ class _FmActionsState extends State<FmActions> {
                 child: CircularProgressIndicator(
                   value: 0.0,
                   backgroundColor: Colors.white70,
-                  strokeWidth: screenUtil.setWidth(2.0),
+                  strokeWidth: 1.5,
                 ),
               ),
               actionItem(notifier.playerState == AudioPlayerState.PLAYING ? 0xe636 : 0xe65e, onPressed: () {
@@ -66,7 +66,7 @@ class _FmActionsState extends State<FmActions> {
         ),
         actionItem(0xeaad, onPressed: () {
           final provider = Provider.of<PlayerSongDemand>(context);
-          provider.next(playMode: 2);
+          provider.next();
         }),
         actionItem(0xe618, onPressed: () {
           final provider = Provider.of<PlayerSongDemand>(context);

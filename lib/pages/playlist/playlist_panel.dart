@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/playlist.dart';
 import 'package:netease_flutter/models/playlist_arguments.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/playcount/playcount.dart';
 
 class NeteasePlaylistPanel extends StatefulWidget {
@@ -68,7 +69,7 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
             ),
             child: Align(
               alignment: Alignment.topRight,
-              child: NeteasePlaycount(playCount: detail.playCount)
+              child: NeteasePlaycount(playCount: detail.playCount ?? 0)
             ),
           ),
           Container(
@@ -82,12 +83,12 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  widget.arguments.name ?? "-",
+                  widget.arguments.name ?? "",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: screenUtil.setSp(30.0)
+                    fontSize: SizeSetting.size_16
                   ),
                 ),
                 FlatButton(
@@ -108,7 +109,7 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
                           maxLines: 1,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: screenUtil.setSp(24.0)
+                            fontSize: SizeSetting.size_12
                           ),
                         )
                       ),
@@ -123,7 +124,7 @@ class _NeteasePlaylistPanelState extends State<NeteasePlaylistPanel> {
                     maxLines: 2,
                     style: TextStyle(
                       color: Colors.grey[300],
-                      fontSize: screenUtil.setSp(22.0)
+                      fontSize: SizeSetting.size_10
                     )
                   )
                 )

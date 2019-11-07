@@ -19,7 +19,8 @@ class _PlayerFuncBtnState extends State<PlayerFuncBtn> {
     final demandProvider = Provider.of<PlayerSongDemand>(context);
 
     return Container(
-      width: 70.0,
+      width: 40.0,
+      margin: EdgeInsets.only(right: 10.0),
       padding: EdgeInsets.only(
         bottom: 1.0
       ),
@@ -38,7 +39,7 @@ class _PlayerFuncBtnState extends State<PlayerFuncBtn> {
         },
         icon: NeteaseIconData(
           demandProvider.playMode == 1 ? 0xe604 : liked ? 0xe60b : 0xe616,
-          size: 30.0,
+          size: 26.0,
           color: demandProvider.playMode == 2 && liked ? Colors.redAccent : Colors.white70,
         ),
       )

@@ -7,6 +7,7 @@ import 'package:netease_flutter/models/comment_arguments.dart';
 import 'package:netease_flutter/models/profile.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/icon_data/icon_data.dart';
 import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 import 'package:netease_flutter/shared/widgets/scaffold/scaffold.dart';
@@ -105,7 +106,7 @@ class _NeteaseCommentState extends State<NeteaseComment> {
                         maxLines: 1,
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: screenUtil.setSp(30.0)
+                          fontSize: SizeSetting.size_14
                         ),
                       ),
                       subtitle: Text(
@@ -116,14 +117,15 @@ class _NeteaseCommentState extends State<NeteaseComment> {
                       ),
                       trailing: Padding(
                         padding: EdgeInsets.only(
-                          right: screenUtil.setWidth(20.0)
+                          right: SizeSetting.size_10
                         ),
                         child: NeteaseIconData(
                           0xe626,
                           color: Colors.white70,
                           size: screenUtil.setSp(42.0),
                         ),
-                      )
+                      ),
+                      dense: true,
                     ),
                   )
                 ],
@@ -136,7 +138,6 @@ class _NeteaseCommentState extends State<NeteaseComment> {
   }
 
   Widget publishDate(CommentModel comment) {
-    ScreenUtil screenUtil = ScreenUtil.getInstance();
     String timeStamp;
     try {
       DateTime time = DateTime.fromMillisecondsSinceEpoch(comment.time);
@@ -148,7 +149,7 @@ class _NeteaseCommentState extends State<NeteaseComment> {
       "$timeStamp",
       style: TextStyle(
         color: Colors.white54,
-        fontSize: screenUtil.setSp(20.0)
+        fontSize: SizeSetting.size_10
       ),
     );
   }
@@ -164,7 +165,7 @@ class _NeteaseCommentState extends State<NeteaseComment> {
           right: screenUtil.setWidth(30.0)
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Padding(
@@ -176,7 +177,7 @@ class _NeteaseCommentState extends State<NeteaseComment> {
                 "${comment.likedCount}",
                 style: TextStyle(
                   color: Colors.white60,
-                  fontSize: screenUtil.setSp(24.0)
+                  fontSize: SizeSetting.size_10
                 ),
               ),
             ),
@@ -210,7 +211,7 @@ class _NeteaseCommentState extends State<NeteaseComment> {
             '$title',
             style: TextStyle(
               color: Colors.white,
-              fontSize: screenUtil.setSp(26.0),
+              fontSize: SizeSetting.size_16,
               fontWeight: FontWeight.bold
             ),
           ),
@@ -319,6 +320,7 @@ class _NeteaseCommentState extends State<NeteaseComment> {
                       ),
                       Container(
                         padding: EdgeInsets.only(
+                          top: screenUtil.setHeight(8.0),
                           right: screenUtil.setWidth(50.0),
                           bottom: screenUtil.setHeight(30.0)
                         ),
@@ -332,9 +334,10 @@ class _NeteaseCommentState extends State<NeteaseComment> {
                           )
                         ),
                         child: Text(
-                          comment.content,
+                          "${comment.content}",
                           style: TextStyle(
-                            color: Colors.white
+                            color: Colors.white,
+                            fontSize: SizeSetting.size_12
                           ),
                         ),
                       )
@@ -434,13 +437,13 @@ class _NeteaseCommentState extends State<NeteaseComment> {
                   hintText: _beReplier == null ? '这一次也许就是你上热评了' : '回复${_beReplier.nickname}：',
                   hintStyle: TextStyle(
                     color: Theme.of(context).textSelectionColor.withOpacity(0.6),
-                    fontSize: screenUtil.setSp(30.0)
+                    fontSize: SizeSetting.size_14
                   ),
                   border: InputBorder.none
                 ),
                 style: TextStyle(
                   color: Colors.white70,
-                  fontSize: screenUtil.setSp(30.0)
+                  fontSize: SizeSetting.size_14
                 ),
               ),
             ),
@@ -449,7 +452,12 @@ class _NeteaseCommentState extends State<NeteaseComment> {
               flex: 0,
               child: FlatButton(
                 textColor: Colors.white70,
-                child: Text('发送'),
+                child: Text('发送', 
+                  textAlign: TextAlign.end,
+                  style: TextStyle(
+                    fontSize: SizeSetting.size_14
+                  ),
+                ),
                 onPressed: () {},
               ),
             )

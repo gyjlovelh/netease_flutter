@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/enums/loading_status.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/states/global.dart';
+import 'package:netease_flutter/shared/states/size_setting.dart';
 import 'package:netease_flutter/shared/widgets/loading/loading.dart';
 
 typedef ResultBuilder = Widget Function(dynamic item);
@@ -81,7 +82,7 @@ class _ResultListState extends State<ResultList> {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white70,
-              fontSize: screenUtil.setSp(28.0)
+              fontSize: SizeSetting.size_14
             ),
           ),
         ));
