@@ -56,6 +56,9 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
     final repeatModeProvider = Provider.of<PlayerRepeatMode>(context);
     final positionProvider = Provider.of<PlayerPosition>(context);
 
+    double maxValue = max(positionProvider.duration.inSeconds, 0).toDouble();
+    double currentValue = min(max(positionProvider.current.inSeconds, 0).toDouble(), maxValue);
+
     return Expanded(
       flex: 0,
       child: Container(
@@ -82,8 +85,8 @@ class _NeteasePlayIconActionState extends State<NeteasePlayIconAction> with Sing
                   width: screenUtil.setWidth(500.0),
                   child: Slider(
                     min: 0,
-                    max: positionProvider.duration.inSeconds.toDouble(),
-                    value: _isPointerDown ? _sliderValue : min(positionProvider.current.inSeconds.toDouble(), positionProvider.duration.inSeconds.toDouble()),
+                    max: maxValue,
+                    value: _isPointerDown ? _sliderValue : currentValue,
                     onChanged: (double v) => setState(() => _sliderValue = v),
                     onChangeStart: (double v) => setState(() => _isPointerDown = true),
                     onChangeEnd: (double v) {      
