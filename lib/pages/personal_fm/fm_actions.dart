@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:audioplayer/audioplayer.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
@@ -16,21 +16,19 @@ class FmActions extends StatefulWidget {
 class _FmActionsState extends State<FmActions> {
 
   Widget actionItem(int pointer, {VoidCallback onPressed}) {
-    ScreenUtil screenUtil = ScreenUtil.getInstance();
 
     return GestureDetector(
       onTap: onPressed,
       child: NeteaseIconData(
         pointer,
         color: Colors.white70,
-        size: 32.0,
+        size: 28.0,
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil screenUtil = ScreenUtil.getInstance();
     final notifier = Provider.of<PlayerStatusNotifier>(context);
 
     return Row(
@@ -39,15 +37,15 @@ class _FmActionsState extends State<FmActions> {
         actionItem(0xe6c1),
         actionItem(0xe616),
         Container(
-          width: 64.0,
+          width: 56.0,
           height: 100.0,
           child: Stack(
             fit: StackFit.expand,
             alignment: Alignment.center,
             children: <Widget>[
               Positioned(
-                height: 64.0,
-                width: 64.0,
+                height: 56.0,
+                width: 56.0,
                 child: CircularProgressIndicator(
                   value: 0.0,
                   backgroundColor: Colors.white70,

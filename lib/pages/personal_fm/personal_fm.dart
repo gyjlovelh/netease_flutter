@@ -69,7 +69,7 @@ class _NeteasePersonalFmState extends State<NeteasePersonalFm> {
               });
               setState(() {
                 _sliderValue = v;
-                Global.player.seek(v);
+                Global.player.seek(new Duration(seconds: v.toInt()));
               });
             },
           ),

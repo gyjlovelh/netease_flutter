@@ -1,114 +1,110 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/player/player_song_demand.dart';
-import 'package:netease_flutter/shared/service/request_service.dart';
 import 'package:netease_flutter/shared/states/size_setting.dart';
-import 'package:netease_flutter/shared/widgets/playcount/playcount.dart';
 import 'package:provider/provider.dart';
 
 class RecommendSong extends StatefulWidget {
+  final List<SongModel> songs;
+  RecommendSong({@required this.songs});
+
   @override
   _RecommendSongState createState() => _RecommendSongState();
 }
 
 class _RecommendSongState extends State<RecommendSong> {
 
-  List songs = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadPageData();
-  }
-
-  Widget songItem(SongModel model) {
-    ScreenUtil screenUtil = ScreenUtil.getInstance();
-    final demandProvider = Provider.of<PlayerSongDemand>(context);
-
-    return GestureDetector(
-      onTap: () {
-        
-      },
-      child: Container(
-        width: screenUtil.setWidth(220.0),
-        height: screenUtil.setWidth(320.0),
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(
-                bottom: screenUtil.setHeight(8.0)
-              ),
-              width: screenUtil.setWidth(220.0),
-              height: screenUtil.setWidth(220.0),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage("${(model.al ?? model.album)?.picUrl}"),
-                  fit: BoxFit.cover
+  Widget songItem(SongModel model) => Consumer<PlayerSongDemand>(
+    builder: (context, notifier, _) {
+      ScreenUtil screenUtil = ScreenUtil.getInstance();
+      return GestureDetector(
+        onTap: () {
+          //播放当前音乐
+          notifier.loadMusic(model);
+          notifier.addMusicItem(model);
+          Navigator.of(context).pushNamed('song_detail');
+        },
+        child: Container(
+          width: screenUtil.setWidth(220.0),
+          height: screenUtil.setWidth(320.0),
+          child: Column(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(
+                  bottom: screenUtil.setHeight(8.0)
                 ),
-                borderRadius: BorderRadius.circular(8.0)
-              ),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    right: 4.0,
-                    bottom: 4.0
+                width: screenUtil.setWidth(220.0),
+                height: screenUtil.setWidth(220.0),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage("${(model.al ?? model.album)?.picUrl}"),
+                    fit: BoxFit.cover
                   ),
-                  height: screenUtil.setWidth(65.0),
-                  width: screenUtil.setWidth(65.0),
-                  decoration: BoxDecoration(
-                    
-                    borderRadius: BorderRadius.circular(99.0)
-                  ),
-                  
-                  child: FlatButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () async {
-                      //播放当前音乐
-                      demandProvider.loadMusic(model);
-                      demandProvider.addMusicItem(model);
-                    },
-                    color: Colors.white70,
-                    shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0)
+                ),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      right: 4.0,
+                      bottom: 4.0
+                    ),
+                    height: screenUtil.setWidth(65.0),
+                    width: screenUtil.setWidth(65.0),
+                    decoration: BoxDecoration(
+                      
                       borderRadius: BorderRadius.circular(99.0)
                     ),
-                    child: Icon(
-                      Icons.play_arrow,
-                      color: Theme.of(context).textSelectionColor,
+                    
+                    child: FlatButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () async {
+                        //播放当前音乐
+                        notifier.loadMusic(model);
+                        notifier.addMusicItem(model);
+                      },
+                      color: Colors.white70,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(99.0)
+                      ),
+                      child: Icon(
+                        Icons.play_arrow,
+                        color: Theme.of(context).textSelectionColor,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Text(
-              "${model.name}", 
-              maxLines: 1, 
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: SizeSetting.size_12
+              Text(
+                "${model.name}", 
+                maxLines: 1, 
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: SizeSetting.size_12
+                ),
               ),
-            ),
-            Text(
-              "${model.artists.map((item) => item.name).join(',')}",
-              maxLines: 1, 
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: SizeSetting.size_12
-              ),
-            )
-          ],
+              Text(
+                "${(model.ar ?? model.artists).map((item) => item.name).join(',')}",
+                maxLines: 1, 
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: SizeSetting.size_12
+                ),
+              )
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
+    },
+  );
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
+    List<SongModel> songs = widget.songs;
 
     return Container(
       margin: EdgeInsets.only(
@@ -157,21 +153,10 @@ class _RecommendSongState extends State<RecommendSong> {
           Wrap(
             runSpacing: screenUtil.setHeight(8.0),
             spacing: screenUtil.setWidth(14.0),
-            children: songs.map((item) {
-              SongModel song = SongModel.fromJson(item['song']);
-              return songItem(song);
-            }).toList(),
+            children: songs.map((song) => songItem(song)).toList(),
           )
         ],
       ),
     );
-  }
-
-  void _loadPageData() async {
-    final result = await RequestService.getInstance(context: context).getPersonalizedSongs();
-    
-    setState(() {
-      songs = result.sublist(0, 3);
-    });
   }
 }

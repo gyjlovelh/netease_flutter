@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:audioplayer/audioplayer.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:netease_flutter/models/song.dart';
 import 'package:netease_flutter/shared/service/request_service.dart';
@@ -24,31 +24,34 @@ class PlayerSongDemand extends ChangeNotifier {
   List get lyric => _lyric;
 
   PlayerSongDemand() {
-    Global.player.onPlayerStateChanged.listen((AudioPlayerState state) {
-      if (state == AudioPlayerState.COMPLETED) {
-        next();
+    Global.player.onPlayerCompletion.listen((_) {
+      if (Global.getRepeatMode() == RepeatMode.SINGLE) {
+        Global.player.resume();
+      } else {
+         next();
       }
-      notifyListeners();
     });
   }
 
   // 加载歌曲
-  loadMusic(SongModel song, {int playMode = 1}) async {
-    Global.setPlayMode(playMode);
-    if (Global.player.state == AudioPlayerState.PLAYING || Global.player.state == AudioPlayerState.PAUSED) {
-      await Global.player.stop();
-    }
-    this._music = song;
-    Global.updateCurrentMusic(song);
-    this._playMode = playMode;
-    print("${song.toJson()}");
-    await Global.player.play(song.url);
-    notifyListeners();
+  Future loadMusic(SongModel song, {int playMode = 1}) async {
+    return Future(() async {
+      Global.setPlayMode(playMode);
+      Global.player.release();
+      if (Global.player.state != AudioPlayerState.STOPPED) {
+        await Global.player.stop();
+      }
+      this._music = song;
+      Global.updateCurrentMusic(song);
+      this._playMode = playMode;
+      await Global.player.play(song.url);
+      notifyListeners();
 
-    // 发布歌词
-    _lyric = await RequestService.getInstance(context: null).getSongLyric(song.id);
-    Global.updateLyric(_lyric);
-    notifyListeners();
+      // 发布歌词
+      _lyric = await RequestService.getInstance(context: null).getSongLyric(song.id);
+      Global.updateLyric(_lyric);
+      notifyListeners();
+    });
   }
 
   // 追加歌曲待播放
@@ -77,17 +80,17 @@ class PlayerSongDemand extends ChangeNotifier {
   }
 
   // 上一首⏮
-  void prev({BuildContext context}) async {
+  Future prev({BuildContext context}) async {
     int index = musicList.map((item) => item.id).toList().indexOf(currentMusic.id);
     ///TODO,上一首定位到历史播放的前一位。
     if (index == 0) {
-      loadMusic(musicList.last);
+      return loadMusic(musicList.last);
     } else {
-      loadMusic(musicList[index - 1]);
+      return loadMusic(musicList[index - 1]);
     }
   }
   // 下一首⏭
-  void next() async {
+  Future next() async {
     var target;
     if (playMode == 1) { ///单曲模式
       int index = musicList.map((item) => item.id).toList().indexOf(currentMusic.id);
@@ -120,7 +123,7 @@ class PlayerSongDemand extends ChangeNotifier {
       }
     }
     
-    loadMusic(target, playMode: playMode);
+    return loadMusic(target, playMode: playMode);
   }
 
 }

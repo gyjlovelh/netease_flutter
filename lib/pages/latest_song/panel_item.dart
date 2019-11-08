@@ -121,9 +121,11 @@ class _PanelItemState extends State<PanelItem> {
   void _loadPageData() async {
     List result = await RequestService.getInstance(context: context).getTopSong(widget.type);
 
-    setState(() {
-      songs = result.map((item) => SongModel.fromJson(item)).toList();
-      status = LoadingStatus.LOADED;
-    });
+    if (mounted) {
+      setState(() {
+        songs = result.map((item) => SongModel.fromJson(item)).toList();
+        status = LoadingStatus.LOADED;
+      });
+    }
   }
 }

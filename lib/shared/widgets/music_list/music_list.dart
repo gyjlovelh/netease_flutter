@@ -16,31 +16,30 @@ class NeteaseMusicList extends StatefulWidget {
 class _NeteaseMusicListState extends State<NeteaseMusicList> {
 
   Widget repeatInfo() {
-    final demandProvider = Provider.of<PlayerSongDemand>(context);
-    final repeatModeProvider = Provider.of<PlayerRepeatMode>(context);
-    var mode = repeatModeProvider.repeatMode;
-
-    int pointer;
-    String label;
-    if (mode == RepeatMode.LIST) {
-      pointer = 0xe63e;
-      label = "列表循环";
-    } else if (mode == RepeatMode.SINGLE) {
-      pointer = 0xe640;
-      label = "单曲循环";
-    } else if (mode == RepeatMode.RANDOM) {
-      pointer = 0xe61b;
-      label = "随机播放";
-    }
-
-    return flatIconButton(
-      pointer, 
-      label: "$label(${demandProvider.musicList.length})",
-      onPressed: () {
-        repeatModeProvider.changeRepeatMode();
-
-        Toast.show('$label', context);
-      }
+    return Consumer<PlayerRepeatMode>(
+      builder: (context, notifier, _) {
+        var mode = notifier.repeatMode;
+        int pointer;
+        String label;
+        if (mode == RepeatMode.LIST) {
+          pointer = 0xe63e;
+          label = "列表循环";
+        } else if (mode == RepeatMode.SINGLE) {
+          pointer = 0xe640;
+          label = "单曲循环";
+        } else if (mode == RepeatMode.RANDOM) {
+          pointer = 0xe61b;
+          label = "随机播放";
+        }
+        return flatIconButton(
+          pointer, 
+          label: "$label(${Provider.of<PlayerSongDemand>(context).musicList.length})",
+          onPressed: () {
+            notifier.changeRepeatMode();
+            Toast.show('$label', context);
+          }
+        );
+      },
     );
   }
 
@@ -67,7 +66,6 @@ class _NeteaseMusicListState extends State<NeteaseMusicList> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    final demandProvider = Provider.of<PlayerSongDemand>(context);
 
     return Container(
       color: Color.fromRGBO(58, 99, 120, 1),
@@ -111,62 +109,66 @@ class _NeteaseMusicListState extends State<NeteaseMusicList> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: demandProvider.musicList.length,
-              itemExtent: screenUtil.setHeight(100.0),
-              itemBuilder: (BuildContext context, int index) {
-                SongModel song = demandProvider.musicList[index];
-                bool isCur = song.id == demandProvider.currentMusic.id;
+            child: Consumer<PlayerSongDemand>(
+              builder: (context, notifier, _) {
+                return ListView.builder(
+                  itemCount: notifier.musicList.length,
+                  itemExtent: screenUtil.setHeight(100.0),
+                  itemBuilder: (BuildContext context, int index) {
+                    SongModel song = notifier.musicList[index];
+                    bool isCur = song.id == notifier.currentMusic.id;
 
-                return Material(
-                  color: Colors.transparent,
-                  child: ListTile(
-                    onTap: () async {
-                      demandProvider.loadMusic(song);
-                    },
-                    dense: true,
-                    title: Row(
-                      children: <Widget>[
-                        isCur ? Container(
-                          padding: EdgeInsets.only(right: screenUtil.setWidth(12.0)),
-                          child: NeteaseIconData(
-                            0xe666,
-                            color: Theme.of(context).textSelectionColor,
+                    return Material(
+                      color: Colors.transparent,
+                      child: ListTile(
+                        onTap: () async {
+                          notifier.loadMusic(song);
+                        },
+                        dense: true,
+                        title: Row(
+                          children: <Widget>[
+                            isCur ? Container(
+                              padding: EdgeInsets.only(right: screenUtil.setWidth(12.0)),
+                              child: NeteaseIconData(
+                                0xe666,
+                                color: Theme.of(context).textSelectionColor,
+                                size: screenUtil.setSp(32.0),
+                              ),
+                            ) : Text(''),
+                            Container(
+                              width: screenUtil.setWidth(500.0),
+                              child: Text(
+                                "${song.name} - ${(song.ar ?? song.artists).map((item) => item.name).join(',')}",
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(
+                                  color: isCur ? Theme.of(context).textSelectionColor : Colors.white70,
+                                  fontSize: SizeSetting.size_14
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        trailing: IconButton(
+                          icon: NeteaseIconData(
+                            0xe632,
+                            color: isCur ? Theme.of(context).textSelectionColor : Colors.white70,
                             size: screenUtil.setSp(32.0),
                           ),
-                        ) : Text(''),
-                        Container(
-                          width: screenUtil.setWidth(500.0),
-                          child: Text(
-                            "${song.name} - ${(song.ar ?? song.artists).map((item) => item.name).join(',')}",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                              color: isCur ? Theme.of(context).textSelectionColor : Colors.white70,
-                              fontSize: SizeSetting.size_14
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    trailing: IconButton(
-                      icon: NeteaseIconData(
-                        0xe632,
-                        color: isCur ? Theme.of(context).textSelectionColor : Colors.white70,
-                        size: screenUtil.setSp(32.0),
+                          onPressed: () {
+                            if (isCur) {
+                              //如果正在播放要删除的这首歌，则先播放下一曲。然后在删除
+                              notifier.next();
+                            }
+                            notifier.removeMusicItem(song);
+                          },
+                        ),
                       ),
-                      onPressed: () {
-                        if (isCur) {
-                          //如果正在播放要删除的这首歌，则先播放下一曲。然后在删除
-                          demandProvider.next();
-                        }
-                        demandProvider.removeMusicItem(song);
-                      },
-                    ),
-                  ),
+                    );
+                  },
                 );
               },
-            ),
+            )
           )
         ],
       ),

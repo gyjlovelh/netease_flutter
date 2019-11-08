@@ -42,9 +42,7 @@ class _NeteaseLyricState extends State<NeteaseLyric> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-
-    final demandProvider = Provider.of<PlayerSongDemand>(context);
-    List lyric = demandProvider.lyric;
+    List lyric = Provider.of<PlayerSongDemand>(context).lyric;
 
     return CustomScrollView(
       controller: scrollController,
@@ -90,12 +88,10 @@ class _NeteaseLyricState extends State<NeteaseLyric> {
   }
 
   void _whenPositionChange(var d) {
-    final demandProvider = Provider.of<PlayerSongDemand>(context);
-    List lyric = demandProvider.lyric;
+    List lyric = Provider.of<PlayerSongDemand>(context).lyric;
     if (mounted) {
       Duration duration = d;
       List milliseconds = lyric.map((item) => item['milliseconds']).toList();
-      // int index = seconds.indexWhere((second) => second == duration.inSeconds);
       int index = milliseconds.indexWhere((millisecond) => millisecond >= duration.inMilliseconds);
       // todo 无法定位到最后一行歌词。
       if (index != -1 && _focusIndex != index) {

@@ -18,36 +18,36 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
 
   bool showLyric = false;
 
-  Widget showMain(SongModel song) {
+  Widget showMain() {
     if (showLyric) {
       return new NeteaseLyric();
     } else {
-      return new NeteaseSongCover(song: song);
+      return new NeteaseSongCover();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil screenUtil = ScreenUtil.getInstance();
-
-    final demandProvider = Provider.of<PlayerSongDemand>(context);
-    SongModel song =  demandProvider.currentMusic;
-    print('song_detail build..${song.id}');
 
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(song.name, style: TextStyle(
-              fontSize: SizeSetting.size_16
-            )),
-            Text((song.ar ?? song.artists).map((item) => item.name).join(','), style: TextStyle(
-              fontSize: SizeSetting.size_12
-            ))
-          ],
-        )
+        title: Consumer<PlayerSongDemand>(builder: (BuildContext context, notifier, _) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text("${notifier.currentMusic.name}", style: TextStyle(
+                fontSize: SizeSetting.size_16
+              )),
+              Text(
+                "${(notifier.currentMusic.ar ?? notifier.currentMusic.artists).map((item) => item.name).join(',')}",
+                style: TextStyle(
+                  fontSize: SizeSetting.size_12
+                ),
+              )
+            ],
+          );
+        }),
       ),
       body: Container(
         child: Container(
@@ -68,11 +68,10 @@ class _NeteaseSongDetailState extends State<NeteaseSongDetail> {
                       showLyric = !showLyric;
                     });
                   },
-                  // child: Text('data'),
-                  child: showMain(song),
+                  child: showMain(),
                 ),
               ),
-              new NeteasePlayIconAction(song: song)
+              new NeteasePlayIconAction()
             ],
           ),
         ),

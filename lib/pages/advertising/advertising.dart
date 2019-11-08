@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/shared/states/global.dart';
-import 'package:netease_flutter/shared/states/size_setting.dart';
 
 class NeteaseAdvertising extends StatefulWidget {
   @override

@@ -6,8 +6,7 @@ import 'package:toast/toast.dart';
 import '../../shared/states/global.dart';
 import 'package:provider/provider.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';
-import 'package:audioplayer/audioplayer.dart';
-
+import 'package:audioplayers/audioplayers.dart';
 //本地音乐播放列表
 class ScanLocalMusics extends StatefulWidget {
   @override

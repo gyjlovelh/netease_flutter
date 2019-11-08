@@ -26,7 +26,6 @@ class _RecordListState extends State<RecordList> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    final provider = Provider.of<PlayerStatusNotifier>(context);
 
     if (status == LoadingStatus.UNINIT) {
       _loadPageData();

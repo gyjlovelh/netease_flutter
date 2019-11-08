@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:audioplayer/audioplayer.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:netease_flutter/models/profile.dart';
 import 'package:netease_flutter/models/song.dart';

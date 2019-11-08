@@ -1,4 +1,4 @@
-import 'package:audioplayer/audioplayer.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:netease_flutter/shared/event/event.dart';
 import 'package:netease_flutter/shared/player/music_player_status.dart';

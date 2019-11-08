@@ -1,6 +1,6 @@
 
 
-import 'package:audioplayer/audioplayer.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:netease_flutter/shared/states/global.dart';
 
@@ -8,12 +8,14 @@ class  PlayerPosition extends ChangeNotifier {
   // 当前位置
   Duration _current = new Duration();
   Duration get current => _current;
-  Duration get duration => Global.player.duration ?? new Duration(seconds: 0);
+  Duration _duration = new Duration();
+  Duration get duration => _duration;
 
   // 当前位置【格式化】
   String _currentTime = '00:00';
   String get currentTime => _currentTime;
-  String get durationTime => (Global.player.duration == null || Global.player.duration.inSeconds < 0) ? '00:00' :"${Global.player.duration.inMinutes.toString().padLeft(2, '0')}:${(Global.player.duration.inSeconds % 60).toString().padLeft(2, '0')}";
+  String _durationTime = '00:00';
+  String get durationTime => _durationTime;
 
   // 播放进度【百分比】
   double _progress = 0;
@@ -24,6 +26,12 @@ class  PlayerPosition extends ChangeNotifier {
       _current = d;
       _progress = d.inMilliseconds / duration.inMilliseconds;
       _currentTime = "${(d.inSeconds ~/ 60).toString().padLeft(2, '0')}:${(d.inSeconds % 60).toString().padLeft(2, '0')}";
+      notifyListeners();
+    });
+
+    Global.player.onDurationChanged.listen((Duration d) {
+      _duration = d;
+      _durationTime = "${d.inMinutes.toString().padLeft(2, '0')}:${(d.inSeconds % 60).toString().padLeft(2, '0')}";
       notifyListeners();
     });
 

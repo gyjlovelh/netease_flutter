@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_flutter/models/song.dart';
@@ -30,8 +29,6 @@ class _NeteaseCommendSongsState extends State<NeteaseRecommendSongs> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil.getInstance();
-    final demandProvider = Provider.of<PlayerSongDemand>(context);
-
     if (status == LoadingStatus.LOADING) {
       
     }
@@ -56,8 +53,9 @@ class _NeteaseCommendSongsState extends State<NeteaseRecommendSongs> {
             return NeteaseListTile(
               listTile: ListTile(
                 onTap: () {
-                  demandProvider.choosePlayList(list.map((item) => SongModel.fromJson(item)).toList());
-                  demandProvider.loadMusic(song);
+                  final notifier = Provider.of<PlayerSongDemand>(context, listen: false);
+                  notifier.choosePlayList(list.map((item) => SongModel.fromJson(item)).toList());
+                  notifier.loadMusic(song);
                 },
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(screenUtil.setWidth(8.0)),
