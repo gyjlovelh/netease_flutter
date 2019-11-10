@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 import '../../../models/video_group_1.dart';
 import '../../../shared/service/request_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../shared/widgets/loading/loading.dart';
 import '../../../shared/widgets/icon_data/icon_data.dart';
+import '../../../shared/utils/common_utils.dart';
 
 //视频详情页
 class VideoDetail extends StatefulWidget {
@@ -94,6 +96,7 @@ class _VideoDetailState extends State<VideoDetail> {
                   iconSize: 40.0,
                   onPressed: (){
                     print('视频播放地址：'+videoGroups[index].urlInfo.url);
+                    Toast.show('播放视频: ' + videoGroups[index].title,context);
                   },
                 ),
               ),
@@ -116,7 +119,7 @@ class _VideoDetailState extends State<VideoDetail> {
                       size: 20.0,
                     ),
                     Text(
-                      videoGroups[index].durationms.toString(),
+                      formatMath((videoGroups[index].durationms)),
                       style: TextStyle(color: Colors.white),
                     ),
                   ],
@@ -155,7 +158,6 @@ class _VideoDetailState extends State<VideoDetail> {
                 style: TextStyle(color: Colors.white),
               ),
                 ),
-              
             ],
           ),
         ),
