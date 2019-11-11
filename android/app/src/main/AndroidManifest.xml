@@ -11,7 +11,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="师爷听歌"
+        android:label="回首掏"
         android:icon="@mipmap/ic_logo"
         android:usesCleartextTraffic="true">
         <activity
