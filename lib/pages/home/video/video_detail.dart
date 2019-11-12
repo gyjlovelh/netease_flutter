@@ -22,6 +22,7 @@ class _VideoDetailState extends State<VideoDetail> {
   int id; //videoGroup的id
   List<VideoData> videoGroups = List<VideoData>();
   VideoPlayerController _controller;
+  List<bool> playWhere = List<bool>();
 
   _VideoDetailState({@required this.id});
 
@@ -51,7 +52,9 @@ class _VideoDetailState extends State<VideoDetail> {
             if (v.type == 1) {
               videoGroups.add(v.data);
             }
+            playWhere.add(false);
           }
+          
           // videoGroups = list.map((i) {
           //   // print('视频 iii[data] = ' + VideoData.fromJson(i['data']).coverUrl);
           //   if (i['type'] == 1) {
@@ -101,7 +104,7 @@ class _VideoDetailState extends State<VideoDetail> {
             borderRadius:
                 BorderRadius.circular(ScreenUtil.instance.setWidth(20.0)),
           ),
-          child: index == 0 //播放视频
+          child: playWhere[index] //播放视频
               ? _controller.value.initialized
                   ? AspectRatio(
                       aspectRatio: _controller.value.aspectRatio,
@@ -126,7 +129,16 @@ class _VideoDetailState extends State<VideoDetail> {
                               videoGroups[index].urlInfo.url)
                             ..initialize().then((_) {
                               // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-                              setState(() {});
+                              setState(() {
+                                for(int m = 0;m < playWhere.length;m++) {
+                                  if (m == index) {
+                                    playWhere[m] = true;
+                                  }else {
+                                    playWhere[m] = false;
+                                  }
+                                }
+                                _controller.play();
+                              });
                             });
                         },
                       ),
