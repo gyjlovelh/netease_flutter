@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:toast/toast.dart';
 import '../../../models/video_group.dart';
 import '../../../shared/service/request_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,9 +21,12 @@ class VideoDetail extends StatefulWidget {
 
 class _VideoDetailState extends State<VideoDetail> {
   int id; //videoGroup的id
-  List<VideoData> videoGroups = List<VideoData>();
+  List<VideoData> _videoGroups = List<VideoData>();
   VideoPlayerController _controller;
-  List<bool> playWhere = List<bool>();
+  List<bool> _playWhere = List<bool>();
+  bool _isShowPlayIcon = false; //播放时，点击屏幕显示播放/暂停按钮
+  bool _isPlaying = true; //播放/暂停
+  Timer timer;
 
   _VideoDetailState({@required this.id});
 
@@ -45,16 +49,16 @@ class _VideoDetailState extends State<VideoDetail> {
       future: RequestService.getInstance(context: context).getVideoGroup(id),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
-          videoGroups.clear();
+          _videoGroups.clear();
           List list = snapshot.data['datas'] as List;
           for (int i = 0; i < list.length; i++) {
             VideoGroupModel v = VideoGroupModel.fromJson(list[i]);
             if (v.type == 1) {
-              videoGroups.add(v.data);
+              _videoGroups.add(v.data);
             }
-            playWhere.add(false);
+            _playWhere.add(false);
           }
-          
+
           // videoGroups = list.map((i) {
           //   // print('视频 iii[data] = ' + VideoData.fromJson(i['data']).coverUrl);
           //   if (i['type'] == 1) {
@@ -64,7 +68,7 @@ class _VideoDetailState extends State<VideoDetail> {
           // }).toList();
           // print('视频 videoGroups.length = '+videoGroups.length.toString());
           return Container(
-            child: videoGroups.length == 0 ? Container() : videoDetail(),
+            child: _videoGroups.length == 0 ? Container() : videoDetail(),
           );
         } else {
           return Center(
@@ -83,7 +87,7 @@ class _VideoDetailState extends State<VideoDetail> {
       // borderRadius: BorderRadius.circular(ScreenUtil.instance.setWidth(20.0)),
       // ),
       child: Text(
-        videoGroups[index].title,
+        _videoGroups[index].title,
         style: TextStyle(
             fontSize: ScreenUtil.instance.setSp(18.0), color: Colors.white),
       ),
@@ -99,17 +103,66 @@ class _VideoDetailState extends State<VideoDetail> {
           ),
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage(videoGroups[index].coverUrl),
+                image: NetworkImage(_videoGroups[index].coverUrl),
                 fit: BoxFit.cover),
             borderRadius:
                 BorderRadius.circular(ScreenUtil.instance.setWidth(20.0)),
           ),
-          child: playWhere[index] //播放视频
+          child: _playWhere[index] //播放视频
               ? _controller.value.initialized
-                  ? AspectRatio(
-                      aspectRatio: _controller.value.aspectRatio,
-                      child: VideoPlayer(_controller),
-                    )
+                  ? GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (_isShowPlayIcon) {
+                            _isShowPlayIcon = false;
+                          } else {
+                            _isShowPlayIcon = true;
+                          }
+                        });
+                      },
+                      child: Stack(
+                        children: <Widget>[
+                          AspectRatio(
+                            aspectRatio: _controller.value.aspectRatio,
+                            child: VideoPlayer(_controller),
+                          ),
+                          //播放时，点击屏幕显示播放暂停图标
+                          _isShowPlayIcon
+                              ? Center(
+                                  child: IconButton(
+                                    icon: Icon(_isPlaying
+                                        ? Icons.pause
+                                        : Icons.play_arrow),
+                                    color: Colors.white,
+                                    iconSize: 40.0,
+                                    onPressed: () {
+                                      if (_controller.value.isPlaying) {
+                                        _controller.pause();
+                                        setState(() {
+                                          _isPlaying = false;
+                                        });
+                                      } else {
+                                        _controller.play();
+                                        setState(() {
+                                          _isPlaying = true;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                )
+                              : Container(),
+                          //进度条
+                          _isShowPlayIcon
+                              ? Container(
+                                  alignment: Alignment.bottomLeft,
+                                  child: LinearProgressIndicator(
+                                    value: _controller.value.position.inMilliseconds /
+                                        _videoGroups[index].durationms,
+                                  ),
+                                )
+                              : Container()
+                        ],
+                      ))
                   : Container()
               : Stack(
                   children: <Widget>[
@@ -122,22 +175,25 @@ class _VideoDetailState extends State<VideoDetail> {
                         color: Colors.white,
                         iconSize: 40.0,
                         onPressed: () {
-                          print('视频播放地址：' + videoGroups[index].urlInfo.url);
+                          print('视频播放地址：' + _videoGroups[index].urlInfo.url);
                           // Toast.show('播放视频: ' + videoGroups[index].title,context);
-                          videoGroups[index].subscribed = true;
+                          _videoGroups[index].subscribed = true;
                           _controller = VideoPlayerController.network(
-                              videoGroups[index].urlInfo.url)
+                              _videoGroups[index].urlInfo.url)
                             ..initialize().then((_) {
                               // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
                               setState(() {
-                                for(int m = 0;m < playWhere.length;m++) {
+                                _isShowPlayIcon = false;
+                                _isPlaying = true;
+                                for (int m = 0; m < _playWhere.length; m++) {
                                   if (m == index) {
-                                    playWhere[m] = true;
-                                  }else {
-                                    playWhere[m] = false;
+                                    _playWhere[m] = true;
+                                  } else {
+                                    _playWhere[m] = false;
                                   }
                                 }
                                 _controller.play();
+                                timerGo();
                               });
                             });
                         },
@@ -153,7 +209,7 @@ class _VideoDetailState extends State<VideoDetail> {
                             size: 20.0,
                           ),
                           Text(
-                            videoGroups[index].playTime.toString(),
+                            _videoGroups[index].playTime.toString(),
                             style: TextStyle(color: Colors.white),
                           ),
                           NeteaseIconData(
@@ -162,7 +218,7 @@ class _VideoDetailState extends State<VideoDetail> {
                             size: 20.0,
                           ),
                           Text(
-                            formatMath((videoGroups[index].durationms)),
+                            formatMath((_videoGroups[index].durationms)),
                             style: TextStyle(color: Colors.white),
                           ),
                         ],
@@ -174,7 +230,7 @@ class _VideoDetailState extends State<VideoDetail> {
         Container(
           margin: EdgeInsets.only(left: 20.0, top: 5.0, right: 20.0),
           child: Text(
-            videoGroups[index].description ??= '',
+            _videoGroups[index].description ??= '',
             style: TextStyle(
               color: Colors.white,
               fontSize: 14.0,
@@ -188,7 +244,7 @@ class _VideoDetailState extends State<VideoDetail> {
             children: <Widget>[
               ClipOval(
                 child: Image.network(
-                  videoGroups[index].creator.avatarUrl,
+                  _videoGroups[index].creator.avatarUrl,
                   width: ScreenUtil.instance.setWidth(50.0),
                   height: ScreenUtil.instance.setHeight(50.0),
                   fit: BoxFit.cover,
@@ -197,7 +253,7 @@ class _VideoDetailState extends State<VideoDetail> {
               Container(
                 margin: EdgeInsets.only(left: 5.0),
                 child: Text(
-                  videoGroups[index].creator.nickname,
+                  _videoGroups[index].creator.nickname,
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -212,10 +268,17 @@ class _VideoDetailState extends State<VideoDetail> {
     );
   }
 
+  void timerGo() {
+    timer = Timer(Duration(seconds: 1), () {
+      // _currentPosition = _controller.value.position.inMilliseconds;
+      setState(() {});
+    });
+  }
+
   Widget videoDetail() {
     return ListView.builder(
       scrollDirection: Axis.vertical,
-      itemCount: videoGroups.length,
+      itemCount: _videoGroups.length,
       itemBuilder: (BuildContext context, int index) {
         return Container(
           child: videoDetailItem(index),
