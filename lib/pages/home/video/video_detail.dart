@@ -176,10 +176,12 @@ class _VideoDetailState extends State<VideoDetail> {
                         iconSize: 40.0,
                         onPressed: () {
                           print('视频播放地址：' + _videoGroups[index].urlInfo.url);
-                          // Toast.show('播放视频: ' + videoGroups[index].title,context);
+                          if (_controller.value.isPlaying) {
+                            _controller.dispose();
+                          }
+                          
                           _videoGroups[index].subscribed = true;
-                          _controller = VideoPlayerController.network(
-                              _videoGroups[index].urlInfo.url)
+                          _controller = VideoPlayerController.network(_videoGroups[index].urlInfo.url)
                             ..initialize().then((_) {
                               // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
                               setState(() {
