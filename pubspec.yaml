@@ -18,11 +18,11 @@ dependencies:
   # 屏幕尺寸计算工具
   flutter_screenutil: ^0.5.3
   # http请求库
-  dio: ^3.0.0
+  dio: ">=3.0.0 <6.0.0"
   # cookie管理
-  cookie_jar: ^1.0.1
+  cookie_jar: ">=1.0.1 <4.0.0"
   # cookie管理
-  dio_cookie_manager: ^1.0.0
+  dio_cookie_manager: ">=1.0.0 <3.0.0"
   # 音频播放
   audioplayers: ^0.13.2
   # 视频播放
